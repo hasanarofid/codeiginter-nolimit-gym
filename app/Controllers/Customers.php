@@ -63,7 +63,10 @@ class Customers extends BaseController
 
     public function profil()
     {
-        $detail = $this->modelcustomer->get_by_email($this->userId);
+            $detail = $this->modelcustomer->get_by_email($this->userId);
+            if (!$detail) {
+                return redirect()->to('/dashboard')->with('pesan', '<div class="alert alert-warning">Profil customer tidak ditemukan atau User bukan merupakan Member.</div>');
+            }
 
         $data = [
             'title' => 'Profil Member',
