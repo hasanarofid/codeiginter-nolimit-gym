@@ -1,0 +1,54 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    /* color: #fff; */
+    background: url("../img/bg-3.jpeg") top center no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(34, 34, 34, 0.8);
+}
+
+@media (min-width: 1366px) {
+    body {
+        background-attachment: fixed;
+    }
+}
+
+a {
+    color: #ff0000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff3333;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Raleway", sans-serif;
+}
+
+#header {
+    position: relative;
+    width: 100%;
+    padding: 100px 0;
+}
+
+.btn-black {
+    color: #fff;
+    background-color: #000000;
+    border-color: #000000;
+}
