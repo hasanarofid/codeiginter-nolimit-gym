@@ -88,6 +88,10 @@
                                                                 <td>Expiry Date</td>
                                                                 <td><span id="memberExpiry"></span></td>
                                                             </tr>
+                                                            <tr>
+                                                                <td>Status</td>
+                                                                <td><span id="memberStatus" class="font-weight-bold"></span></td>
+                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>

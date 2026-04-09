@@ -58,14 +58,42 @@ class Visitors extends BaseController
         }
 
         $idmember = $this->request->getVar('idmember');
-        $cabang = $this->modelcustomer->get_customer($idmember);
+        $customer = $this->modelcustomer->get_customer($idmember);
+
+        if (!$customer) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger">Member tidak ditemukan</div>');
+            return redirect()->back()->withInput();
+        }
+
+        // Check Membership Expiry
+        $exp = $this->modelmemtrans->get_expired($idmember);
+        $is_expired = true;
+        if ($exp) {
+            $today = date('Y-m-d');
+            $expired_date = date('Y-m-d', strtotime($exp->expired_date));
+            if ($expired_date >= $today) {
+                $is_expired = false;
+            }
+        }
+
+        if ($is_expired) {
+            $pesan = '<div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <strong>Gagal!</strong> Keanggotaan sudah kadaluarsa atau tidak aktif. Silakan perpanjang terlebih dahulu.
+                </div>';
+            session()->setFlashdata('pesan', $pesan);
+            return redirect()->to('/visitors/member')->withInput();
+        }
+
         $locker = $this->request->getVar('locker');
         $handuk = $this->request->getVar('handuk');
         $user = $this->userId;
 
         $data = [
             'idmember' => $idmember,
-            'cabang' => $cabang['kdcab'],
+            'cabang' => $customer['kdcab'],
             'locker' => $locker,
             'handuk' => $handuk,
             'user' => $user,
@@ -87,7 +115,7 @@ class Visitors extends BaseController
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
-                    Terjadi kesalahan
+                    Terjadi kesalahan saat menyimpan data
                 </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/visitors/member');
@@ -247,15 +275,26 @@ class Visitors extends BaseController
             $expired = $this->modelmemtrans->get_expired($memberId);
 
             if ($member) {
+                $is_expired = true;
+                $expiry_text = 'No Active Membership';
+                
+                if ($expired) {
+                    $today = date('Y-m-d');
+                    $expired_date = date('Y-m-d', strtotime($expired->expired_date));
+                    $is_expired = ($expired_date < $today);
+                    $expiry_text = date('M, d Y', strtotime($expired->expired_date));
+                }
+
                 return $this->response
-                    ->setHeader('X-CSRF-TOKEN', csrf_hash()) // Tambahkan header CSRF
+                    ->setHeader('X-CSRF-TOKEN', csrf_hash())
                     ->setJSON([
                         'status' => 'success',
                         'data' => [
                             'id' => $member['id'],
                             'nama' => $member['nama'],
                             'fp_image' => base_url('img/uploads/member/fp/' . $member['fp_image']),
-                            'expiry_date' => date('M, d Y', strtotime($expired->expired_date)),
+                            'expiry_date' => $expiry_text,
+                            'is_expired' => $is_expired
                         ],
                     ]);
             } else {

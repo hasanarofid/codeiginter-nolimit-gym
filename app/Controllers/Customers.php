@@ -41,7 +41,7 @@ class Customers extends BaseController
                 </button>
                 <strong>Oops: </strong> Data customer tidak ditemukan.
             </div>');
-            return rediect()->to(base_url('/costumer'));
+            return redirect()->to(base_url('/customer'));
         } else {
             $expired = $this->modeltransmem->kadaluarsa($id);
             $detail = $this->modelcustomer->get_customer($id);
@@ -52,6 +52,7 @@ class Customers extends BaseController
                 'title' => 'Detail Customer',
                 'detail' => $detail,
                 'cabang' => $this->modelcabang->get_detail($detail['kdcab']),
+                'cabangs' => $this->modelcabang->get_cabang('%'),
                 'membership' => $memberships,
                 'expired' => $expired,
                 'renewal' => count($memberships),

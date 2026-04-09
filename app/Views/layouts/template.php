@@ -429,6 +429,7 @@
             Quagga.onDetected(function(result) {
                 if (result.codeResult.code) {
                     $('#scanner_input').val(result.codeResult.code);
+                    $('#scanner_input').trigger('change'); // Trigger AJAX check
                     Quagga.stop();
                     setTimeout(function() {
                         $('#livestream_scanner').modal('hide');
@@ -488,25 +489,20 @@
     <!-- Menampilkan AJAX data customer -->
     <script>
         $(document).ready(function() {
-            $('#locker').on('change', function() {
+            function checkMember() {
                 let memberId = $('#scanner_input').val();
                 let csrfName = '<?= csrf_token() ?>';
                 let csrfHash = '<?= csrf_hash() ?>';
 
                 if (memberId.trim() === '') {
-                    alert('Please enter Member ID');
                     return;
                 }
 
                 $.ajax({
                     url: '<?= base_url('visitors/get-member-data') ?>',
                     type: 'POST',
-                    // headers: {
-                    //     'X-CSRF-TOKEN': $('input[name="<?= csrf_token() ?>"]').val()
-                    // },
                     data: {
                         member_id: memberId,
-                        // [csrfName]: csrfHash
                     },
                     dataType: 'json',
                     success: function(response) {
@@ -516,15 +512,45 @@
                             $('#memberName').text(response.data.nama);
                             $('#memberExpiry').text(response.data.expiry_date);
                             $('#memberPhoto').attr('src', response.data.fp_image);
+
+                            if (response.data.is_expired) {
+                                $('#memberStatus').text('EXPIRED / INACTIVE').removeClass('text-success').addClass('text-danger');
+                                $('#memberExpiry').addClass('text-danger').addClass('font-weight-bold');
+                                $('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
+                                alert('WARNING: Keanggotaan sudah kadaluarsa!');
+                            } else {
+                                $('#memberStatus').text('ACTIVE').removeClass('text-danger').addClass('text-success');
+                                $('#memberExpiry').removeClass('text-danger').removeClass('font-weight-bold');
+                                $('button[type="submit"]').prop('disabled', false).addClass('btn-primary').removeClass('btn-secondary');
+                                
+                                // Auto focus locker
+                                setTimeout(function(){
+                                    $('#locker').focus();
+                                }, 300);
+                            }
                         } else {
-                            alert(response.message);
+                            // alert(response.message);
                             $('#memberDetails').hide();
+                            $('button[type="submit"]').prop('disabled', true);
                         }
                     },
                     error: function() {
-                        alert('An error occurred. Please try again.');
+                        console.log('Error fetching member data');
                     }
                 });
+            }
+
+            // Trigger on change (scanner usually hits Enter/Tab) or blur
+            $('#scanner_input').on('change', function() {
+                checkMember();
+            });
+
+            // Also check on manual confirm if for some reason the above didn't fire
+            $('#scanner_input').on('keypress', function(e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    checkMember();
+                }
             });
         });
     </script>

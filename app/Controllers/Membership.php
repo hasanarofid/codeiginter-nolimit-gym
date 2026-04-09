@@ -547,6 +547,12 @@ class Membership extends BaseController
 
     public function set_perpanjangan()
     {
+        // Restrict to Management Only
+        if (!in_array(session()->group, ['SA', 'AD', 'OP'])) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger" role="alert"><strong>Akses Ditolak:</strong> Perpanjangan membership hanya bisa dilakukan oleh manajemen.</div>');
+            return redirect()->to(base_url('/dashboard'));
+        }
+
         $paket      = $this->request->getVar('paket');
         $cabang     = $this->request->getVar('cabang');
         $idcust     = $this->request->getVar('idcust');

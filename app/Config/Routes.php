@@ -120,6 +120,19 @@ $routes->get('/report/fetch_transactions', 'ReportTrans::fetch_transactions');
 $routes->get('/report/umumvisit', 'ReportTrans::transaksi_umumvisit');
 $routes->get('/report/fetch_nonmember_trx', 'ReportTrans::fetch_nonmember_trx');
 
+// POS (Snack & Minuman)
+$routes->get('/pos', 'Pos::index');
+$routes->post('/pos/store', 'Pos::store');
+$routes->get('/pos/inventory', 'Pos::inventory');
+$routes->get('/pos/report', 'Pos::report');
+$routes->post('/pos/item-save', 'Pos::item_save');
+$routes->get('/pos/item-delete/(:segment)', 'Pos::item_delete/$1');
+
+// Expenses (Pengeluaran)
+$routes->get('/expenses', 'Expenses::index');
+$routes->post('/expenses/store', 'Expenses::store');
+$routes->get('/expenses/delete/(:num)', 'Expenses::delete/$1');
+
 
 // Users
 $routes->get('/user', 'AkunPengguna::index');

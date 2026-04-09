@@ -6,6 +6,11 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <?= anchor(base_url('customer'), 'Back', ['title' => 'data baru', 'class' => "d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm float-right"]) ?>
+        <?php if (in_array(session()->group, ['SA', 'AD', 'OP'])): ?>
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-right mr-2" data-toggle="modal" data-target="#modalPerpanjang">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Perpanjang
+            </button>
+        <?php endif; ?>
     </div>
     <div class="card-body">
         <div class="row">
@@ -246,4 +251,83 @@
         </div>
     </div>
 </div>
+
+<?php if (in_array(session()->group, ['SA', 'AD', 'OP'])): ?>
+<!-- Modal Perpanjangan -->
+<div class="modal fade" id="modalPerpanjang" tabindex="-1" aria-labelledby="modalPerpanjangLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPerpanjangLabel">Form Perpanjangan Membership</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?= base_url('membership-renewal') ?>" method="post">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Cabang <span class="text-danger">*</span></label>
+                        <select class="form-control" name="cabang" id="renew_cabang" required>
+                            <option value="">: Pilih Cabang</option>
+                            <?php foreach ($cabangs as $b): ?>
+                                <option value="<?= $b['id'] ?>" <?= $detail['kdcab'] == $b['id'] ? 'selected' : '' ?>><?= $b['nama'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Paket Membership <span class="text-danger">*</span></label>
+                        <select class="form-control" name="paket" id="renew_paket" required>
+                            <option value="">: Pilih Paket</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Metode Bayar <span class="text-danger">*</span></label>
+                        <select name="payment" class="form-control" required>
+                            <option value="">: Metode Bayar</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Qris">Qris</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="idcust" value="<?= $detail['id'] ?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perpanjangan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    function loadPaket(cabangId) {
+        if (cabangId) {
+            $('#renew_paket').empty().append('<option value="">: Loading...</option>');
+            $.ajax({
+                url: `<?= base_url("membership/getPaketByCabang") ?>/${cabangId}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#renew_paket').empty().append('<option value="">: Pilih Paket</option>');
+                    response.forEach(function(paket) {
+                        $('#renew_paket').append(`<option value="${paket.id}">${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
+                    });
+                }
+            });
+        }
+    }
+
+    // Load initial packages for the selected branch
+    loadPaket($('#renew_cabang').val());
+
+    $('#renew_cabang').on('change', function() {
+        loadPaket($(this).val());
+    });
+});
+</script>
+<?php endif; ?>
+
 <?= $this->endSection(); ?>
