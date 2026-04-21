@@ -91,9 +91,31 @@ class Visitors extends BaseController
         $handuk = $this->request->getVar('handuk');
         $user = $this->userId;
 
+        // Check Cross-Branch Access (7 Days Rule)
+        if ($customer['kdcab'] != $this->user_cabang) {
+            $first_visit = $this->modelvisitor->getFirstVisit($idmember, $this->user_cabang);
+            if ($first_visit) {
+                $first_date = new \DateTime($first_visit['created_at']);
+                $today_dt = new \DateTime(date('Y-m-d'));
+                $interval = $first_date->diff($today_dt);
+                $days = $interval->days;
+
+                if ($days >= 7) {
+                    $pesan = '<div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <strong>Akses Ditolak!</strong> Jatah akses 7 hari Anda di cabang ini sudah habis (Mulai sejak: ' . date('d M Y', strtotime($first_visit['created_at'])) . ').
+                        </div>';
+                    session()->setFlashdata('pesan', $pesan);
+                    return redirect()->to('/visitors/member')->withInput();
+                }
+            }
+        }
+
         $data = [
             'idmember' => $idmember,
-            'cabang' => $customer['kdcab'],
+            'cabang' => $this->user_cabang, // Use current branch instead of member home branch
             'locker' => $locker,
             'handuk' => $handuk,
             'user' => $user,
@@ -285,6 +307,31 @@ class Visitors extends BaseController
                     $expiry_text = date('M, d Y', strtotime($expired->expired_date));
                 }
 
+                // Cross-branch logic for AJAX
+                $is_cross_branch = ($member['kdcab'] != $this->user_cabang);
+                $cross_branch_msg = "";
+                $is_cross_expired = false;
+
+                if ($is_cross_branch) {
+                    $first_visit = $this->modelvisitor->getFirstVisit($memberId, $this->user_cabang);
+                    if ($first_visit) {
+                        $first_date = new \DateTime($first_visit['created_at']);
+                        $today_dt = new \DateTime(date('Y-m-d'));
+                        $interval = $first_date->diff($today_dt);
+                        $days = $interval->days;
+
+                        if ($days >= 7) {
+                            $is_cross_expired = true;
+                            $cross_branch_msg = "Akses 7 hari di cabang ini sudah HABIS (Mulai: " . date('d M Y', strtotime($first_visit['created_at'])) . ")";
+                        } else {
+                            $remaining = 7 - $days;
+                            $cross_branch_msg = "Member dari cabang lain. Hari ke-" . ($days + 1) . " (Sisa " . $remaining . " hari lagi)";
+                        }
+                    } else {
+                        $cross_branch_msg = "Member dari cabang lain. Ini adalah kunjungan PERTAMA di cabang ini (Akses 7 hari dimulai hari ini).";
+                    }
+                }
+
                 return $this->response
                     ->setHeader('X-CSRF-TOKEN', csrf_hash())
                     ->setJSON([
@@ -294,7 +341,10 @@ class Visitors extends BaseController
                             'nama' => $member['nama'],
                             'fp_image' => base_url('img/uploads/member/fp/' . $member['fp_image']),
                             'expiry_date' => $expiry_text,
-                            'is_expired' => $is_expired
+                            'is_expired' => $is_expired,
+                            'is_cross_branch' => $is_cross_branch,
+                            'is_cross_expired' => $is_cross_expired,
+                            'cross_branch_msg' => $cross_branch_msg
                         ],
                     ]);
             } else {

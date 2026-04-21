@@ -57,4 +57,12 @@ class ModelVisitor extends Model
         }
         return $data;
     }
+
+    public function getFirstVisit($idmember, $cabang)
+    {
+        return $this->where('idmember', $idmember)
+            ->where('cabang', $cabang)
+            ->orderBy('created_at', 'ASC')
+            ->first();
+    }
 }

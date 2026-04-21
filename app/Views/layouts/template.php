@@ -518,9 +518,20 @@
                                 $('#memberExpiry').addClass('text-danger').addClass('font-weight-bold');
                                 $('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
                                 alert('WARNING: Keanggotaan sudah kadaluarsa!');
+                            } else if (response.data.is_cross_expired) {
+                                $('#memberStatus').text('CROSS-BRANCH EXPIRED').removeClass('text-success').addClass('text-danger');
+                                $('#memberExpiry').text(response.data.cross_branch_msg).addClass('text-danger').addClass('font-weight-bold');
+                                $('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
+                                alert('WARNING: ' + response.data.cross_branch_msg);
                             } else {
-                                $('#memberStatus').text('ACTIVE').removeClass('text-danger').addClass('text-success');
-                                $('#memberExpiry').removeClass('text-danger').removeClass('font-weight-bold');
+                                if (response.data.is_cross_branch) {
+                                    $('#memberStatus').text('ACTIVE (CROSS-BRANCH)').removeClass('text-danger').addClass('text-success');
+                                    $('#memberExpiry').html(response.data.expiry_date + '<br><small class="text-info">' + response.data.cross_branch_msg + '</small>');
+                                } else {
+                                    $('#memberStatus').text('ACTIVE').removeClass('text-danger').addClass('text-success');
+                                    $('#memberExpiry').text(response.data.expiry_date).removeClass('text-danger').removeClass('font-weight-bold');
+                                }
+                                
                                 $('button[type="submit"]').prop('disabled', false).addClass('btn-primary').removeClass('btn-secondary');
                                 
                                 // Auto focus locker
