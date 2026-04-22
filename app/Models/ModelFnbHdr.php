@@ -11,7 +11,7 @@ class ModelFnbHdr extends Model
     protected $useAutoIncrement = false;
     protected $returnType       = 'array';
     protected $protectFields    = true;
-    protected $allowedFields    = ['hdr_id', 'kdcab', 'total_nominal', 'user'];
+    protected $allowedFields    = ['hdr_id', 'kdcab', 'total_nominal', 'payment_method', 'user'];
 
     // Dates
     protected $useTimestamps = true;

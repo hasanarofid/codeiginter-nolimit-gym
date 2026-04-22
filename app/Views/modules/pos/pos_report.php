@@ -35,7 +35,8 @@
                         <th width="50">No</th>
                         <th>Cabang</th>
                         <th>Waktu</th>
-                        <th>ID Transaksi</th>
+                         <th>ID Transaksi</th>
+                        <th>Metode</th>
                         <th>Nama Produk</th>
                         <th class="text-center">Qty</th>
                         <th class="text-right">Harga Satuan</th>
@@ -56,7 +57,14 @@
                             <td><?= $no++ ?></td>
                             <td><span class="badge badge-info"><?= $row->cabang_nama ?></span></td>
                             <td><?= date('d/m/Y H:i', strtotime($row->created_at)) ?></td>
-                            <td><small class="font-weight-bold text-primary"><?= $row->hdr_id ?></small></td>
+                             <td><small class="font-weight-bold text-primary"><?= $row->hdr_id ?></small></td>
+                            <td>
+                                <?php if (($row->payment_method ?? 'Tunai') == 'Tunai'): ?>
+                                    <span class="badge badge-success">Tunai</span>
+                                <?php else: ?>
+                                    <span class="badge badge-info">Non-Tunai</span>
+                                <?php endif; ?>
+                            </td>
                             <td><?= $row->item_nama ?></td>
                             <td class="text-center"><?= $row->qty ?></td>
                             <td class="text-right">Rp <?= number_format($row->current_price, 0, ',', '.') ?></td>
@@ -66,7 +74,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="bg-light">
-                        <th colspan="5" class="text-right">TOTAL TERJUAL:</th>
+                         <th colspan="6" class="text-right">TOTAL TERJUAL:</th>
                         <th class="text-center"><?= $total_qty ?></th>
                         <th class="text-right">GRAND TOTAL:</th>
                         <th class="text-right text-primary">Rp <?= number_format($grand_total, 0, ',', '.') ?></th>

@@ -70,9 +70,18 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-primary btn-block btn-lg" id="btnCheckout" disabled onclick="processCheckout()">
-                    <i class="fas fa-cash-register mr-2"></i> BAYAR
-                </button>
+                <div class="row no-gutters">
+                    <div class="col-6 pr-1">
+                        <button type="button" class="btn btn-success btn-block btn-lg" id="btnTunai" disabled onclick="processCheckout('Tunai')">
+                            <i class="fas fa-money-bill-wave mr-1"></i> TUNAI
+                        </button>
+                    </div>
+                    <div class="col-6 pl-1">
+                        <button type="button" class="btn btn-info btn-block btn-lg" id="btnNonTunai" disabled onclick="processCheckout('Non-Tunai')">
+                            <i class="fas fa-credit-card mr-1"></i> NON-TUNAI
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -130,7 +139,7 @@
         if (cart.length === 0) {
             body.append('<tr id="emptyCartRow"><td colspan="4" class="text-center py-4 text-muted">Keranjang kosong</td></tr>');
             $('#grandTotalLabel').text('Rp 0');
-            $('#btnCheckout').prop('disabled', true).html('<i class="fas fa-cash-register mr-2"></i> BAYAR');
+            $('#btnTunai, #btnNonTunai').prop('disabled', true);
             return;
         }
 
@@ -162,19 +171,28 @@
         });
 
         $('#grandTotalLabel').text('Rp ' + total.toLocaleString('id-ID'));
-        $('#btnCheckout').prop('disabled', false);
+        $('#btnTunai, #btnNonTunai').prop('disabled', false);
     }
 
-    function processCheckout() {
-        if (!confirm('Proses pembayaran sekarang?')) return;
+    function processCheckout(method) {
+        if (!confirm('Proses pembayaran ' + method.toUpperCase() + ' sekarang?')) return;
 
-        $('#btnCheckout').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Loading...');
+        const btnBackupTunai = $('#btnTunai').html();
+        const btnBackupNonTunai = $('#btnNonTunai').html();
+        
+        $('#btnTunai, #btnNonTunai').prop('disabled', true);
+        if (method === 'Tunai') {
+            $('#btnTunai').html('<i class="fas fa-spinner fa-spin"></i>');
+        } else {
+            $('#btnNonTunai').html('<i class="fas fa-spinner fa-spin"></i>');
+        }
 
         $.ajax({
             url: '<?= base_url('pos/store') ?>',
             type: 'POST',
             data: { 
                 cart: cart,
+                payment_method: method,
                 [$('input[name="<?= csrf_token() ?>"]').attr('name')]: $('input[name="<?= csrf_token() ?>"]').val()
             },
             success: function(response) {
@@ -184,12 +202,17 @@
                     renderCart();
                 } else {
                     alert('Error: ' + response.message);
-                    $('#btnCheckout').prop('disabled', false).html('<i class="fas fa-cash-register mr-2"></i> BAYAR');
+                }
+            },
+            complete: function() {
+                $('#btnTunai').html(btnBackupTunai);
+                $('#btnNonTunai').html(btnBackupNonTunai);
+                if (cart.length > 0) {
+                    $('#btnTunai, #btnNonTunai').prop('disabled', false);
                 }
             },
             error: function() {
                 alert('Terjadi kesalahan koneksi');
-                $('#btnCheckout').prop('disabled', false).html('<i class="fas fa-cash-register mr-2"></i> BAYAR');
             }
         });
     }

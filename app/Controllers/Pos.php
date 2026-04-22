@@ -37,6 +37,8 @@ class Pos extends BaseController
     public function store()
     {
         $cart = $this->request->getPost('cart');
+        $payment_method = $this->request->getPost('payment_method') ?? 'Tunai';
+
         if (empty($cart)) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Cart is empty']);
         }
@@ -70,6 +72,7 @@ class Pos extends BaseController
             'hdr_id' => $id_trx,
             'kdcab' => $this->user_cabang,
             'total_nominal' => $total,
+            'payment_method' => $payment_method,
             'user' => $this->userId
         ]);
 
