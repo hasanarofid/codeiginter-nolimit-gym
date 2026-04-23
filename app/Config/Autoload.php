@@ -47,6 +47,10 @@ class Autoload extends AutoloadConfig
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
         'Pusher' => ROOTPATH . 'vendor/pusher/pusher-php-server/src',
+        'PhpOffice\PhpSpreadsheet' => ROOTPATH . 'vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
+        'ZipStream' => ROOTPATH . 'vendor/maennchen/zipstream-php/src',
+        'Markbaker\Matrix' => ROOTPATH . 'vendor/markbaker/matrix/classes/src',
+        'Markbaker\Complex' => ROOTPATH . 'vendor/markbaker/complex/classes/src',
     ];
 
     /**

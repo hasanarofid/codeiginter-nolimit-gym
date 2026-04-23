@@ -53,7 +53,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Membership Expired</div>
                                         <?php
-                                        if ($expired->expired_date != null):
+                                        if ($expired && $expired->expired_date != null):
                                         ?>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?= date('D, d M Y', strtotime($expired->expired_date)) ?></div>
                                         <?php
