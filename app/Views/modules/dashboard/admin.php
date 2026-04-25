@@ -202,6 +202,91 @@
     </div>
 </div>
 
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-dark text-white">
+                <h5 class="m-0 font-weight-bold">CLASS SCHEDULE</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Senin</th>
+                                <th>Selasa</th>
+                                <th>Rabu</th>
+                                <th>Kamis</th>
+                                <th>Jumat</th>
+                                <th>Sabtu</th>
+                                <th>Minggu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($schedule_class as $row): ?>
+                                <tr>
+                                    <td class="align-middle"><strong><?= $row['Waktu'] ?></strong></td>
+                                    <td class="align-middle"><?= $row['Senin'] ?></td>
+                                    <td class="align-middle"><?= $row['Selasa'] ?></td>
+                                    <td class="align-middle"><?= $row['Rabu'] ?></td>
+                                    <td class="align-middle"><?= $row['Kamis'] ?></td>
+                                    <td class="align-middle"><?= $row['Jumat'] ?></td>
+                                    <td class="align-middle"><?= $row['Sabtu'] ?></td>
+                                    <td class="align-middle"><?= $row['Minggu'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4 mb-4">
+    <div class="col-md-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-danger text-white">
+                <h5 class="m-0 font-weight-bold">BOXING / MUAYTHAI SCHEDULE</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center table-sm">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Senin</th>
+                                <th>Selasa</th>
+                                <th>Rabu</th>
+                                <th>Kamis</th>
+                                <th>Jumat</th>
+                                <th>Sabtu</th>
+                                <th>Minggu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($schedule_boxing as $row): ?>
+                                <tr>
+                                    <td class="align-middle"><strong><?= $row['Waktu'] ?></strong></td>
+                                    <td class="align-middle"><?= $row['Senin'] ?></td>
+                                    <td class="align-middle"><?= $row['Selasa'] ?></td>
+                                    <td class="align-middle"><?= $row['Rabu'] ?></td>
+                                    <td class="align-middle"><?= $row['Kamis'] ?></td>
+                                    <td class="align-middle"><?= $row['Jumat'] ?></td>
+                                    <td class="align-middle"><?= $row['Sabtu'] ?></td>
+                                    <td class="align-middle"><?= $row['Minggu'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- PushNotification Modal -->
 <!-- Modal Notifikasi -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">

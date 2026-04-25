@@ -475,6 +475,22 @@
             // Set konten notifikasi di modal
             document.getElementById('notificationMessage').innerText = data.message;
 
+            // Play alarm sound 3 times
+            var audio = new Audio('<?= base_url("audio/alarm.mp3") ?>');
+            var playCount = 0;
+            
+            function playAlarm() {
+                if (playCount < 3) {
+                    audio.play().catch(function(error) {
+                        console.log("Audio play failed: ", error);
+                    });
+                    playCount++;
+                }
+            }
+
+            audio.onended = playAlarm;
+            playAlarm();
+
             // Tampilkan modal
             $('#notificationModal').modal('show');
         });

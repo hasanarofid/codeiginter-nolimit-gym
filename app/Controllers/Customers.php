@@ -8,6 +8,7 @@ use App\Models\Model_customer;
 use App\Models\Model_user;
 use App\Models\ModelMemtrans;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use App\Libraries\CardGenerator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -341,6 +342,25 @@ class Customers extends BaseController
         // Atur header agar output langsung berupa gambar PNG
         header('Content-Type: image/png');
         echo $barcode;
+    }
+
+    public function download_card($customerId)
+    {
+        $detail = $this->modelcustomer->get_customer($customerId);
+        if (!$detail) {
+            return redirect()->back()->with('pesan', '<div class="alert alert-danger">Member tidak ditemukan.</div>');
+        }
+
+        // Cek jika ada frame khusus di folder public/img/card_frame.png
+        $framePath = FCPATH . 'img/card_frame.png'; 
+        
+        $generator = new CardGenerator();
+        $cardImage = $generator->generate($detail, $framePath);
+
+        return $this->response
+            ->setHeader('Content-Type', 'image/png')
+            ->setHeader('Content-Disposition', 'attachment; filename="MemberCard_' . $customerId . '.png"')
+            ->setBody($cardImage);
     }
 
     public function export()

@@ -71,6 +71,8 @@ class Membership extends BaseController
             'payment' => 'required',
             'fotoktp' => 'uploaded[fotoktp]|is_image[fotoktp]|mime_in[fotoktp,image/jpg,image/jpeg,image/png]|max_size[fotoktp,4096]',
             'foto' => 'uploaded[foto]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]|max_size[foto,4096]',
+            'password' => 'required|min_length[8]',
+            'pass_confirm' => 'required|matches[password]',
         ], [
             'firstname' => ['required' => 'Harus diisi'],
             'hpwa' => ['required' => 'No Hp / WA harus diisi'],
@@ -80,7 +82,9 @@ class Membership extends BaseController
             'paket' => ['required' => 'Harus di pilih'],
             'payment' => ['required' => 'Harus di pilih'],
             'fotoktp' => ['uploaded' => 'Upload foto KTP', 'is_image' => 'Gambar tidak valid', 'mime_in' => 'Format harus jpg, jpeg, png', 'max_size' => 'Maksimal file 4MB'],
-            'foto' => ['uoloaded' => 'Upload foto profil', 'is_image' => 'Gambar tidak valid', 'mime_in' => 'Format harus jpg, jpeg, png', 'max_size' => 'Maksimal file 4MB'],
+            'foto' => ['uploaded' => 'Upload foto profil', 'is_image' => 'Gambar tidak valid', 'mime_in' => 'Format harus jpg, jpeg, png', 'max_size' => 'Maksimal file 4MB'],
+            'password' => ['required' => 'Password harus diisi', 'min_length' => 'Minimal 8 karakter'],
+            'pass_confirm' => ['required' => 'Konfirmasi password harus diisi', 'matches' => 'Password tidak cocok'],
         ]);
 
         if (!$this->validation->withRequest($this->request)->run()) {
@@ -147,13 +151,25 @@ class Membership extends BaseController
                 'email' => $email,
                 'alamat' => $alamat,
                 'barcode' => null,
-                'password' => null,
+                'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
                 'idcard_image' => $ktpName,
                 'fp_image' => $fpName,
                 'user' => null
             ];
 
             $this->modelcustomer->insert($newData);
+
+            // Create user for login (Group MS = Membership)
+            $newUser = [
+                'UserID'    => $email,
+                'Password'  => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
+                'Nama'      => $nama,
+                'UserGroup' => 'MS',
+                'Ket'       => 'disabled', // Set status to disabled until approved
+                'kdcab'     => $cabang,
+                'CreatedDate' => date('Y-m-d H:i:s')
+            ];
+            $this->modeluser->insert($newUser);
 
             $getpaket = $this->modelmembership->get_membership($paket);
             $transid = $this->generateUniqueId($cabang);

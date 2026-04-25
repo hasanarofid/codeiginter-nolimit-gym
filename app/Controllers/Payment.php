@@ -199,59 +199,71 @@ class Payment extends BaseController
                 // $this->modelmemtrans->update(null, ['status' => 0]);
                 $updt = $this->modelmemtrans->update($idtrx, $data_up);
 
-                if (($updt === true) && ($custonuser == 0)) {
-                    // insert to users
-                    $newpas = $this->generatePassword();
-                    $data_users = [
-                        'UserID' => strtolower($getcustomer['email']),
-                        'Password' => password_hash($newpas, PASSWORD_DEFAULT),
-                        'Nama' => $getcustomer['nama'],
-                        'UserGroup' => 'MS',
-                        'LastActivity' => null,
-                        'LastIP' => null,
-                        'CurrentActivity' => null,
-                        'CurrentIP' => null,
-                        'CreatedDate' => date('Y-m-d H:i:s'),
-                        'CreatedBy' => $this->userId,
-                        'Ket' => 'Membership',
-                        'kdcab' => $getcustomer['kdcab']
-                    ];
-                    // dd($data_users);
-    
-                    $this->modeluser->insert($data_users);
+                if ($updt === true) {
+                    if ($custonuser == 0) {
+                        // insert to users
+                        $newpas = $this->generatePassword();
+                        $data_users = [
+                            'UserID' => strtolower($getcustomer['email']),
+                            'Password' => password_hash($newpas, PASSWORD_DEFAULT),
+                            'Nama' => $getcustomer['nama'],
+                            'UserGroup' => 'MS',
+                            'LastActivity' => null,
+                            'LastIP' => null,
+                            'CurrentActivity' => null,
+                            'CurrentIP' => null,
+                            'CreatedDate' => date('Y-m-d H:i:s'),
+                            'CreatedBy' => $this->userId,
+                            'Ket' => 'Membership',
+                            'kdcab' => $getcustomer['kdcab']
+                        ];
+                        // dd($data_users);
+        
+                        $this->modeluser->insert($data_users);
 
-                    // echo $x == true ? 'sukses' : 'tidak tersimpan';
+                        // echo $x == true ? 'sukses' : 'tidak tersimpan';
 
-                    $emailData = [
-                        'emailto' => $getcustomer['email'],
-                        'nama'  => $getcustomer['nama'],
-                        'default_pass' => $newpas,
-                        'link' => base_url('/login')
-                    ];
+                        $emailData = [
+                            'emailto' => $getcustomer['email'],
+                            'nama'  => $getcustomer['nama'],
+                            'default_pass' => $newpas,
+                            'link' => base_url('/login')
+                        ];
 
-                    // dd($emailData);
-                    $conf_email = service('email');
+                        // dd($emailData);
+                        $conf_email = service('email');
 
-                    $conf_email->setFrom('noreply@nolimitstraining.id', 'NoLimits');
-                    $conf_email->setTo($emailData['emailto']);
-                    $conf_email->setSubject('Info Payment Confirmation');
-                    $message = view('modules/email/email_password', $emailData);
-                    $conf_email->setMessage($message);
+                        $conf_email->setFrom('noreply@nolimitstraining.id', 'NoLimits');
+                        $conf_email->setTo($emailData['emailto']);
+                        $conf_email->setSubject('Info Payment Confirmation');
+                        $message = view('modules/email/email_password', $emailData);
+                        $conf_email->setMessage($message);
 
-                    if ($conf_email->send()) {
+                        if ($conf_email->send()) {
+                            session()->setFlashdata('konfirmpass', '<div class="alert alert-success" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <strong>Success: </strong> Konfirmasi berhasil dikirim ke email, informasikan kepada member 
+                                </div>');
+                        } else {
+                            // $data['email_error'] = '';
+                            session()->setFlashdata('konfirmpass', '<div class="alert alert-warning" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <strong>Oops: </strong> Failed to send email confirmation. Please try again later.
+                                </div>');
+                        }
+                    } else {
+                        // Activate existing user account
+                        $this->modeluser->update($getcustomer['email'], ['Ket' => 'Membership']);
+                        
                         session()->setFlashdata('konfirmpass', '<div class="alert alert-success" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                                <strong>Success: </strong> Konfirmasi berhasil dikirim ke email, informasikan kepada member 
-                            </div>');
-                    } else {
-                        // $data['email_error'] = '';
-                        session()->setFlashdata('konfirmpass', '<div class="alert alert-warning" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <strong>Oops: </strong> Failed to send email confirmation. Please try again later.
+                                <strong>Success: </strong> Akun Member telah diaktifkan. Member sekarang bisa login menggunakan email dan password mereka.
                             </div>');
                     }
                 }

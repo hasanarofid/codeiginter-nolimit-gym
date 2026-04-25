@@ -80,12 +80,6 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <input type="email" class="form-control <?= session('errors.email') ? 'is-invalid' : '' ?>" name="email" id="email" value="<?= $email ?>" placeholder="Email Address">
-                                                <div class="invalid-feedback">
-                                                    <?= session('errors.email') ?>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
                                                 <select name="cabang" id="cabang" class="form-control <?= session('errors.cabang') ? 'is-invalid' : '' ?>">
                                                     <option value="">: Lokasi Gym</option>
                                                     <?php
@@ -127,6 +121,30 @@
 
                                                 <div class="invalid-feedback">
                                                     <?= session('errors.payment') ?>
+                                                </div>
+                                            </div>
+
+                                            <hr/>
+                                            
+                                            <div class="form-group">
+                                                <input type="email" class="form-control <?= session('errors.email') ? 'is-invalid' : '' ?>" name="email" id="email" value="<?= $email ?>" placeholder="Email Address">
+                                                <div class="invalid-feedback">
+                                                    <?= session('errors.email') ?>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-row">
+                                                <div class="form-group col">
+                                                    <input type="password" class="form-control <?= session('errors.password') ? 'is-invalid' : '' ?>" name="password" id="password" placeholder="Password">
+                                                    <div class="invalid-feedback">
+                                                        <?= session('errors.password') ?>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col">
+                                                    <input type="password" class="form-control <?= session('errors.pass_confirm') ? 'is-invalid' : '' ?>" name="pass_confirm" id="pass_confirm" placeholder="Repeat Password">
+                                                    <div class="invalid-feedback">
+                                                        <?= session('errors.pass_confirm') ?>
+                                                    </div>
                                                 </div>
                                             </div>
 

@@ -39,7 +39,10 @@
 
                                         <div class="text-center">
                                             <?= $barcode ?><br />
-                                            <small><?= $detail['id'] ?></small>
+                                            <small><?= $detail['id'] ?></small><br/>
+                                            <a href="<?= base_url('customer/barcode/download/' . $detail['id']) ?>" class="btn btn-sm btn-primary mt-3">
+                                                <i class="fas fa-download"></i> Download Kartu
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="col-auto">

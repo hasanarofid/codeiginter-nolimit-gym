@@ -27,10 +27,19 @@ class Dashboard extends BaseController
         $pending_req = $this->modelmemtrans->get_pending_request($getUser->kdcab)->jml;
         $active_member = $this->modelmemtrans->get_member_active($getUser->kdcab)->jml;
 
+        // Fetch Schedule Data
+        $modelKelas = new \App\Models\ModelKelas();
+        $modelKlsBoxing = new \App\Models\ModelKlsBoxing();
+        
+        // Handle % (All Branches) for Super Admin - focus on their primary branch or a default one
+        $cabang_id = ($getUser->kdcab == '%') ? 'NL01' : $getUser->kdcab; 
+
         $data = [
             'title' => 'Dashboard',
             'cabangs' => $this->modelcabang->get_cabang($this->user_cabang),
-            'dashboard' => session()->dashboard
+            'dashboard' => session()->dashboard,
+            'schedule_class' => $modelKelas->tabel_kelas($cabang_id),
+            'schedule_boxing' => $modelKlsBoxing->tabel_bothai($cabang_id),
         ];
 
         // data pendapatan yang muncul di dashboard
