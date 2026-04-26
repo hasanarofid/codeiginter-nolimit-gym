@@ -141,12 +141,12 @@ class KelasBoxing extends BaseController
         if ($edit === false) {
             return redirect()->back()->withInput()->with('errors', $this->modelboxing->errors());
         } else {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data Berhasil di Rubah
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/boxing');
         }

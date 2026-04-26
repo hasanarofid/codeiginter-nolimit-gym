@@ -68,12 +68,10 @@ class Visitors extends BaseController
         // Check Membership Expiry
         $exp = $this->modelmemtrans->get_expired($idmember);
         $is_expired = true;
-        if ($exp) {
-            $today = date('Y-m-d');
-            $expired_date = date('Y-m-d', strtotime($exp->expired_date));
-            if ($expired_date >= $today) {
-                $is_expired = false;
-            }
+        $expired_date = ($exp) ? date('Y-m-d', strtotime($exp->expired_date)) : null;
+        $today = date('Y-m-d');
+        if ($expired_date && $expired_date >= $today) {
+            $is_expired = false;
         }
 
         if ($is_expired) {
@@ -158,12 +156,12 @@ class Visitors extends BaseController
         $update = $this->modelvisitor->update($idx, $data);
 
         if ($update) {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data kunjungan tersimpan
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/visitors/member');
         }
@@ -249,12 +247,12 @@ class Visitors extends BaseController
         $save = $this->modelumum->insert($data);
 
         if ($save) {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data kunjungan tersimpan
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/visitors/nonmember');
         }
@@ -274,12 +272,12 @@ class Visitors extends BaseController
         $update = $this->modelumum->update($idx, $data);
 
         if ($update) {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data kunjungan tersimpan
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/visitors/nonmember');
         }
@@ -301,10 +299,13 @@ class Visitors extends BaseController
                 $expiry_text = 'No Active Membership';
                 
                 if ($expired) {
-                    $today = date('Y-m-d');
                     $expired_date = date('Y-m-d', strtotime($expired->expired_date));
+                    $today = date('Y-m-d');
                     $is_expired = ($expired_date < $today);
                     $expiry_text = date('M, d Y', strtotime($expired->expired_date));
+                } else {
+                    $expired_date = null;
+                    $expiry_text = 'N.A';
                 }
 
                 // Cross-branch logic for AJAX

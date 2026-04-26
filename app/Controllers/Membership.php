@@ -65,7 +65,7 @@ class Membership extends BaseController
             'firstname' => 'required',
             'hpwa' => 'required',
             'alamat' => 'required',
-            'email' => 'required|valid_email|is_unique[customers.email]',
+            'email' => 'required|valid_email|is_unique[customers.email]|is_unique[user.UserID]',
             'cabang' => 'required',
             'paket' => 'required',
             'payment' => 'required',
@@ -157,6 +157,10 @@ class Membership extends BaseController
                 'user' => null
             ];
 
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
             $this->modelcustomer->insert($newData);
 
             // Create user for login (Group MS = Membership)
@@ -194,7 +198,6 @@ class Membership extends BaseController
             ];
 
             sendPusherNotification('my-channel', 'my-event', $dataNotif);
-            // return $this->response->setJSON(['status' => 'success']);
 
             // Send confirmation email
             $getCabang = $this->modelcabang->get_detail($cabang);
@@ -211,30 +214,35 @@ class Membership extends BaseController
                 'transfer' => $tfrek
             ];
 
-            // dd($emailData);
             $conf_email = service('email');
-
             $conf_email->setFrom('noreply@nolimitstraining.id', 'NoLimits');
             $conf_email->setTo($emailData['emailto']);
             $conf_email->setSubject('Info Registration Confirmation');
             $message = view('modules/email/email_registration_non_midtrans', $emailData);
             $conf_email->setMessage($message);
 
-            if ($conf_email->send()) {
-                session()->setFlashdata('pesan', '<div class="alert alert-success" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <strong>Success: </strong> Pendaftaran berhasil, lakukan pembayaran untuk aktivasi 
-                            </div>');
-            } else {
-                session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                                <strong>Oops: </strong> Failed to send email confirmation. Please try again later.
-                            </div>');
+            if (!$conf_email->send()) {
+                log_message('error', $conf_email->printDebugger(['headers']));
+                throw new \Exception('Gagal mengirim email konfirmasi.');
             }
+
+            $db->transCommit();
+
+            session()->setFlashdata('pesan', '<div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <strong>Success: </strong> Pendaftaran berhasil, lakukan pembayaran untuk aktivasi 
+                        </div>');
+        } catch (\Exception $e) {
+            $db->transRollback();
+            session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <strong>Oops: </strong> ' . $e->getMessage() . ' Silakan coba lagi nanti.
+                        </div>');
+        }
         } else {
             session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -342,12 +350,12 @@ class Membership extends BaseController
         if ($simpan === false) {
             return redirect()->back()->withInput()->with('errors', $this->modelmembership->errors());
         } else {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data Tersimpan
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/membership');
         }
@@ -476,6 +484,7 @@ class Membership extends BaseController
                                 <strong>Success: </strong> Cek email untuk melakukan perubahan password
                             </div>');
             } else {
+                log_message('error', $conf_email->printDebugger(['headers']));
                 // $data['email_error'] = '';
                 session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

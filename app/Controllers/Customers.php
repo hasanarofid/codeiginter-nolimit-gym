@@ -88,6 +88,10 @@ class Customers extends BaseController
     public function update_pass()
     {
         $detail = $this->modelcustomer->get_by_email($this->userId);
+        if (!$detail) {
+            return redirect()->to('/dashboard')->with('pesan', '<div class="alert alert-warning">Profil customer tidak ditemukan atau User bukan merupakan Member.</div>');
+        }
+
         $data = [
             'title' => 'Ubah Password Member',
             'action' => base_url('/customer/password_update'),
@@ -123,7 +127,7 @@ class Customers extends BaseController
         $email      = $this->request->getPost('email');
 
         $cek_pass   = $this->modeluser->get_user($email);
-        if (password_verify($passlama, $cek_pass->Password)) {
+        if ($cek_pass && password_verify($passlama, $cek_pass->Password)) {
             $up_pass = $this->modeluser->update($email, ['Password' => password_hash($passbaru, PASSWORD_DEFAULT)]);
             if ($up_pass === false) {
                 return redirect()->back()->withInput()->with('errors', $this->modeluser->errors());
@@ -132,7 +136,7 @@ class Customers extends BaseController
                 return redirect()->to('/customer/password');
             }
         } else {
-            session()->setFlashdata('pesan', '<div class="alert alert-warning">Password lama salah</div>');
+            session()->setFlashdata('pesan', '<div class="alert alert-warning">Password lama salah atau user tidak ditemukan</div>');
             return redirect()->to('/customer/password');
         }
     }

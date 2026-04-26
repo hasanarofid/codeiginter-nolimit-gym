@@ -206,12 +206,12 @@ class Trainer extends BaseController
         ];
 
         if ($this->modeltrainer->update($id, $data)) {
-            $pesan = `<div class="alert alert-success" role="alert">
+            $pesan = '<div class="alert alert-success" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                     Data Berhasil di Rubah
-                </div>`;
+                </div>';
             session()->setFlashdata('pesan', $pesan);
             return redirect()->to('/trainer');
         } else {
