@@ -28,17 +28,17 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'mail.nolimitstraining.id';
+    public string $SMTPHost = 'smtp.sumopod.com';
 
     /**
      * SMTP Username
      */
-    public string $SMTPUser = 'noreply@nolimitstraining.id';
+    public string $SMTPUser = 'cmoft94fg11otor086xrqviwe';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'j&WZW6}wN3Qb';
+    public string $SMTPPass = 'Xp1kWKG0D1cipBE5AKD8q1HUyZV5crbk';
 
     /**
      * SMTP Port

@@ -43,7 +43,7 @@
                             </table>
                             <p style="margin-bottom:50px;color:#6e6e6e;">
                                 Silahkan konfirmasi pembayaran dengan mengirim bukti pembayaran melalui link ini : <a href="https://wa.me/<?= $hp ?>?text=Konfirmasi%20pembayaran%20membership%20No%20Limits" target="_blank">Klik disini</a>
-                                atau WA ke <strong><?= $hp ?>/strong>.
+                                atau WA ke <strong><?= $hp ?></strong>.
                             </p>
 
                             <p style="margin-top:65px;color:#6e6e6e;">
