@@ -201,8 +201,6 @@ class Membership extends BaseController
 
             // Send confirmation email
             $getCabang = $this->modelcabang->get_detail($cabang);
-            $tfrek = '<strong>' . strtolower(strtoupper($getCabang->bank_name)) . ' dengan Rek. ' . $getCabang->bank_rek . ' , Atas nama : ' . $getCabang->bank_acc_an . '</strong>';
-
             $emailData = [
                 'emailto' => $email,
                 'cabang' => $getCabang->nama,
@@ -211,7 +209,6 @@ class Membership extends BaseController
                 'paket' => $getpaket['nama'],
                 'nominal' => $getpaket['nominal'],
                 'hp' => $getCabang->hp,
-                'transfer' => $tfrek
             ];
 
             $conf_email = service('email');
@@ -232,7 +229,7 @@ class Membership extends BaseController
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
-                            <strong>Success: </strong> Pendaftaran berhasil, lakukan pembayaran untuk aktivasi 
+                             <strong>Success: </strong> Pendaftaran berhasil, segera lakukan konfirmasi ke kasir untuk aktivasi keanggotaan Anda. 
                         </div>');
         } catch (\Exception $e) {
             $db->transRollback();
