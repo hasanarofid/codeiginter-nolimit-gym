@@ -64,13 +64,7 @@ class Model_customer extends Model
         $lastId = $this->get_count($kdcab)->jml;
         $lastId += 1;
 
-        if (strlen($lastId) == 1) {
-            $newId = $kdcab . '00' . $lastId;
-        } else if (strlen($lastId) == 2) {
-            $newId = $kdcab . '0' . $lastId;
-        } else {
-            $newId = $kdcab . '' . $lastId;
-        }
+        $newId = $kdcab . str_pad($lastId, 4, '0', STR_PAD_LEFT);
 
         return $newId;
     }

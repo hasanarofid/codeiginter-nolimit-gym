@@ -94,17 +94,7 @@ class Membership extends BaseController
         helper('text'); // untuk manipulasi string
 
         $cabang = $this->request->getVar('cabang');
-        $lastId = $this->modelcustomer->get_count($cabang)->jml;
-
-        $lastId += 1;
-
-        if (strlen($lastId) == 1) {
-            $newId = $cabang . '00' . $lastId;
-        } else if (strlen($lastId) == 2) {
-            $newId = $cabang . '0' . $lastId;
-        } else {
-            $newId = $cabang . '' . $lastId;
-        }
+        $newId = $this->modelcustomer->generateID($cabang);
 
         $paket = $this->request->getVar('paket');
         $payment = $this->request->getVar('payment');
