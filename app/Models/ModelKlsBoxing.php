@@ -85,7 +85,7 @@ class ModelKlsBoxing extends Model
                 MAX(CASE WHEN b.hari = 'Minggu' THEN CONCAT('<h4>',b.nama, '</h4><br /> ', t.nama) ELSE '' END) AS Minggu
             FROM 
                 kelas_boxing b
-            JOIN 
+            LEFT JOIN 
                 trainer t ON b.trainer = t.id
             WHERE b.kdcab = '$cabang'
             GROUP BY 

@@ -95,6 +95,18 @@ class ModelMemtrans extends Model
         return $b->get()->getRow();
     }
 
+    public function get_daily_earning($cabang)
+    {
+        $b = $this->table($this->table);
+        $b->select('SUM(nominal) as total');
+        $b->where('payment_date = CURDATE()');
+        if ($cabang != '%') {
+            $b->like('id', $cabang, 'after');
+        }
+
+        return $b->get()->getRow();
+    }
+
     public function get_pending_request($cabang)
     {
         $v = $this->table($this->table);

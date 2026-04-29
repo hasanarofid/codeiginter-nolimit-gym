@@ -125,6 +125,8 @@ $routes->get('/report/trans_membership', 'ReportTrans::transaksi_membership');
 $routes->get('/report/fetch_transactions', 'ReportTrans::fetch_transactions');
 $routes->get('/report/umumvisit', 'ReportTrans::transaksi_umumvisit');
 $routes->get('/report/fetch_nonmember_trx', 'ReportTrans::fetch_nonmember_trx');
+$routes->get('/report/rekap_harian', 'ReportTrans::rekap_harian');
+$routes->get('/report/fetch_rekap_harian', 'ReportTrans::fetch_rekap_harian');
 
 // POS (Snack & Minuman)
 $routes->get('/pos', 'Pos::index');

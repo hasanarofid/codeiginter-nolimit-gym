@@ -44,15 +44,30 @@ class Dashboard extends BaseController
 
         // data pendapatan yang muncul di dashboard
         // menyesuaikan level admin & cabang
+        $daily_earning = $this->modelmemtrans->get_daily_earning($getUser->kdcab);
+        $today_transactions = $this->modelmemtrans->get_mem_trans($getUser->kdcab, date('Y-m-d'), date('Y-m-d'));
+        
+        $transactions_with_status = [];
+        foreach ($today_transactions as $tr) {
+            $prevCount = $this->db->table('membership_trans')
+                            ->where('custid', $tr->custid)
+                            ->where('payment_date <', $tr->payment_date)
+                            ->where('status', 1)
+                            ->countAllResults();
+            $tr->is_renew = ($prevCount > 0);
+            $transactions_with_status[] = $tr;
+        }
 
         // total dari cabang2, lihat detail dari report
         $data['report'] = [
+            'daily_earning' => 'Rp.' . number_format($daily_earning->total ?? 0, 0, ',', '.'),
             'monthly_earning' => 'Rp.' . number_format($monthly_earning, 0, ',', '.'),
             'anual_earning' => 'Rp.' . number_format($anual_earning, 0, ',', '.'),
             'pending_req' => $pending_req,
             'member_active' => $active_member,
             'customer_visit' => 115,
             'perpanjangan' => $this->modelmemtrans->get_perpanjangan($this->user_cabang),
+            'today_transactions' => $transactions_with_status
         ];
         $data['title'] = 'Dashboard';
 
