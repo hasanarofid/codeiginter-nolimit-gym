@@ -45,42 +45,30 @@
                 </div>
             </div>
             <div class="col-xl-6 col-md-6">
-                <div class="row">
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-danger shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Membership Expired</div>
-                                        <?php
-                                        if ($expired && $expired->expired_date != null):
-                                        ?>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= date('D, d M Y', strtotime($expired->expired_date)) ?></div>
-                                        <?php
-                                        endif;
-                                        ?>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-users fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2 text-center">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Membership Expired</div>
+                                <?php if ($expired && $expired->expired_date != null): ?>
+                                    <div class="h5 mb-3 font-weight-bold text-gray-800"><?= date('D, d M Y', strtotime($expired->expired_date)) ?></div>
+                                <?php else: ?>
+                                    <div class="h5 mb-3 font-weight-bold text-gray-800 text-danger">N.A</div>
+                                <?php endif; ?>
+                                
+                                <hr/>
+
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Barcode</div>
+                                <?= $barcode ?>
+                                <br/>
+                                <small><?= $detail['id'] ?></small>
+                                <br/>
+                                <a href="<?= base_url('customer/barcode/download/' . $detail['id']) ?>" class="btn btn-sm btn-primary shadow-sm mt-3">
+                                    <i class="fas fa-download fa-sm text-white-50"></i> Download Member Card
+                                </a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2 text-center">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Barcode</div>
-                                        <?= $barcode ?>
-                                        <br/>
-                                        <small><?= $detail['id'] ?></small>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-barcode fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
+                            <div class="col-auto">
+                                <i class="fas fa-id-card fa-2x text-gray-300"></i>
                             </div>
                         </div>
                     </div>
