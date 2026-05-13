@@ -532,12 +532,12 @@
                             if (response.data.is_expired) {
                                 $('#memberStatus').text('EXPIRED / INACTIVE').removeClass('text-success').addClass('text-danger');
                                 $('#memberExpiry').addClass('text-danger').addClass('font-weight-bold');
-                                $('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
+                                $('#scanner_input').closest('form').find('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
                                 alert('WARNING: Keanggotaan sudah kadaluarsa!');
                             } else if (response.data.is_cross_expired) {
                                 $('#memberStatus').text('CROSS-BRANCH EXPIRED').removeClass('text-success').addClass('text-danger');
                                 $('#memberExpiry').text(response.data.cross_branch_msg).addClass('text-danger').addClass('font-weight-bold');
-                                $('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
+                                $('#scanner_input').closest('form').find('button[type="submit"]').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
                                 alert('WARNING: ' + response.data.cross_branch_msg);
                             } else {
                                 if (response.data.is_cross_branch) {
@@ -548,7 +548,7 @@
                                     $('#memberExpiry').text(response.data.expiry_date).removeClass('text-danger').removeClass('font-weight-bold');
                                 }
                                 
-                                $('button[type="submit"]').prop('disabled', false).addClass('btn-primary').removeClass('btn-secondary');
+                                $('#scanner_input').closest('form').find('button[type="submit"]').prop('disabled', false).addClass('btn-primary').removeClass('btn-secondary');
                                 
                                 // Auto focus locker
                                 setTimeout(function(){
@@ -558,7 +558,7 @@
                         } else {
                             // alert(response.message);
                             $('#memberDetails').hide();
-                            $('button[type="submit"]').prop('disabled', true);
+                            $('#scanner_input').closest('form').find('button[type="submit"]').prop('disabled', true);
                         }
                     },
                     error: function() {

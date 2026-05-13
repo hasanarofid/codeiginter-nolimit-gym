@@ -141,7 +141,7 @@
                                         <td><?= $pengunjung['locker'] ?></td>
                                         <td><?= strtoupper($pengunjung['handuk']) ?></td>
                                         <td>
-                                            <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#pengunjung<?= $pengunjung['idx'] ?>" <?= $btn_out ?>>Out</button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#pengunjung<?= $pengunjung['idx'] ?>" <?= $btn_out ?>>Out</button>
                                         </td>
                                     </tr>
 
