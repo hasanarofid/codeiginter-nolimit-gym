@@ -194,9 +194,9 @@ class Visitors extends BaseController
             'locker' => old('locker'),
             'handuk' => old('handuk'),
             'prices' => $json,
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
+            'cabang' => $this->modelcabang->get_cabang('%'),
             'user_cabang' => $this->user_cabang,
-            'visitors' => $this->modelumum->get_visitor($this->user_cabang),
+            'visitors' => $this->modelumum->get_visitor('%'),
         ];
 
         return view('modules/visitor/visitor_nonmember_form', $data);

@@ -1,6 +1,6 @@
 <?php
 
-namespace APP\Controllers;
+namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Model_cabang;
@@ -20,7 +20,7 @@ class Trainer extends BaseController
     {
         $data = [
             'title' => 'Daftar Trainer',
-            'trainers' => $this->modeltrainer->get_trainer_oncab($this->user_cabang),
+            'trainers' => $this->modeltrainer->get_trainer_oncab('%'),
             'permission' => $this->permission,
             'role_array' => $this->role_array
         ];
@@ -145,7 +145,7 @@ class Trainer extends BaseController
             'title' => 'Edit Trainer',
             'action' => base_url('/trainer/update'),
             'readonly' => '',
-            'button' => 'Edit',
+            'button' => 'Save',
             'btn_class' => 'btn btn-warning',
             'id' => old('id', $find['id']),
             'kdcab' => old('kdcab', $find['kdcab']),

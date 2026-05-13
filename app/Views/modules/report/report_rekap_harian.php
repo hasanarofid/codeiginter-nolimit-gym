@@ -35,7 +35,7 @@
         </form>
 
         <div class="table-responsive mt-4">
-            <table class="table table-sm table-bordered" id="transactionTable">
+            <table class="table table-sm table-bordered" id="rekapHarianTable">
                 <thead>
                     <tr>
                         <th>Nama Paket</th>
@@ -67,7 +67,7 @@ $(document).ready(function() {
         todayHighlight: true
     });
 
-    const table = $('#transactionTable').DataTable({
+    const table = $('#rekapHarianTable').DataTable({
         "processing": true,
         "serverSide": false,
         "ajax": {

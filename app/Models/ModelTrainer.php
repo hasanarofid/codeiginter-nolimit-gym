@@ -81,7 +81,7 @@ class ModelTrainer extends Model
         $build->select("trainer.id, trainer.nama, trainer.jenis, trainer.hp, trainer.foto, cabang.nama AS nmcab");
         $build->join('cabang', 'trainer.kdcab = cabang.id', 'left');
         if ($kdcab != '%') {
-            $build->where('cabang.id', $kdcab);
+            $build->where('trainer.kdcab', $kdcab);
         }
         $build->where('trainer.deleted_at IS NULL');
 

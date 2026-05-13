@@ -28,7 +28,7 @@ class Customers extends BaseController
     {
         $data = [
             'title' => 'Daftar Customer',
-            'customers' => $this->modelcustomer->getByCabang($this->user_cabang),
+            'customers' => $this->modelcustomer->getByCabang('%'),
             'permission' => $this->permission,
             'role_array' => $this->role_array
         ];
@@ -60,6 +60,7 @@ class Customers extends BaseController
                 'membership' => $memberships,
                 'expired' => $expired,
                 'renewal' => count($memberships),
+                'barcode' => '<img class="img-fluid" src="' . base_url('customer/barcode/' . $id) . '" alt="' . $id . '">'
             ];
 
             return view('modules/customer/customer_detail', $data);
@@ -369,7 +370,7 @@ class Customers extends BaseController
 
     public function export()
     {
-        $customers = $this->modelcustomer->getByCabang($this->user_cabang);
+        $customers = $this->modelcustomer->getByCabang('%');
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

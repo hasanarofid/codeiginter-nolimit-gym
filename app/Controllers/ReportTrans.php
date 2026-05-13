@@ -24,7 +24,7 @@ class ReportTrans extends BaseController
         $data = [
             'title' => 'Laporan Transaksi Membership',
             'cab_def' => $this->user_cabang,
-            'branches' => $this->modelcabang->get_cabang($this->user_cabang)
+            'branches' => $this->modelcabang->get_cabang('%')
         ];
 
         return view('modules/report/report_membership', $data);
@@ -64,7 +64,7 @@ class ReportTrans extends BaseController
         $data = [
             'title' => 'Laporan Visit Non Member',
             'cab_def' => $this->user_cabang,
-            'branches' => $this->modelcabang->get_cabang($this->user_cabang)
+            'branches' => $this->modelcabang->get_cabang('%')
         ];
 
         return view('modules/report/report_umumvisit', $data);
@@ -105,7 +105,7 @@ class ReportTrans extends BaseController
         $data = [
             'title' => 'Rekap Laporan Harian',
             'cab_def' => $this->user_cabang,
-            'branches' => $this->modelcabang->get_cabang($this->user_cabang)
+            'branches' => $this->modelcabang->get_cabang('%')
         ];
 
         return view('modules/report/report_rekap_harian', $data);

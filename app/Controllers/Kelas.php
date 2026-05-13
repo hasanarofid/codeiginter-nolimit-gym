@@ -67,8 +67,8 @@ class Kelas extends BaseController
             'jam_mulai' => old('jam_mulai'),
             'jam_akhir' => old('jam_akhir'),
             'trainer' => old('trainer'),
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
-            'trainers' => $this->modeltrainer->get_trainer_oncab($this->user_cabang, 'class trainer')
+            'cabang' => $this->modelcabang->get_cabang('%'),
+            'trainers' => $this->modeltrainer->get_trainer_oncab('%')
         ];
 
         return view('modules/kelas/kelas_form', $data);
@@ -132,8 +132,8 @@ class Kelas extends BaseController
             'jam_mulai' => old('jam_mulai', $find->jam_mulai),
             'jam_akhir' => old('jam_akhir', $find->jam_akhir),
             'trainer' => old('trainer', $find->trainer),
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
-            'trainers' => $this->modeltrainer->get_trainer_oncab($this->user_cabang)
+            'cabang' => $this->modelcabang->get_cabang('%'),
+            'trainers' => $this->modeltrainer->get_trainer_oncab('%')
         ];
 
         return view('modules/kelas/kelas_form', $data);

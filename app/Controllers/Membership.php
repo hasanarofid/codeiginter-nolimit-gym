@@ -364,7 +364,7 @@ class Membership extends BaseController
             'nominal' => old('nominal', $find['nominal']),
             'expired' => old('expired', $find['expired']),
             'deskripsi' => old('deskripsi', $find['deskripsi']),
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
+            'cities' => $this->modelcabang->get_kota(),
             'category' => $this->modelmemcat->get_category()
         ];
 
