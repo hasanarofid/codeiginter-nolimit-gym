@@ -41,8 +41,8 @@ class Model_cabang extends Model
     public function get_kota()
     {
         $builder = $this->db->table($this->table);
-        $builder->distinct('kota');
-        $builder->groupBy('kota');
+        $builder->select('kota');
+        $builder->distinct();
         $builder->orderBy('kota', 'ASC');
 
         return $builder->get()->getResult();
