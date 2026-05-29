@@ -68,7 +68,7 @@
 <!-- slider_area_end -->
 
 <!-- marquee_start -->
-<div class="marquee-wrapper" style="background: #212121; color: #656565; padding: 20px 0; overflow: hidden; position: relative; white-space: nowrap; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
+<div class="marquee-wrapper" style="background-image: url('<?= base_url("img/bg-marque.webp") ?>'); background-size: cover; background-position: center center; background-repeat: no-repeat; color: #656565; padding: 20px 0; overflow: hidden; position: relative; white-space: nowrap; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
     <div class="marquee-content" style="display: flex; white-space: nowrap; animation: marquee-scroll 25s linear infinite; font-size: 44px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; line-height: 1;">
         <!-- First Block -->
         <div>
@@ -465,13 +465,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div id="muaythaiCarousel" class="carousel slide muaythai-slider-container" data-ride="carousel" data-interval="4000">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="<?= base_url('img/slider1.webp') ?>" class="d-block w-100" alt="Muaythai 1">
+                            <img src="<?= base_url('img/slider4.webp') ?>" class="d-block w-100" alt="Muaythai 1">
                         </div>
                         <div class="carousel-item">
-                            <img src="<?= base_url('img/slider2.webp') ?>" class="d-block w-100" alt="Muaythai 2">
+                            <img src="<?= base_url('img/slider5.webp') ?>" class="d-block w-100" alt="Muaythai 2">
                         </div>
                         <div class="carousel-item">
-                            <img src="<?= base_url('img/slider3.webp') ?>" class="d-block w-100" alt="Muaythai 3">
+                            <img src="<?= base_url('img/slider6.webp') ?>" class="d-block w-100" alt="Muaythai 3">
                         </div>
                     </div>
                     <!-- Indicators -->
@@ -812,7 +812,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 
 <!-- features_area_start  -->
-<div class="features_area features_bg" id="features">
+<div class="features_area features_bg" id="features" style="display: none;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
@@ -967,7 +967,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <!-- team_area_start  -->
-<div class="team_area team_bg_23 overlay2" id="trainer_area">
+<div class="team_area team_bg_23 overlay2" id="trainer_area" style="display: none;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
@@ -1022,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- team_area_end  -->
 
 <!-- team_area_start  -->
-<div class="team_area team_bg_1 overlay2" id="coach_area">
+<div class="team_area team_bg_1 overlay2" id="coach_area" style="display: none;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
