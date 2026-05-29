@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
     text-transform: uppercase;
     text-decoration: none;
     transition: color 0.3s;
-    font-size: 1rem;
+    font-size: 20px;
     padding: 5px 15px;
 }
 .location-link:hover {
@@ -261,12 +261,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2 style="color: #ffe2b6; font-weight: 800; font-style: italic; font-size: 3.5rem; margin-bottom: 20px;">ABOUT US</h2>
                     
                     <!-- About Us Text -->
-                    <p style="color: #DDD; font-size: 1.1rem; line-height: 1.6; margin-bottom: 40px; text-align: center;">
+                    <p style="color: #DDD; font-size: 20px; line-height: 1.6; margin-bottom: 40px; text-align: center;">
                         No Limits Training Facility menyediakan fasilitas lengkap untuk Powerlifting, Body Building, Boxing, & Cardio yang dirancang untuk mendukung berbagai tujuan latihan, mulai dari meningkatkan performa, membangun massa otot, menjaga kebugaran, hingga melatih mental dan disiplin. Sejak berdiri pada tahun 2021, No Limits terus berkembang menjadi tempat latihan dengan suasana yang solid dan penuh motivasi, didukung oleh penggunaan peralatan modern dan berkualitas, komunitas yang terus bertumbuh, serta berbagai event dan aktivitas yang rutin diadakan untuk membangun semangat, koneksi, dan kultur latihan yang kuat bagi setiap member.
                     </p>
 
                     <!-- Our Location -->
-                    <h5 style="color: #ffe2b6; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR LOCATION</h5>
+                    <h5 style="color: #ffe2b6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR LOCATION</h5>
                     <div class="d-flex justify-content-center mb-5">
                         <div >
                             <?php foreach ($cabangs as $cab): ?>
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
 
                     <!-- Our Social Media -->
-                    <h5 style="color: #ffe2b6; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR SOCIAL MEDIA</h5>
+                    <h5 style="color: #ffe2b6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR SOCIAL MEDIA</h5>
                     <div class="d-flex justify-content-center align-items-center" style="gap: 30px; margin-bottom: 15px;">
                         <a href="#" style="color: #FFF; font-size: 3rem; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'"><i class="fa fa-instagram"></i></a>
                         
@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 .muaythai-schedule-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.92)), url('<?= base_url("img/bg-2.jpg") ?>');
+    background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('<?= base_url("img/bg-jadwal-nolimit.webp") ?>');
     background-size: cover;
     background-position: center center;
     padding: 80px 0;
@@ -662,11 +662,16 @@ document.addEventListener('DOMContentLoaded', function() {
 .muaythai-note {
     width: 100%;
     text-align: center;
-    color: #aaaaaa;
-    font-size: 14px;
+    background-color: #212121;
+    color: #ffe2b6;
+    font-size: 17px;
     font-style: italic;
     margin-top: 30px;
     letter-spacing: 0.5px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 226, 182, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 991px) {
@@ -877,7 +882,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- features_area_end  -->
 
 <!-- schedule_area_start -->
-<div class="priscing_area" id="class_schedule">
+<div class="priscing_area" id="class_schedule" style="display: none;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
