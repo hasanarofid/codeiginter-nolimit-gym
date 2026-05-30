@@ -68,15 +68,21 @@
 <!-- slider_area_end -->
 
 <!-- marquee_start -->
-<div class="marquee-wrapper" style="background-image: url('<?= base_url("img/bg-marque.webp") ?>'); background-size: cover; background-position: center center; background-repeat: no-repeat; color: #656565; padding: 20px 0; overflow: hidden; position: relative; white-space: nowrap; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
-    <div class="marquee-content" style="display: flex; white-space: nowrap; animation: marquee-scroll 25s linear infinite; font-size: 44px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; line-height: 1;">
+<div class="marquee-wrapper" style="background: #212121; padding: 12px 0; overflow: hidden; position: relative; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
+    <div class="marquee-content" style="display: flex; white-space: nowrap; animation: marquee-scroll 35s linear infinite; height: 60px;">
         <!-- First Block -->
-        <div>
-            FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING // FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING // FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING //&nbsp;
+        <div style="flex-shrink: 0; display: flex; align-items: center;">
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
         </div>
         <!-- Second Block (Duplicate) -->
-        <div>
-            FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING // FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING // FIGHT CLASS // POWER LIFTING // CARDIO // BODYBUILDING //&nbsp;
+        <div style="flex-shrink: 0; display: flex; align-items: center;">
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
         </div>
     </div>
 </div>
@@ -481,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li data-target="#muaythaiCarousel" data-slide-to="2"></li>
                     </ol>
                     <!-- Text Overlay -->
-                    <div class="muaythai-slider-overlay">MUAYTHAI</div>
+                    <!-- <div class="muaythai-slider-overlay">MUAYTHAI</div> -->
                 </div>
             </div>
         </div>
