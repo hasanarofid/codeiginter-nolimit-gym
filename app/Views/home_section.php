@@ -68,21 +68,21 @@
 <!-- slider_area_end -->
 
 <!-- marquee_start -->
-<div class="marquee-wrapper" style="background: #212121; padding: 12px 0; overflow: hidden; position: relative; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
-    <div class="marquee-content" style="display: flex; white-space: nowrap; animation: marquee-scroll 35s linear infinite; height: 60px;">
+<div class="marquee-wrapper" style="background: #212121; padding: 0; overflow: hidden; position: relative; display: flex; cursor: pointer; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0, 0, 0, 0.6); z-index: 10;">
+    <div class="marquee-content" style="display: flex; white-space: nowrap; animation: marquee-scroll 35s linear infinite; height: 90px;">
         <!-- First Block -->
         <div style="flex-shrink: 0; display: flex; align-items: center;">
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
         </div>
         <!-- Second Block (Duplicate) -->
         <div style="flex-shrink: 0; display: flex; align-items: center;">
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
-            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 60px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
+            <img src="<?= base_url("img/bg-marque.webp") ?>" alt="Marquee" style="height: 90px; width: auto; display: block;" />
         </div>
     </div>
 </div>

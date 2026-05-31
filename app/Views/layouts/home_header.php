@@ -18,9 +18,9 @@
                             <div class="main-menu d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation" class="d-flex justify-content-center align-items-center" style="margin-bottom:0; padding:0;">
-                                        <li><a href="<?= base_url() ?>">HOME</a></li>
                                         <li><a href="#about-us">ABOUT US</a></li>
                                         <li><a href="#class_schedule">CLASSES</a></li>
+                                        <li><a href="<?= base_url('/events') ?>">EVENT</a></li>
                                         
                                         <li class="d-none d-lg-block logo-nav-item">
                                             <a href="<?= site_url() ?>" class="logo-nav-link">
@@ -129,15 +129,20 @@ ul#navigation li a::before {
     display: none !important;
 }
 
-/* White Box Logo Container */
+/* Black Box Logo Container (Punjul / Protruding) */
 ul#navigation li.logo-nav-item {
-    background-color: #ffffff !important;
-    height: 100% !important;
+    background-color: #000000 !important;
+    height: 120px !important;
     margin: 0 45px !important;
     padding: 0 30px !important;
     display: flex !important;
-    align-items: stretch !important;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    align-items: center !important;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
+    align-self: flex-start !important;
+    transition: height 0.3s ease;
+}
+.header-area .main-header-area.sticky ul#navigation li.logo-nav-item {
+    height: 95px !important;
 }
 .logo-nav-link {
     display: flex !important;
@@ -149,7 +154,7 @@ ul#navigation li.logo-nav-item {
     padding: 0 !important;
 }
 .logo-nav-link img {
-    height: 24px !important;
+    height: 28px !important;
     width: auto !important;
     display: block !important;
     margin-bottom: 2px !important;
@@ -162,14 +167,14 @@ ul#navigation li.logo-nav-item {
     font-family: 'Inter', 'Montserrat', sans-serif !important;
     font-size: 12px !important;
     font-weight: 700 !important;
-    color: #444444 !important;
+    color: #ffffff !important;
     line-height: 1 !important;
     letter-spacing: 0.2px !important;
     text-transform: none !important;
     font-style: normal !important;
 }
 .header-area .main-header-area.sticky .logo-subtitle {
-    font-size: 11px !important;
+    font-size: 10px !important;
 }
 
 /* Shopping Cart styling */
