@@ -3,14 +3,14 @@
 <!-- slider_area_start -->
 <div class="slider_area">
     <div class="slider_active owl-carousel">
-        <div class="single_slider  d-flex align-items-center slider_bg_1 overlay">
+        <div class="single_slider  d-flex align-items-center overlay" style="background-image: url('<?= base_url('img/slider/slidwer-home-1.webp') ?>');">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-xl-12">
                         <div class="slider_text text-center">
                             <span>Join</span>
                             <!-- <h3>NO LIMITS</h3> -->
-                            <img class="img-fluid" src="<?= base_url("/img/logo_text.png") ?>" />
+                            <img class="img-fluid" src="<?= base_url("/img/slider/slidwer-home-1.webp") ?>" />
                             <p>Team</p>
                             <a href="<?= base_url('/registration') ?>" class="boxed-btn3">Register Now</a>
                         </div>
@@ -18,14 +18,14 @@
                 </div>
             </div>
         </div>
-        <div class="single_slider  d-flex align-items-center slider_bg_2 overlay">
+        <div class="single_slider  d-flex align-items-center overlay" style="background-image: url('<?= base_url('img/slider/slidwer-home-2.webp') ?>');">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-xl-12">
                         <div class="slider_text text-center">
                             <span>Join</span>
                             <!-- <h3>NO LIMITS</h3> -->
-                            <img class="img-fluid" src="<?= base_url("/img/logo_text.png") ?>" />
+                            <img class="img-fluid" src="<?= base_url("/img/slider/slidwer-home-2.webp") ?>" />
                             <p>Body Combat</p>
                             <a href="<?= base_url('/registration') ?>" class="boxed-btn3">Register Now</a>
                         </div>
@@ -33,14 +33,14 @@
                 </div>
             </div>
         </div>
-        <div class="single_slider  d-flex align-items-center slider_bg_3 overlay">
+        <div class="single_slider  d-flex align-items-center overlay" style="background-image: url('<?= base_url('img/slider/slidwer-home-3.webp') ?>');">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-xl-12">
                         <div class="slider_text text-center">
                             <span>Join</span>
                             <!-- <h3>NO LIMITS</h3> -->
-                            <img class="img-fluid" src="<?= base_url("/img/logo_text.png") ?>" />
+                            <img class="img-fluid" src="<?= base_url("/img/slider/slidwer-home-3.webp") ?>" />
                             <p>Boxing / Muaythai</p>
                             <a href="<?= base_url('/registration') ?>" class="boxed-btn3">Register Now</a>
                         </div>
@@ -48,15 +48,30 @@
                 </div>
             </div>
         </div>
-        <div class="single_slider  d-flex align-items-center slider_bg_4 overlay">
+        <div class="single_slider  d-flex align-items-center overlay" style="background-image: url('<?= base_url('img/slider/slidwer-home-4.webp') ?>');">
             <div class="container">
                 <div class="row align-items-center justify-content-center">
                     <div class="col-xl-12">
                         <div class="slider_text text-center">
                             <span>Join</span>
                             <!-- <h3>NO LIMITS</h3> -->
-                            <img class="img-fluid" src="<?= base_url("/img/logo_text.png") ?>" />
+                            <img class="img-fluid" src="<?= base_url("/img/slider/slidwer-home-4.webp") ?>" />
                             <p>Inside Flow</p>
+                            <a href="<?= base_url('/registration') ?>" class="boxed-btn3">Register Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="single_slider  d-flex align-items-center overlay" style="background-image: url('<?= base_url('img/slider/slidwer-home-5.webp') ?>');">
+            <div class="container">
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-xl-12">
+                        <div class="slider_text text-center">
+                            <span>Join</span>
+                            <!-- <h3>NO LIMITS</h3> -->
+                            <img class="img-fluid" src="<?= base_url("/img/slider/slidwer-home-5.webp") ?>" />
+                            <p>Special Class</p>
                             <a href="<?= base_url('/registration') ?>" class="boxed-btn3">Register Now</a>
                         </div>
                     </div>

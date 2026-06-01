@@ -45,6 +45,7 @@ $('.slider_active').owlCarousel({
   autoplaySpeed: 800,
   animateOut: 'fadeOut',
   animateIn: 'fadeIn',
+  smartSpeed: 1000,
   responsive:{
       0:{
           items:1,
