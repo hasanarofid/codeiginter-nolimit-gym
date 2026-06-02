@@ -232,8 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2 style="color: #ffe2b6; font-weight: 800; font-style: italic; font-size: 3.5rem; margin-bottom: 20px;">ABOUT US</h2>
                     
                     <!-- About Us Text -->
-                    <p style="color: #DDD; font-size: 20px; line-height: 1.6; margin-bottom: 40px; text-align: center;">
-                        No Limits Training Facility menyediakan fasilitas lengkap untuk Powerlifting, Body Building, Boxing, & Cardio yang dirancang untuk mendukung berbagai tujuan latihan, mulai dari meningkatkan performa, membangun massa otot, menjaga kebugaran, hingga melatih mental dan disiplin. Sejak berdiri pada tahun 2021, No Limits terus berkembang menjadi tempat latihan dengan suasana yang solid and penuh motivasi, didukung oleh penggunaan peralatan modern dan berkualitas, komunitas yang terus bertumbuh, serta berbagai event dan aktivitas yang rutin diadakan untuk membangun semangat, koneksi, dan kultur latihan yang kuat bagi setiap member.
+                    <p style="color: #DDD; font-size: 20px; font-weight: 500; line-height: 1.6; margin-bottom: 40px; text-align: center;">
+                        No Limits is more than just a gym. It’s therapy, a sanctuary, a place where you can use all your negative energy to lift the weights. Some people came here to be healthier or to be part of the fit communities. But some people also came here to heal from their past, some to find purpose. Among all that, this is a place where the body and the willpower is tested. We grow through the pain and the pressure. Because the human race has NO LIMITS.
                     </p>
 
                     <!-- Our Location -->
