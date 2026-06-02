@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 .location-link {
-    color: #777;
+    color: #FFF;
     font-weight: bold;
     text-transform: uppercase;
     text-decoration: none;
@@ -233,11 +233,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <!-- About Us Text -->
                     <p style="color: #DDD; font-size: 20px; line-height: 1.6; margin-bottom: 40px; text-align: center;">
-                        No Limits Training Facility menyediakan fasilitas lengkap untuk Powerlifting, Body Building, Boxing, & Cardio yang dirancang untuk mendukung berbagai tujuan latihan, mulai dari meningkatkan performa, membangun massa otot, menjaga kebugaran, hingga melatih mental dan disiplin. Sejak berdiri pada tahun 2021, No Limits terus berkembang menjadi tempat latihan dengan suasana yang solid dan penuh motivasi, didukung oleh penggunaan peralatan modern dan berkualitas, komunitas yang terus bertumbuh, serta berbagai event dan aktivitas yang rutin diadakan untuk membangun semangat, koneksi, dan kultur latihan yang kuat bagi setiap member.
+                        No Limits Training Facility menyediakan fasilitas lengkap untuk Powerlifting, Body Building, Boxing, & Cardio yang dirancang untuk mendukung berbagai tujuan latihan, mulai dari meningkatkan performa, membangun massa otot, menjaga kebugaran, hingga melatih mental dan disiplin. Sejak berdiri pada tahun 2021, No Limits terus berkembang menjadi tempat latihan dengan suasana yang solid and penuh motivasi, didukung oleh penggunaan peralatan modern dan berkualitas, komunitas yang terus bertumbuh, serta berbagai event dan aktivitas yang rutin diadakan untuk membangun semangat, koneksi, dan kultur latihan yang kuat bagi setiap member.
                     </p>
 
                     <!-- Our Location -->
-                    <h5 style="color: #ffe2b6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR LOCATION</h5>
+                    <h5 style="color: #ffe2b6; font-family: 'Inter', 'Montserrat', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR LOCATION</h5>
                     <div class="d-flex justify-content-center mb-5">
                         <div >
                             <?php foreach ($cabangs as $cab): ?>
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
 
                     <!-- Our Social Media -->
-                    <h5 style="color: #ffe2b6; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR SOCIAL MEDIA</h5>
+                    <h5 style="color: #ffe2b6; font-family: 'Inter', 'Montserrat', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; font-size: 1rem;">OUR SOCIAL MEDIA</h5>
                     <div class="d-flex justify-content-center align-items-center" style="gap: 30px; margin-bottom: 15px;">
                         <a href="#" style="color: #FFF; font-size: 3rem; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'"><i class="fa fa-instagram"></i></a>
                         
