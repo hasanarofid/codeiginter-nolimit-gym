@@ -77,6 +77,18 @@ class CardGenerator
             $bWidth = imagesx($barcodeImg);
             $bHeight = imagesy($barcodeImg);
             
+            // Tambahkan Quiet Zone (kotak putih) di belakang barcode agar kontras terjaga
+            // walaupun menggunakan frame/background gelap
+            $padding = 15;
+            $startX = (($width - $bWidth) / 2) - $padding;
+            $startY = ($height - 180) - $padding;
+            $endX = $startX + $bWidth + ($padding * 2);
+            $endY = $startY + $bHeight + ($padding * 2);
+            
+            // Background putih khusus untuk area barcode
+            $pureWhite = imagecolorallocate($card, 255, 255, 255);
+            imagefilledrectangle($card, $startX, $startY, $endX, $endY, $pureWhite);
+            
             // Position barcode (Center bottom)
             // DO NOT use imagecopyresampled as it introduces anti-aliasing (blur) 
             // which makes the barcode unreadable by physical laser scanners.

@@ -342,11 +342,31 @@ class Customers extends BaseController
 
         // Generate barcode berdasarkan ID customer
         $generator = new BarcodeGeneratorPNG();
-        $barcode = $generator->getBarcode($customerId, $generator::TYPE_CODE_128);
+        $barcodeData = $generator->getBarcode($customerId, $generator::TYPE_CODE_128, 2, 50);
+
+        // Buat image dari data barcode
+        $barcodeImg = imagecreatefromstring($barcodeData);
+        $bWidth = imagesx($barcodeImg);
+        $bHeight = imagesy($barcodeImg);
+
+        // Tambahkan padding (Quiet Zone) 20px di kiri, kanan, atas, bawah
+        $padding = 20;
+        $newWidth = $bWidth + ($padding * 2);
+        $newHeight = $bHeight + ($padding * 2);
+
+        $img = imagecreatetruecolor($newWidth, $newHeight);
+        $white = imagecolorallocate($img, 255, 255, 255);
+        imagefilledrectangle($img, 0, 0, $newWidth, $newHeight, $white);
+
+        // Copy barcode ke background putih (tanpa resample agar tidak blur)
+        imagecopy($img, $barcodeImg, $padding, $padding, 0, 0, $bWidth, $bHeight);
 
         // Atur header agar output langsung berupa gambar PNG
         header('Content-Type: image/png');
-        echo $barcode;
+        imagepng($img);
+
+        imagedestroy($barcodeImg);
+        imagedestroy($img);
     }
 
     public function download_card($customerId)

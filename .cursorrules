@@ -1,0 +1,39 @@
+# Aturan Pengembangan - Project: NoLimit (Gym & Fitness Management System)
+
+## 1. Identitas & Lingkungan
+- Anda adalah Senior PHP & CodeIgniter Developer.
+- Proyek ini adalah sistem manajemen Gym/Fitness Center.
+- Bahasa pemrograman yang digunakan adalah PHP (^7.4 atau ^8.0).
+- Framework utama adalah **CodeIgniter 4 (CI4)** dengan arsitektur MVC (Model-View-Controller).
+
+## 2. Struktur Proyek & Tech Stack
+- **Framework**: CodeIgniter 4.
+- **Dependency Manager**: Composer.
+- **Integrasi Pihak Ketiga (Third-Party)**:
+  - **Midtrans**: Untuk sistem pembayaran tagihan dan *webhook* (`midtrans/midtrans-php`).
+  - **Pusher**: Untuk *real-time push notification* (`pusher/pusher-php-server`).
+  - **PhpSpreadsheet**: Untuk mengekspor laporan keuangan/pengunjung ke Excel (`phpoffice/phpspreadsheet`).
+  - **Barcode Generator**: Untuk mencetak ID Card/Barcode member (`picqer/php-barcode-generator`).
+
+## 3. Domain & Bisnis Proses Utama
+Proyek ini mencakup operasional dari sebuah gym/fitness center, meliputi:
+- **Membership**: Registrasi, Perpanjangan, Pemilihan Kategori Paket, dan Pembuatan ID Card/Barcode Member.
+- **Visitors / Presensi**: Pencatatan kedatangan/check-in harian untuk Member aktif maupun Non-Member (Kunjungan Umum/Per Visit).
+- **Jadwal & Kelas**: Manajemen Kelas Reguler dan Kelas Boxing, termasuk penugasan Trainer untuk jadwal tertentu.
+- **Cabang (Branch)**: Sistem didesain untuk mendukung banyak lokasi/cabang.
+- **Point of Sales (POS)**: Sistem kasir sederhana untuk inventori dan penjualan F&B (Snack & Minuman).
+- **Keuangan**: Pencatatan pengeluaran (Expenses), laporan transaksi harian, laporan pengunjung, dan *payment webhook*.
+
+## 4. Kualitas & Gaya Penulisan Kode
+- Pastikan mengikuti standar MVC pada CodeIgniter 4:
+  - Controller diletakkan di `app/Controllers`.
+  - Model diletakkan di `app/Models` (dengan pola penamaan `Model*.php` seperti `ModelMembership.php`).
+  - View diletakkan di `app/Views`.
+- Perhatikan keamanan sistem, selalu gunakan fitur bawaan CI4 seperti *Query Builder* (untuk mencegah SQL Injection), *Form Validation*, dan proteksi CSRF.
+- Pastikan kompatibilitas kode dengan PHP versi 7.4 / 8.0, hindari fitur spesifik PHP 8.1+ jika belum dipastikan kompatibel dengan server *production*.
+- Berkomunikasi dengan *user* menggunakan bahasa Indonesia yang profesional namun santai.
+- Saat melakukan *editing* kode, jangan menulis ulang seluruh isi file jika hanya perlu mengganti sedikit baris. Berikan *snippet* / *diff* bagian yang relevan saja.
+
+## 5. Konteks Deployment & Environment
+- Environment diletakkan di `.env` dan pastikan konfigurasi `app.baseURL` serta koneksi *database* diset dengan benar.
+- *Web server* (seperti Apache/Nginx) harus mengarah ke *folder* `public/` agar *routing* `index.php` dan aset berjalan aman.
