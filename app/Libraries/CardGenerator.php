@@ -78,9 +78,9 @@ class CardGenerator
             $bHeight = imagesy($barcodeImg);
             
             // Position barcode (Center bottom)
-            $targetBWidth = 400;
-            $targetBHeight = 120;
-            imagecopyresampled($card, $barcodeImg, ($width - $targetBWidth) / 2, $height - 180, 0, 0, $targetBWidth, $targetBHeight, $bWidth, $bHeight);
+            // DO NOT use imagecopyresampled as it introduces anti-aliasing (blur) 
+            // which makes the barcode unreadable by physical laser scanners.
+            imagecopy($card, $barcodeImg, ($width - $bWidth) / 2, $height - 180, 0, 0, $bWidth, $bHeight);
             imagedestroy($barcodeImg);
         }
         
