@@ -63,8 +63,8 @@
                                 <br/>
                                 <small><?= $detail['id'] ?></small>
                                 <br/>
-                                <a href="<?= base_url('customer/barcode/download/' . $detail['id']) ?>" class="btn btn-sm btn-primary shadow-sm mt-3">
-                                    <i class="fas fa-download fa-sm text-white-50"></i> Download Member Card
+                                <a href="#" data-toggle="modal" data-target="#modalDownloadBarcode" class="btn btn-sm btn-primary shadow-sm mt-3">
+                                    <i class="fas fa-download fa-sm text-white-50"></i> Download Barcode
                                 </a>
                             </div>
                             <div class="col-auto">
@@ -300,6 +300,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan Perpanjangan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Download Barcode -->
+<div class="modal fade" id="modalDownloadBarcode" tabindex="-1" aria-labelledby="modalDownloadBarcodeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDownloadBarcodeLabel">Pilih Wallpaper Barcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="<?= base_url('customer/barcode/download-bg/' . $detail['id']) ?>" method="get">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Pilih Wallpaper <span class="text-danger">*</span></label>
+                        <select class="form-control" name="bg" required>
+                            <option value="">: Pilih Wallpaper</option>
+                            <option value="Boxing.jpg">Boxing</option>
+                            <option value="Conquer.jpg">Conquer</option>
+                            <option value="NL Team.jpg">NL Team</option>
+                            <option value="Trust the Process.jpg">Trust the Process</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Download</button>
                 </div>
             </form>
         </div>

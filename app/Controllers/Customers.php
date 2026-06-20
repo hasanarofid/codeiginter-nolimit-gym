@@ -388,6 +388,75 @@ class Customers extends BaseController
             ->setBody($cardImage);
     }
 
+    public function download_barcode_bg($customerId)
+    {
+        $bg = $this->request->getGet('bg');
+        if (!$bg) {
+            return redirect()->back()->with('pesan', '<div class="alert alert-danger">Background belum dipilih.</div>');
+        }
+
+        $detail = $this->modelcustomer->get_customer($customerId);
+        if (!$detail) {
+            return redirect()->back()->with('pesan', '<div class="alert alert-danger">Member tidak ditemukan.</div>');
+        }
+
+        $bgPath = FCPATH . 'barcode-bg/' . $bg;
+        if (!file_exists($bgPath)) {
+            return redirect()->back()->with('pesan', '<div class="alert alert-danger">Background tidak ditemukan.</div>');
+        }
+
+        // Create image from background
+        $ext = pathinfo($bgPath, PATHINFO_EXTENSION);
+        if (strtolower($ext) == 'jpg' || strtolower($ext) == 'jpeg') {
+            $card = imagecreatefromjpeg($bgPath);
+        } elseif (strtolower($ext) == 'png') {
+            $card = imagecreatefrompng($bgPath);
+        } else {
+            return redirect()->back()->with('pesan', '<div class="alert alert-danger">Format background tidak didukung.</div>');
+        }
+
+        $width = imagesx($card);
+        $height = imagesy($card);
+
+        // Generate barcode (putih)
+        $generator = new BarcodeGeneratorPNG();
+        // [255, 255, 255] for white color barcode
+        $barcodeData = $generator->getBarcode($customerId, $generator::TYPE_CODE_128, 3, 100, [255, 255, 255]);
+        $barcodeImg = imagecreatefromstring($barcodeData);
+        
+        $bWidth = imagesx($barcodeImg);
+        $bHeight = imagesy($barcodeImg);
+
+        // Put barcode at bottom
+        $barcodeY = $height - 180;
+        
+        // Ensure transparent background is preserved when copying if any
+        imagealphablending($card, true);
+        imagesavealpha($card, true);
+
+        // Copy barcode directly to background
+        imagecopy($card, $barcodeImg, ($width - $bWidth) / 2, $barcodeY, 0, 0, $bWidth, $bHeight);
+        imagedestroy($barcodeImg);
+
+        // Add text ID centered below barcode
+        $grey = imagecolorallocate($card, 150, 150, 150); // greyish text
+        
+        $memberId = $customerId;
+        $textY = $barcodeY + $bHeight + 10;
+        
+        imagestring($card, 5, ($width - (strlen($memberId) * 9)) / 2, $textY, $memberId, $grey);
+
+        ob_start();
+        imagejpeg($card, null, 100);
+        $imageData = ob_get_clean();
+        imagedestroy($card);
+
+        return $this->response
+            ->setHeader('Content-Type', 'image/jpeg')
+            ->setHeader('Content-Disposition', 'attachment; filename="Barcode_' . $customerId . '.jpg"')
+            ->setBody($imageData);
+    }
+
     public function export()
     {
         $customers = $this->modelcustomer->getByCabang('%');
