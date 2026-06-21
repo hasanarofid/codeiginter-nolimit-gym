@@ -420,31 +420,86 @@ class Customers extends BaseController
 
         // Generate barcode (putih)
         $generator = new BarcodeGeneratorPNG();
-        // [255, 255, 255] for white color barcode
-        $barcodeData = $generator->getBarcode($customerId, $generator::TYPE_CODE_128, 3, 100, [255, 255, 255]);
+        
+        // Generate barcode dasar
+        $barcodeData = $generator->getBarcode(
+            $customerId,
+            $generator::TYPE_CODE_128,
+            2,      // ketebalan garis
+            120,    // tinggi barcode asli
+            [255, 255, 255]
+        );
+
         $barcodeImg = imagecreatefromstring($barcodeData);
-        
-        $bWidth = imagesx($barcodeImg);
-        $bHeight = imagesy($barcodeImg);
 
-        // Put barcode at bottom
-        $barcodeY = $height - 180;
-        
-        // Ensure transparent background is preserved when copying if any
-        imagealphablending($card, true);
-        imagesavealpha($card, true);
+        if ($barcodeImg) {
+            $srcWidth = imagesx($barcodeImg);
+            $srcHeight = imagesy($barcodeImg);
 
-        // Copy barcode directly to background
-        imagecopy($card, $barcodeImg, ($width - $bWidth) / 2, $barcodeY, 0, 0, $bWidth, $bHeight);
-        imagedestroy($barcodeImg);
+            // Target ukuran barcode (dikurangi agar tidak terlalu besar)
+            $targetWidth = $width - 240; // margin kiri kanan 120px
+            $targetHeight = 90;
 
-        // Add text ID centered below barcode
-        $grey = imagecolorallocate($card, 150, 150, 150); // greyish text
-        
-        $memberId = $customerId;
-        $textY = $barcodeY + $bHeight + 10;
-        
-        imagestring($card, 5, ($width - (strlen($memberId) * 9)) / 2, $textY, $memberId, $grey);
+            // Canvas barcode baru
+            $barcodeLarge = imagecreatetruecolor(
+                $targetWidth,
+                $targetHeight
+            );
+
+            // Buat background canvas transparan (agar tidak menutupi wallpaper)
+            imagealphablending($barcodeLarge, false);
+            imagesavealpha($barcodeLarge, true);
+            $transparent = imagecolorallocatealpha($barcodeLarge, 0, 0, 0, 127);
+            imagefill($barcodeLarge, 0, 0, $transparent);
+            imagealphablending($barcodeLarge, true);
+
+            // Perbesar barcode TANPA smoothing agar tetap tajam (mudah di-scan)
+            imagecopyresized(
+                $barcodeLarge,
+                $barcodeImg,
+                0,
+                0,
+                0,
+                0,
+                $targetWidth,
+                $targetHeight,
+                $srcWidth,
+                $srcHeight
+            );
+
+            imagedestroy($barcodeImg);
+
+            $bWidth = imagesx($barcodeLarge);
+            $bHeight = imagesy($barcodeLarge);
+
+            // Posisi bawah kartu (dinaikkan ke atas)
+            $barcodeY = $height - $bHeight - 150;
+
+            // Ensure transparent background is preserved when copying if any
+            imagealphablending($card, true);
+            imagesavealpha($card, true);
+
+            // Copy barcode directly to background
+            imagecopy(
+                $card,
+                $barcodeLarge,
+                ($width - $bWidth) / 2,
+                $barcodeY,
+                0,
+                0,
+                $bWidth,
+                $bHeight
+            );
+
+            imagedestroy($barcodeLarge);
+
+            // Add text ID centered below barcode
+            $grey = imagecolorallocate($card, 160, 160, 160); // greyish text
+            $memberId = strtoupper($customerId);
+            $textY = $barcodeY + $bHeight + 15;
+            
+            imagestring($card, 5, ($width - (strlen($memberId) * 9)) / 2, $textY, $memberId, $grey);
+        }
 
         ob_start();
         imagejpeg($card, null, 100);
