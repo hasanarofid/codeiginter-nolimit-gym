@@ -437,8 +437,8 @@ class Customers extends BaseController
             $srcHeight = imagesy($barcodeImg);
 
             // Target ukuran barcode (dikurangi agar tidak terlalu besar)
-            $targetWidth = $width - 240; // margin kiri kanan 120px
-            $targetHeight = 90;
+            $targetWidth = $width - 120; // margin kiri kanan 60px
+            $targetHeight = 150;
 
             // Canvas barcode baru dengan padding (quiet zone) putih di sekitar barcode
             $padding = 20;
@@ -477,8 +477,8 @@ class Customers extends BaseController
             $bWidth = imagesx($barcodeLarge);
             $bHeight = imagesy($barcodeLarge);
 
-            // Posisi bawah kartu
-            $barcodeY = $height - $bHeight - 120;
+            // Posisi bawah kartu, dinaikkan ke atas agar lebih mudah di-scan (tadinya - 120, sekarang - 350)
+            $barcodeY = $height - $bHeight - 350;
 
             // Copy barcode putih ke background wallpaper
             imagecopy(
