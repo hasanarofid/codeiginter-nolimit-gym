@@ -477,8 +477,8 @@ class Customers extends BaseController
             $bWidth = imagesx($barcodeLarge);
             $bHeight = imagesy($barcodeLarge);
 
-            // Posisi bawah kartu (dinaikkan agar mudah di scan)
-            $barcodeY = $height - $bHeight - 250;
+            // Posisi bawah kartu, dinaikkan ke atas agar lebih mudah di-scan
+            $barcodeY = $height - $bHeight - 350;
 
             // Copy barcode putih ke background wallpaper
             imagecopy(
