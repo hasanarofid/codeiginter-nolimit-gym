@@ -425,7 +425,7 @@ class Customers extends BaseController
         $barcodeData = $generator->getBarcode(
             $customerId,
             $generator::TYPE_CODE_128,
-            2,      // ketebalan garis
+            3,      // ketebalan garis (3 agar lebih proporsional)
             120,    // tinggi barcode asli
             [0, 0, 0] // black color
         );
@@ -436,9 +436,9 @@ class Customers extends BaseController
             $srcWidth = imagesx($barcodeImg);
             $srcHeight = imagesy($barcodeImg);
 
-            // Target ukuran barcode (dikurangi agar tidak terlalu besar)
-            $targetWidth = $width - 240; // margin kiri kanan 120px
-            $targetHeight = 90;
+            // Gunakan ukuran asli barcode agar tidak melar (lebih rapat)
+            $targetWidth = $srcWidth;
+            $targetHeight = $srcHeight;
 
             // Canvas barcode baru dengan padding (quiet zone) putih di sekitar barcode
             $padding = 20;
@@ -477,8 +477,8 @@ class Customers extends BaseController
             $bWidth = imagesx($barcodeLarge);
             $bHeight = imagesy($barcodeLarge);
 
-            // Posisi bawah kartu
-            $barcodeY = $height - $bHeight - 120;
+            // Posisi bawah kartu (dinaikkan agar mudah di scan)
+            $barcodeY = $height - $bHeight - 250;
 
             // Copy barcode putih ke background wallpaper
             imagecopy(
