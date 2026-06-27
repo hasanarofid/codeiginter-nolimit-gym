@@ -425,8 +425,8 @@ class Customers extends BaseController
         $barcodeData = $generator->getBarcode(
             $customerId,
             $generator::TYPE_CODE_128,
-            3,      // ketebalan garis (3 agar lebih proporsional)
-            120,    // tinggi barcode asli
+            2,      // ketebalan garis (2 agar lebih kecil dan fit di scanner walau jadi wallpaper)
+            100,    // tinggi barcode asli
             [0, 0, 0] // black color
         );
 
