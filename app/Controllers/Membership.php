@@ -346,7 +346,7 @@ class Membership extends BaseController
                     Data Tersimpan
                 </div>';
             session()->setFlashdata('pesan', $pesan);
-            return redirect()->to('/membership');
+            return redirect()->to(base_url('membership'));
         }
     }
 
@@ -400,14 +400,14 @@ class Membership extends BaseController
                     Data Berhasil di Rubah
                 </div>';
             session()->setFlashdata('pesan', $pesan);
-            return redirect()->to('/membership');
+            return redirect()->to(base_url('membership'));
         }
     }
 
     public function delete($id)
     {
         $this->modelmembership->delete($id); // Soft delete
-        return redirect()->to('/membership');
+        return redirect()->to(base_url('membership'));
     }
 
     public function forgot_password()

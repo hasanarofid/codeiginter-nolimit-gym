@@ -207,7 +207,7 @@ class Customers extends BaseController
 
         if ($insert) {
             session()->setFlashdata('pesan', '<div class="alert alert-success">Customer berhasil ditambahkan</div>');
-            return redirect()->to('/customer');
+            return redirect()->to(base_url('customer'));
         } else {
             return redirect()->back()->withInput()->with('errors', $this->modelcustomer->errors());
         }
@@ -272,7 +272,7 @@ class Customers extends BaseController
 
         if ($update) {
             session()->setFlashdata('pesan', '<div class="alert alert-success">Data customer berhasil diubah</div>');
-            return redirect()->to('/customer');
+            return redirect()->to(base_url('customer'));
         } else {
             session()->setFlashdata('pesan', '<div class="alert alert-danger"><strong>Error : </strong> Gagal mengubah data customer</div>');
             return redirect()->to('/customer/edit/' . $id);
@@ -648,6 +648,6 @@ class Customers extends BaseController
             session()->setFlashdata('pesan', '<div class="alert alert-danger">File tidak valid.</div>');
         }
 
-        return redirect()->to('/customer');
+        return redirect()->to(base_url('customer'));
     }
 }
