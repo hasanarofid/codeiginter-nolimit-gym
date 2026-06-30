@@ -8,45 +8,49 @@
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
-        <?php
-        if (session()->group != 'MS'):
-        ?>
+        <?php if (session()->group != 'MS') : ?>
             <!-- Notification -->
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-bell fa-fw"></i>
-                    <!-- Counter - Alerts -->
-                    <span class="badge badge-danger badge-counter"><?= session()->pending_reqs > 10 ? '+' . session()->pending_reqs : session()->pending_reqs; ?></span>
+                    <?php if (session()->unread_notif_count > 0) : ?>
+                        <!-- Counter - Alerts -->
+                        <span class="badge badge-danger badge-counter"><?= session()->unread_notif_count > 99 ? '99+' : session()->unread_notif_count; ?></span>
+                    <?php endif; ?>
                 </a>
                 <!-- Dropdown - Alerts -->
                 <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                     <h6 class="dropdown-header">
                         Alerts Center
                     </h6>
-                    <?php
-                    $pending_members = session()->pending_members;
-                    foreach ($pending_members as $all):
-                    ?>
-                        <a class="dropdown-item d-flex align-items-center" href="<?= base_url('customer/detail/' . $all->custid) ?>">
+                    <?php 
+                    $unread_notifs = session()->unread_notifs ?? [];
+                    if (empty($unread_notifs)): ?>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div><span class="small text-gray-500">Tidak ada notifikasi baru.</span></div>
+                        </a>
+                    <?php else: 
+                        foreach ($unread_notifs as $notif): ?>
+                        <a class="dropdown-item d-flex align-items-center" href="<?= $notif->link ?: '#' ?>">
                             <div class="mr-3">
-                                <div class="icon-circle bg-warning">
-                                    <i class="fas fa-fw fa-user text-white"></i>
+                                <div class="icon-circle bg-primary">
+                                    <i class="fas fa-fw fa-bell text-white"></i>
                                 </div>
                             </div>
                             <div>
-                                <div class="small text-gray-500"><?= date('M, d Y', strtotime($all->created_at)) ?></div>
-                                <span class="font-weight-bold">New pending request, click for detail..</span>
+                                <div class="small text-gray-500"><?= date('d M Y, H:i', strtotime($notif->created_at)) ?></div>
+                                <span class="font-weight-bold"><?= esc($notif->title) ?></span>
+                                <div class="small text-truncate" style="max-width: 250px;"><?= esc($notif->message) ?></div>
                             </div>
                         </a>
-                    <?php
-                    endforeach;
-                    ?>
-                    <a class="dropdown-item text-center small text-gray-500" href="<?= base_url('/customer') ?>">Show All Members</a>
+                    <?php 
+                        endforeach; 
+                    endif; ?>
+                    <a class="dropdown-item text-center small text-gray-500" href="<?= base_url('notifications') ?>">View All Notifications</a>
                 </div>
             </li>
-        <?php
-        endif;
-        ?>
+        <?php endif; ?>
+
         <div class="topbar-divider d-none d-sm-block"></div>
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">

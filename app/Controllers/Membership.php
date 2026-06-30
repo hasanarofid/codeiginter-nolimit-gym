@@ -183,8 +183,10 @@ class Membership extends BaseController
             // SendPush Notification
             $message = "Pendaftaran baru an. " . $nama . " dengan ID : " . $newId;
             $dataNotif = [
-                'title' => "Pendaftaran Member Baru",
+                'title'   => "Pendaftaran Member Baru",
                 'message' => $message,
+                'kdcab'   => $cabang,
+                'link'    => base_url('customer')
             ];
 
             sendPusherNotification('my-channel', 'my-event', $dataNotif);
@@ -613,8 +615,10 @@ class Membership extends BaseController
         // SendPush Notification
         $message = "Perpanjangan member an. " . $customer['nama'] . " dengan ID : " . $idcust;
         $dataNotif = [
-            'title' => "Perpanjangan Member",
+            'title'   => "Perpanjangan Member",
             'message' => $message,
+            'kdcab'   => $cust['kdcab'] ?? '%',
+            'link'    => base_url('customer')
         ];
 
         sendPusherNotification('my-channel', 'my-event', $dataNotif);

@@ -49,7 +49,8 @@ class Dashboard extends BaseController
         
         $transactions_with_status = [];
         foreach ($today_transactions as $tr) {
-            $prevCount = $this->db->table('membership_trans')
+            $db = \Config\Database::connect();
+            $prevCount = $db->table('membership_trans')
                             ->where('custid', $tr->custid)
                             ->where('payment_date <', $tr->payment_date)
                             ->where('status', 1)

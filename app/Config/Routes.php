@@ -10,6 +10,8 @@ $routes->get('/maintenance', 'Home::maintenance');
 
 // Notification
 $routes->post('/send-notification', 'PushNotification::sendNotification');
+$routes->get('/notifications', 'Notifications::index');
+$routes->get('/notifications/readAll', 'Notifications::readAll');
 
 // membership
 $routes->get('/registration', 'Membership::index');

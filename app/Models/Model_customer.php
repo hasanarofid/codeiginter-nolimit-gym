@@ -61,7 +61,19 @@ class Model_customer extends Model
 
     public function generateID($kdcab)
     {
-        $lastId = $this->get_count($kdcab)->jml;
+        $builder = $this->db->table($this->table);
+        $builder->select('id');
+        $builder->where('kdcab', $kdcab);
+        $builder->like('id', $kdcab, 'after');
+        $builder->orderBy('id', 'DESC');
+        $builder->limit(1);
+        
+        $row = $builder->get()->getRow();
+        
+        $lastId = 0;
+        if ($row) {
+            $lastId = (int) substr($row->id, strlen($kdcab));
+        }
         $lastId += 1;
 
         $newId = $kdcab . str_pad($lastId, 4, '0', STR_PAD_LEFT);

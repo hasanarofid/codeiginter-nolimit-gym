@@ -330,10 +330,12 @@
                     type: "LiveStream",
                     constraints: {
                         width: {
-                            min: 640
+                            min: 1280,
+                            ideal: 1920
                         },
                         height: {
-                            min: 480
+                            min: 720,
+                            ideal: 1080
                         },
                         aspectRatio: {
                             min: 1,
@@ -343,8 +345,8 @@
                     }
                 },
                 locator: {
-                    patchSize: "medium",
-                    halfSample: true
+                    patchSize: "x-small",
+                    halfSample: false
                 },
                 numOfWorkers: (navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4),
                 decoder: {

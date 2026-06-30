@@ -21,16 +21,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="kdcab">Cabang <span class="text-danger">*</span></label>
-                            <select name="kdcab" id="kdcab" class="form-control <?= session('errors.kdcab') ? 'is-invalid' : '' ?>" <?= $user_cabang != '%' ? 'readonly' : '' ?>>
+                            <select name="kdcab" id="kdcab" class="form-control <?= session('errors.kdcab') ? 'is-invalid' : '' ?>" required>
                                 <option value="">: Pilih Cabang</option>
                                 <?php foreach ($cabang as $cb) : ?>
                                     <option value="<?= $cb['id'] ?>" <?= $detail['kdcab'] == $cb['id'] ? 'selected' : '' ?>><?= $cb['nama'] ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <?php if ($user_cabang != '%') : ?>
-                                <input type="hidden" name="kdcab" value="<?= $detail['kdcab'] ?>">
-                                <small class="text-muted">Cabang dikunci sesuai login admin.</small>
-                            <?php endif; ?>
                             <div class="invalid-feedback">
                                 <?= session('errors.kdcab') ?>
                             </div>

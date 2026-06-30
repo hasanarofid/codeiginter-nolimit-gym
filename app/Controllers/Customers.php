@@ -147,7 +147,7 @@ class Customers extends BaseController
         $data = [
             'title' => 'Tambah Customer Baru',
             'action' => base_url('customer/store'),
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
+            'cabang' => $this->modelcabang->get_cabang('%'),
             'detail' => [
                 'id' => '',
                 'kdcab' => $this->user_cabang != '%' ? $this->user_cabang : '',
@@ -225,7 +225,7 @@ class Customers extends BaseController
             'title' => 'Edit Data Customer',
             'action' => base_url('customer/update'),
             'detail' => $detail,
-            'cabang' => $this->modelcabang->get_cabang($this->user_cabang),
+            'cabang' => $this->modelcabang->get_cabang('%'),
             'userGroup' => $this->userGroup,
             'user_cabang' => $this->user_cabang,
         ];

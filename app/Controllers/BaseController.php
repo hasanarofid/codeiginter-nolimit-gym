@@ -73,12 +73,15 @@ abstract class BaseController extends Controller
 
         if ($this->user_cabang) {
             $this->modelmemtrans = new ModelMemtrans();
-            $this->pending_reqs = $this->modelmemtrans->get_pending_request($this->user_cabang)->jml;
-            $this->pending_members = $this->modelmemtrans->get_member_pending($this->user_cabang);
+            
+            // Load Notifications
+            $modelNotification = new \App\Models\Model_notification();
+            $this->unread_notif_count = $modelNotification->getUnreadCount($this->user_cabang);
+            $this->unread_notifs = $modelNotification->getUnreadNotifications($this->user_cabang, 5);
 
             $data = [
-                'pending_reqs' => $this->pending_reqs,
-                'pending_members' => $this->pending_members,
+                'unread_notif_count' => $this->unread_notif_count,
+                'unread_notifs' => $this->unread_notifs,
             ];
 
             session()->set($data);
