@@ -186,8 +186,11 @@ class Membership extends BaseController
                 'title'   => "Pendaftaran Member Baru",
                 'message' => $message,
                 'kdcab'   => $cabang,
-                'link'    => base_url('customer')
+                'link'    => base_url('customer/detail/' . $newId)
             ];
+
+            $modelNotification = new \App\Models\Model_notification();
+            $modelNotification->insert($dataNotif);
 
             sendPusherNotification('my-channel', 'my-event', $dataNotif);
 
@@ -617,9 +620,12 @@ class Membership extends BaseController
         $dataNotif = [
             'title'   => "Perpanjangan Member",
             'message' => $message,
-            'kdcab'   => $cust['kdcab'] ?? '%',
-            'link'    => base_url('customer')
+            'kdcab'   => $customer['kdcab'] ?? '%',
+            'link'    => base_url('customer/detail/' . $idcust)
         ];
+
+        $modelNotification = new \App\Models\Model_notification();
+        $modelNotification->insert($dataNotif);
 
         sendPusherNotification('my-channel', 'my-event', $dataNotif);
         // return $this->response->setJSON(['status' => 'success']);

@@ -25,6 +25,7 @@ class Model_notification extends Model
     {
         $builder = $this->builder();
         $builder->where('is_read', 0);
+        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-3 days')));
         if ($kdcab != '%') {
             $builder->where('kdcab', $kdcab);
         }
@@ -35,6 +36,7 @@ class Model_notification extends Model
     {
         $builder = $this->builder();
         $builder->where('is_read', 0);
+        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-3 days')));
         if ($kdcab != '%') {
             $builder->where('kdcab', $kdcab);
         }
@@ -48,6 +50,7 @@ class Model_notification extends Model
     public function getAllNotifications($kdcab)
     {
         $builder = $this->builder();
+        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-3 days')));
         if ($kdcab != '%') {
             $builder->where('kdcab', $kdcab);
         }
@@ -58,6 +61,7 @@ class Model_notification extends Model
     public function markAllAsRead($kdcab)
     {
         $builder = $this->builder();
+        $builder->where('created_at >=', date('Y-m-d H:i:s', strtotime('-3 days')));
         if ($kdcab != '%') {
             $builder->where('kdcab', $kdcab);
         }
