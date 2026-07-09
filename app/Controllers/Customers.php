@@ -425,8 +425,8 @@ class Customers extends BaseController
         $barcodeData = $generator->getBarcode(
             $customerId,
             $generator::TYPE_CODE_128,
-            2,      // ketebalan garis (2 agar lebih kecil dan fit di scanner walau jadi wallpaper)
-            100,    // tinggi barcode asli
+            4,      // ketebalan garis (dinaikkan agar tidak terlalu tipis saat di layar HP beresolusi tinggi)
+            150,    // tinggi barcode asli
             [0, 0, 0] // black color
         );
 
@@ -441,9 +441,9 @@ class Customers extends BaseController
             $targetHeight = $srcHeight;
 
             // Canvas barcode baru dengan padding (quiet zone) putih di sekitar barcode
-            $padding = 20;
+            $padding = 40;
             $canvasWidth = $targetWidth + ($padding * 2);
-            $canvasHeight = $targetHeight + ($padding * 2) + 30; // +30 untuk tempat teks ID
+            $canvasHeight = $targetHeight + ($padding * 2) + 40; // +40 untuk tempat teks ID
 
             $barcodeLarge = imagecreatetruecolor($canvasWidth, $canvasHeight);
 
@@ -477,8 +477,8 @@ class Customers extends BaseController
             $bWidth = imagesx($barcodeLarge);
             $bHeight = imagesy($barcodeLarge);
 
-            // Posisi bawah kartu, dinaikkan ke atas agar lebih mudah di-scan
-            $barcodeY = $height - $bHeight - 350;
+            // Posisi 75% dari atas (di bawah tulisan PROCESS tapi tidak terlalu bawah)
+            $barcodeY = ($height * 0.75) - ($bHeight / 2);
 
             // Copy barcode putih ke background wallpaper
             imagecopy(
