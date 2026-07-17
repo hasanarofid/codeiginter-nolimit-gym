@@ -341,8 +341,8 @@ class Customers extends BaseController
     {
 
         // Generate barcode berdasarkan ID customer
-        $generator = new BarcodeGeneratorPNG();
-        $barcodeData = $generator->getBarcode($customerId, $generator::TYPE_CODE_128, 2, 50);
+        $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=' . urlencode($customerId);
+        $barcodeData = @file_get_contents($qrUrl);
 
         // Buat image dari data barcode
         $barcodeImg = imagecreatefromstring($barcodeData);
@@ -419,16 +419,8 @@ class Customers extends BaseController
         $height = imagesy($card);
 
         // Generate barcode (hitam)
-        $generator = new BarcodeGeneratorPNG();
-        
-        // Generate barcode dasar
-        $barcodeData = $generator->getBarcode(
-            $customerId,
-            $generator::TYPE_CODE_128,
-            4,      // ketebalan garis (dinaikkan agar tidak terlalu tipis saat di layar HP beresolusi tinggi)
-            150,    // tinggi barcode asli
-            [0, 0, 0] // black color
-        );
+        $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=0&data=' . urlencode($customerId);
+        $barcodeData = @file_get_contents($qrUrl);
 
         $barcodeImg = imagecreatefromstring($barcodeData);
 

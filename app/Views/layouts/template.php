@@ -320,140 +320,43 @@
         }
     </script>
 
-    <!-- Quagga JS for barcode scan -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <!-- HTML5-QRCode JS for barcode/QR scan -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
         $(function() {
-            // Create the QuaggaJS config object for the live stream
-            var liveStreamConfig = {
-                inputStream: {
-                    type: "LiveStream",
-                    constraints: {
-                        width: {
-                            min: 1280,
-                            ideal: 1920
-                        },
-                        height: {
-                            min: 720,
-                            ideal: 1080
-                        },
-                        aspectRatio: {
-                            min: 1,
-                            max: 100
-                        },
-                        facingMode: "environment" // or "user" for the front camera
-                    }
-                },
-                locator: {
-                    patchSize: "x-small",
-                    halfSample: false
-                },
-                numOfWorkers: (navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4),
-                decoder: {
-                    "readers": [{
-                        "format": "code_128_reader",
-                        "config": {}
-                    }]
-                },
-                locate: true
-            };
-            // The fallback to the file API requires a different inputStream option. 
-            // The rest is the same 
-            var fileConfig = $.extend({},
-                liveStreamConfig, {
-                    inputStream: {
-                        size: 800
-                    }
-                }
-            );
+            var html5QrcodeScanner;
+
             // Start the live stream scanner when the modal opens
             $('#livestream_scanner').on('shown.bs.modal', function(e) {
-                Quagga.init(
-                    liveStreamConfig,
-                    function(err) {
-                        if (err) {
-                            $('#livestream_scanner .modal-body .error').html('<div class="alert alert-danger"><strong><i class="fa fa-exclamation-triangle"></i> ' + err.name + '</strong>: ' + err.message + '</div>');
-                            Quagga.stop();
-                            return;
-                        }
-                        Quagga.start();
-                    }
-                );
-            });
-
-            // Make sure, QuaggaJS draws frames an lines around possible 
-            // barcodes on the live stream
-            Quagga.onProcessed(function(result) {
-                var drawingCtx = Quagga.canvas.ctx.overlay,
-                    drawingCanvas = Quagga.canvas.dom.overlay;
-
-                if (result) {
-                    if (result.boxes) {
-                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
-                        result.boxes.filter(function(box) {
-                            return box !== result.box;
-                        }).forEach(function(box) {
-                            Quagga.ImageDebug.drawPath(box, {
-                                x: 0,
-                                y: 1
-                            }, drawingCtx, {
-                                color: "green",
-                                lineWidth: 2
-                            });
-                        });
-                    }
-
-                    if (result.box) {
-                        Quagga.ImageDebug.drawPath(result.box, {
-                            x: 0,
-                            y: 1
-                        }, drawingCtx, {
-                            color: "#00F",
-                            lineWidth: 2
-                        });
-                    }
-
-                    if (result.codeResult && result.codeResult.code) {
-                        Quagga.ImageDebug.drawPath(result.line, {
-                            x: 'x',
-                            y: 'y'
-                        }, drawingCtx, {
-                            color: 'red',
-                            lineWidth: 3
-                        });
-                    }
-                }
-            });
-
-            // Once a barcode had been read successfully, stop quagga and 
-            // close the modal after a second to let the user notice where 
-            // the barcode had actually been found.
-            Quagga.onDetected(function(result) {
-                if (result.codeResult.code) {
-                    $('#scanner_input').val(result.codeResult.code);
+                html5QrcodeScanner = new Html5QrcodeScanner(
+                    "interactive",
+                    { fps: 10, qrbox: {width: 250, height: 250} },
+                    /* verbose= */ false);
+                    
+                function onScanSuccess(decodedText, decodedResult) {
+                    $('#scanner_input').val(decodedText);
                     $('#scanner_input').trigger('change'); // Trigger AJAX check
-                    Quagga.stop();
-                    setTimeout(function() {
-                        $('#livestream_scanner').modal('hide');
-                    }, 1000);
+                    html5QrcodeScanner.clear().then(() => {
+                        setTimeout(function() {
+                            $('#livestream_scanner').modal('hide');
+                        }, 500);
+                    }).catch(error => {
+                        console.error("Failed to clear html5QrcodeScanner. ", error);
+                    });
                 }
+
+                function onScanFailure(error) {
+                    // handle scan failure, usually better to ignore and keep scanning.
+                }
+
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
             });
 
-            // Stop quagga in any case, when the modal is closed
+            // Stop scanner in any case, when the modal is closed
             $('#livestream_scanner').on('hide.bs.modal', function() {
-                if (Quagga) {
-                    Quagga.stop();
-                }
-            });
-
-            // Call Quagga.decodeSingle() for every file selected in the 
-            // file input
-            $("#livestream_scanner input:file").on("change", function(e) {
-                if (e.target.files && e.target.files.length) {
-                    Quagga.decodeSingle($.extend({}, fileConfig, {
-                        src: URL.createObjectURL(e.target.files[0])
-                    }), function(result) {
-                        alert(result.codeResult.code);
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.clear().catch(error => {
+                        console.error("Failed to clear html5QrcodeScanner. ", error);
                     });
                 }
             });
