@@ -325,15 +325,20 @@
     <script>
         $(function() {
             var html5QrcodeScanner;
+            var isScanning = false;
 
             // Start the live stream scanner when the modal opens
             $('#livestream_scanner').on('shown.bs.modal', function(e) {
+                isScanning = true;
                 html5QrcodeScanner = new Html5QrcodeScanner(
                     "interactive",
                     { fps: 10, qrbox: {width: 250, height: 250} },
                     /* verbose= */ false);
                     
                 function onScanSuccess(decodedText, decodedResult) {
+                    if (!isScanning) return;
+                    isScanning = false;
+                    
                     $('#scanner_input').val(decodedText);
                     $('#scanner_input').trigger('change'); // Trigger AJAX check
                     html5QrcodeScanner.clear().then(() => {
@@ -354,10 +359,30 @@
 
             // Stop scanner in any case, when the modal is closed
             $('#livestream_scanner').on('hide.bs.modal', function() {
+                isScanning = false;
                 if (html5QrcodeScanner) {
                     html5QrcodeScanner.clear().catch(error => {
                         console.error("Failed to clear html5QrcodeScanner. ", error);
                     });
+                }
+            });
+            
+            // Client-side validation to prevent automatic submission when locker/handuk is empty
+            $('form[name="visitors"]').on('submit', function(e) {
+                var lockerVal = $('#locker').val();
+                var handukVal = $('input[name="handuk"]:checked').val();
+                
+                if (!lockerVal || lockerVal.trim() === '') {
+                    e.preventDefault();
+                    alert('Mohon isi Nomor Locker terlebih dahulu!');
+                    $('#locker').focus();
+                    return false;
+                }
+                
+                if (!handukVal) {
+                    e.preventDefault();
+                    alert('Mohon pilih opsi Handuk terlebih dahulu!');
+                    return false;
                 }
             });
         });
