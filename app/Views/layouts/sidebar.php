@@ -1,9 +1,9 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #000000;">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url() ?>">
-        <div class="sidebar-brand-text mx-3">NO LIMITS</div>
+        <img src="<?= base_url('img/logo_text.PNG') ?>" alt="NO LIMITS" class="img-fluid px-3" style="max-height: 40px;">
     </a>
 
     <!-- Divider -->

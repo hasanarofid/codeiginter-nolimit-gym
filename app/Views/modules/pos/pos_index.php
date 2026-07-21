@@ -195,7 +195,12 @@
                 payment_method: method,
                 [$('input[name="<?= csrf_token() ?>"]').attr('name')]: $('input[name="<?= csrf_token() ?>"]').val()
             },
-            success: function(response) {
+            success: function(response, textStatus, xhr) {
+                var newToken = xhr.getResponseHeader('X-CSRF-TOKEN');
+                if (newToken) {
+                    $('input[name="<?= csrf_token() ?>"]').val(newToken);
+                }
+
                 if (response.status === 'success') {
                     alert('Berhasil! Transaksi: ' + response.trx_id);
                     cart = [];
@@ -211,8 +216,14 @@
                     $('#btnTunai, #btnNonTunai').prop('disabled', false);
                 }
             },
-            error: function() {
-                alert('Terjadi kesalahan koneksi');
+            error: function(xhr, status, error) {
+                let errorMsg = 'Terjadi kesalahan koneksi.\nStatus: ' + status + '\nError: ' + error;
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg += '\nMessage: ' + xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    errorMsg += '\nDetails: ' + xhr.responseText.substring(0, 100);
+                }
+                alert(errorMsg);
             }
         });
     }

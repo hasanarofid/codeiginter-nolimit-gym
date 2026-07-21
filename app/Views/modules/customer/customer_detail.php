@@ -104,7 +104,7 @@
                                 <th>Paket</th>
                                 <th>Nominal</th>
                                 <th>Jenis Byr</th>
-                                <th>Tgl. Byr</th>
+                                <th>Periode</th>
                                 <th>Status</th>
                                 <th><i class="fas fa-cog"></i></th>
                             </tr>
@@ -121,7 +121,7 @@
                                     <td><?= ucwords(strtolower($mbr->nama)) ?></td>
                                     <td><?= number_format($mbr->nominal, 0, '.', ',') ?></td>
                                     <td><?= $mbr->payment_type ?></td>
-                                    <td><?= $mbr->payment_date == null ? 'N.A' : date('d/m/Y', strtotime($mbr->payment_date)) ?></td>
+                                    <td><?= $mbr->payment_date == null ? 'N.A' : date('d-m-Y', strtotime($mbr->payment_date)) . ' s/d ' . ($mbr->expired_date ? date('d-m-Y', strtotime($mbr->expired_date)) : 'N.A') ?></td>
                                     <td>
                                         <?php
                                         if ($mbr->payment_date == null) {
@@ -295,6 +295,10 @@
                             <option value="Bank Transfer">Bank Transfer</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Tgl. Mulai (Periode) <span class="text-danger">*</span></label>
+                        <input type="text" name="payment_date" id="renew_payment_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="<?= date('Y-m-d') ?>" required="required">
+                    </div>
                     <input type="hidden" name="idcust" value="<?= $detail['id'] ?>">
                 </div>
                 <div class="modal-footer">
@@ -340,18 +344,29 @@
 
 <script>
 $(document).ready(function() {
+    $("#renew_payment_date").datepicker({
+        dateFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "c-80:c+0"
+    });
+
     function loadPaket(cabangId) {
         if (cabangId) {
             $('#renew_paket').empty().append('<option value="">: Loading...</option>');
             $.ajax({
-                url: `<?= base_url("membership/getPaketByCabang") ?>/${cabangId}`,
+                url: "<?= base_url('membership/getPaketByCabang') ?>/" + cabangId,
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
                     $('#renew_paket').empty().append('<option value="">: Pilih Paket</option>');
                     response.forEach(function(paket) {
-                        $('#renew_paket').append(`<option value="${paket.id}">${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
+                        $('#renew_paket').append('<option value="' + paket.id + '">' + paket.category + ' ' + paket.nama + ' - ' + paket.nominal + '</option>');
                     });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading paket:", error);
+                    $('#renew_paket').empty().append('<option value="">: Gagal memuat data</option>');
                 }
             });
         }

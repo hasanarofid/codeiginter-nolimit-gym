@@ -202,6 +202,21 @@ class ModelMemtrans extends Model
         return $bd->get()->getResult();
     }
 
+    public function get_expiring_memberships($days = 3)
+    {
+        $db =  db_connect();
+        $bd = $db->table($this->table . ' mt');
+        $bd->select("c.id AS idcust, b.nama AS cabang, c.nama AS nmcust, c.hp_wa, c.email, CONCAT(mc.catname,' ',m.nama) AS pkgname, mt.expired_date");
+        $bd->join('customers c', 'c.id = mt.custid', 'left');
+        $bd->join('membership m', 'm.id = mt.membershipid', 'left');
+        $bd->join('membership_cat mc', 'mc.catid = m.catid', 'left');
+        $bd->join('cabang b', 'b.id = c.kdcab', 'left');
+        $bd->where('mt.status', 1);
+        $bd->where('DATEDIFF(mt.expired_date, NOW())', $days);
+
+        return $bd->get()->getResult();
+    }
+
     public function ubah_status($custid, $id, $data)
     {
         $db = db_connect();

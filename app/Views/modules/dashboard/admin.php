@@ -165,7 +165,7 @@
                                 <td><?= ucwords(strtolower($exp->nmcust)) ?></td>
                                 <td><?= ucwords(strtolower($exp->pkgname)) ?></td>
                                 <td><?= $exp->hp_wa == null ? 'N.A' : $exp->hp_wa ?></td>
-                                <td><?= $exp->expired_day < 0 ? '<span class="badge badge-danger">Over ' . abs($exp->expired_day) . ' hari</span>' : '<span class="badge badge-warning">' . $exp->expired_day . ' hari lagi</span>' ?></td>
+                                <td><?= $exp->expired_day < 0 ? '<span class="badge badge-danger">Expired</span>' : '<span class="badge badge-warning">' . $exp->expired_day . ' hari lagi</span>' ?></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#perpanjang<?= $n ?>">Perpanjang</button>
 
@@ -190,7 +190,7 @@
                                                                 foreach ($cabangs as $b):
                                                                     if ($exp->branchid == $b['id']):
                                                                 ?>
-                                                                        <option value="<?= $b['id'] ?>"><?= $b['nama'] ?></option>
+                                                                        <option value="<?= $b['id'] ?>" selected><?= $b['nama'] ?></option>
                                                                 <?php
                                                                     endif;
                                                                 endforeach;
@@ -217,6 +217,10 @@
                                                                 ?>
                                                             </select>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label>Tgl. Mulai (Periode) <span class="text-danger">*</span></label>
+                                                            <input type="text" name="payment_date" class="form-control datepicker renew_payment_date" placeholder="yyyy-mm-dd" value="<?= date('Y-m-d') ?>" required="required">
+                                                        </div>
 
                                                         <input type="hidden" name="idcust" value="<?= $exp->idcust ?>" />
                                                     </div>
@@ -227,23 +231,42 @@
                                                 </form>
                                                 <script>
                                                     $(document).ready(function() {
+                                                        $(".renew_payment_date").datepicker({
+                                                            dateFormat: "yy-mm-dd",
+                                                            changeMonth: true,
+                                                            changeYear: true,
+                                                            yearRange: "c-80:c+0"
+                                                        });
+
                                                         // Load paket member berdasarkan cabang
                                                         $('#cabang<?= $n; ?>').on('change', function() {
                                                             const selectedCabangId = $(this).val();
-                                                            $('#paket<?= $n; ?>').empty().append('<option value="">: Paket Membership</option>');
+                                                            $('#paket<?= $n; ?>').empty().append('<option value="">: Loading...</option>');
                                                             if (selectedCabangId) {
                                                                 $.ajax({
-                                                                    url: `<?= base_url("membership/getPaketByCabang") ?>/${selectedCabangId}`,
+                                                                    url: "<?= base_url('membership/getPaketByCabang') ?>/" + selectedCabangId,
                                                                     type: 'GET',
                                                                     dataType: 'json',
                                                                     success: function(response) {
+                                                                        $('#paket<?= $n; ?>').empty().append('<option value="">: Paket Membership</option>');
                                                                         response.forEach(function(paket) {
-                                                                            $('#paket<?= $n; ?>').append(`<option value="${paket.id}">${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
+                                                                            $('#paket<?= $n; ?>').append('<option value="' + paket.id + '">' + paket.category + ' ' + paket.nama + ' - ' + paket.nominal + '</option>');
                                                                         });
+                                                                    },
+                                                                    error: function(xhr, status, error) {
+                                                                        console.error("Error loading paket:", error);
+                                                                        $('#paket<?= $n; ?>').empty().append('<option value="">: Gagal memuat data</option>');
                                                                     }
                                                                 });
+                                                            } else {
+                                                                $('#paket<?= $n; ?>').empty().append('<option value="">: Paket Membership</option>');
+                                                            }
+                                                        });
 
-                                                                // alert('yuhuu..');
+                                                        // Trigger loading paket when modal opens
+                                                        $('#perpanjang<?= $n ?>').on('shown.bs.modal', function () {
+                                                            if ($('#cabang<?= $n; ?>').val() && $('#paket<?= $n; ?> option').length <= 1) {
+                                                                $('#cabang<?= $n; ?>').trigger('change');
                                                             }
                                                         });
                                                     });

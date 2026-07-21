@@ -83,9 +83,10 @@
                                                 <select name="cabang" id="cabang" class="form-control <?= session('errors.cabang') ? 'is-invalid' : '' ?>">
                                                     <option value="">: Lokasi Gym</option>
                                                     <?php
+                                                    $oldCabang = old('cabang') ?? '';
                                                     foreach ($cabangs as $cab):
                                                     ?>
-                                                        <option value="<?= $cab['id'] ?>"><?= $cab['nama'] ?></option>
+                                                        <option value="<?= $cab['id'] ?>" <?= $oldCabang == $cab['id'] ? 'selected' : '' ?>><?= $cab['nama'] ?></option>
                                                     <?php
                                                     endforeach;
                                                     ?>
@@ -110,10 +111,11 @@
                                                 <select name="payment" id="payment" class="form-control <?= session('errors.payment') ? 'is-invalid' : '' ?>">
                                                     <option value="">: Metode Bayar</option>
                                                     <?php
+                                                    $oldPayment = old('payment') ?? '';
                                                     $arr_mtd = ['Cash', 'Qris', 'Bank Transfer'];
                                                     for ($i = 0; $i < count($arr_mtd); $i++):
                                                     ?>
-                                                        <option value="<?= $arr_mtd[$i] ?>"><?= $arr_mtd[$i] ?></option>
+                                                        <option value="<?= $arr_mtd[$i] ?>" <?= $oldPayment == $arr_mtd[$i] ? 'selected' : '' ?>><?= $arr_mtd[$i] ?></option>
                                                     <?php
                                                     endfor;
                                                     ?>
@@ -272,6 +274,8 @@
 
     <script>
         $(document).ready(function() {
+            let oldPaket = "<?= old('paket') ?? '' ?>";
+
             // Load paket member berdasarkan cabang
             $('#cabang').on('change', function() {
                 const selectedCabangId = $(this).val();
@@ -283,14 +287,19 @@
                         dataType: 'json',
                         success: function(response) {
                             response.forEach(function(paket) {
-                                $('#paket').append(`<option value="${paket.id}">${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
+                                let isSelected = (oldPaket == paket.id) ? 'selected' : '';
+                                $('#paket').append(`<option value="${paket.id}" ${isSelected}>${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
                             });
+                            oldPaket = ""; // Reset setelah render pertama
                         }
                     });
-
-                    // alert('yuhuu..');
                 }
             });
+
+            // Trigger otomatis jika cabang sudah terpilih (misal karena error validasi redirect back)
+            if ($('#cabang').val() !== '') {
+                $('#cabang').trigger('change');
+            }
         });
     </script>
 </body>

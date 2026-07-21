@@ -595,6 +595,14 @@ class Membership extends BaseController
         $existingTransaction = $this->modeltrans->where('custid', $idcust)
             ->where('DATE(created_at)', date('Y-m-d'))
             ->first();
+            
+        $tgl = $this->request->getVar('payment_date');
+        $tgl = empty($tgl) ? date('Y-m-d') : $tgl;
+        
+        $expired_date = date('Y-m-d 23:59:00', strtotime("+$getpaket[expired] month", strtotime($tgl)));
+        
+        // Ubah status keanggotaan lama menjadi 2 (Expired)
+        $this->modeltrans->ubah_status($idcust, $transid, ['status' => 2]);
 
         if ($existingTransaction) {
             $update = [
@@ -602,17 +610,20 @@ class Membership extends BaseController
                 'membershipid' => $paket,
                 'nominal' => $getpaket['nominal'],
                 'payment_type' => $payment,
-                'expired_date' => null,
-                'status' => 0,
-                'user' => null
+                'payment_date' => date('Y-m-d', strtotime($tgl)),
+                'expired_date' => $expired_date,
+                'status' => 1,
+                'user' => $this->userId
             ];
             // Update transaksi jika sudah ada
             $this->modeltrans->update($existingTransaction['id'], $update);
-            // $message = "Transaksi berhasil diperbarui!";
         } else {
+            $trans['payment_date'] = date('Y-m-d', strtotime($tgl));
+            $trans['expired_date'] = $expired_date;
+            $trans['status'] = 1;
+            $trans['user'] = $this->userId;
             // Tambahkan transaksi baru jika belum ada
             $this->modeltrans->insert($trans);
-            // $message = "Transaksi baru berhasil disimpan!";
         }
 
         // SendPush Notification
@@ -671,6 +682,11 @@ class Membership extends BaseController
     public function getPaketByCabang($idcabang)
     {
         $cabang = $this->modelcabang->get_detail($idcabang);
+        
+        if (!$cabang) {
+            return $this->response->setJSON([]);
+        }
+
         $pkt = $this->modelmembership->pkgByKota($cabang->kota);
 
         // dd($pkt);
