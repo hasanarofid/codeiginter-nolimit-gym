@@ -24,7 +24,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control <?= session('errors.idmember') ? 'is-invalid' : '' ?>" name="idmember" id="scanner_input" value="<?= $idmember ?>" placeholder="xxxxxxxxx" autofocus>
                                         <div class="input-group-append">
-                                            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#livestream_scanner"><i class="fas fa-fw fa-barcode mr-1"></i>Scan</button>
+                                            <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#livestream_scanner"><i class="fas fa-fw fa-camera mr-1"></i>Scan Kamera</button>
                                         </div>
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#memberlist"><i class="fas fa-fw fa-users mr-1"></i>Cari</button>
@@ -34,6 +34,7 @@
                                             <?= session('errors.idmember') ?>
                                         </div>
                                     </div>
+                                    <small class="form-text text-muted">*Untuk scanner USB, langsung scan ke alat tanpa klik tombol.</small>
 
                                 </div>
                                 <div class="form-group col-3">
@@ -113,7 +114,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
-                                        <h4 class="modal-title">Barcode Scanner</h4>
+                                        <h4 class="modal-title">Webcam Barcode/QR Scanner</h4>
                                     </div>
                                     <div class="modal-body" style="position: static">
                                         <div id="interactive" class="viewport"></div>
