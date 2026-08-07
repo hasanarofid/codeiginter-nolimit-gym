@@ -181,7 +181,12 @@
                                                         dateFormat: "yy-mm-dd",
                                                         changeMonth: true,
                                                         changeYear: true,
-                                                        yearRange: "c-80:c+0"
+                                                        yearRange: "c-80:c+0",
+                                                        beforeShow: function(input) {
+                                                            return {
+                                                                appendTo: $(input).closest('.modal-body')
+                                                            };
+                                                        }
                                                     });
                                                 });
                                             </script>
@@ -348,7 +353,12 @@ $(document).ready(function() {
         dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
-        yearRange: "c-80:c+0"
+        yearRange: "c-80:c+0",
+        beforeShow: function(input) {
+            return {
+                appendTo: $(input).closest('.modal-body')
+            };
+        }
     });
 
     function loadPaket(cabangId) {
@@ -361,7 +371,8 @@ $(document).ready(function() {
                 success: function(response) {
                     $('#renew_paket').empty().append('<option value="">: Pilih Paket</option>');
                     response.forEach(function(paket) {
-                        $('#renew_paket').append('<option value="' + paket.id + '">' + paket.category + ' ' + paket.nama + ' - ' + paket.nominal + '</option>');
+                        let nominal = 'Rp ' + parseInt(paket.nominal).toLocaleString('id-ID');
+                        $('#renew_paket').append('<option value="' + paket.id + '">' + paket.category + ' - ' + paket.nama + ' (' + nominal + ')</option>');
                     });
                 },
                 error: function(xhr, status, error) {
