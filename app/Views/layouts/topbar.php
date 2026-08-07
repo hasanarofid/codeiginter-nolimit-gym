@@ -39,8 +39,8 @@
                             </div>
                             <div>
                                 <div class="small text-gray-500"><?= date('d M Y, H:i', strtotime($notif->created_at)) ?></div>
-                                <span class="font-weight-bold"><?= esc($notif->title) ?></span>
-                                <div class="small text-truncate" style="max-width: 250px;"><?= esc($notif->message) ?></div>
+                                <span class="font-weight-bold text-dark"><?= esc($notif->title) ?></span>
+                                <div class="small text-gray-700" style="white-space: normal; word-break: break-word;"><?= esc($notif->message) ?></div>
                             </div>
                         </a>
                     <?php 
