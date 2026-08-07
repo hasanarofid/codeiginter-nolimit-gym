@@ -137,11 +137,12 @@ class ModelMembership extends Model
     public function pkgByKota($kota)
     {
         $builder = $this->db->table($this->table);
-        $builder->select('membership.id, membership.nama, membership.nominal,membership_cat.catname AS category');
+        $builder->select('membership.id, membership.nama, membership.nominal, membership_cat.catname AS category');
         $builder->join('membership_cat', 'membership_cat.catid = membership.catid', 'left');
-        $builder->where('membership.kota', $kota);
+        $builder->where('LOWER(membership.kota) =', strtolower($kota));
         $builder->where('membership.expired != 0');
         $builder->where('membership.deleted_at IS NULL');
+        $builder->orderBy('membership.catid', 'ASC');
         return $builder->get()->getResultArray();
     }
 

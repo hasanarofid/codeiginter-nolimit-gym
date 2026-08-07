@@ -276,6 +276,10 @@
         $(document).ready(function() {
             let oldPaket = "<?= old('paket') ?? '' ?>";
 
+            function formatRupiah(angka) {
+                return 'Rp ' + parseInt(angka).toLocaleString('id-ID');
+            }
+
             // Load paket member berdasarkan cabang
             $('#cabang').on('change', function() {
                 const selectedCabangId = $(this).val();
@@ -286,11 +290,17 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
+                            if (response.length === 0) {
+                                $('#paket').append('<option value="" disabled>Tidak ada paket tersedia</option>');
+                            }
                             response.forEach(function(paket) {
                                 let isSelected = (oldPaket == paket.id) ? 'selected' : '';
-                                $('#paket').append(`<option value="${paket.id}" ${isSelected}>${paket.category} ${paket.nama} - ${paket.nominal}</option>`);
+                                $('#paket').append(`<option value="${paket.id}" ${isSelected}>${paket.category} - ${paket.nama} (${formatRupiah(paket.nominal)})</option>`);
                             });
                             oldPaket = ""; // Reset setelah render pertama
+                        },
+                        error: function() {
+                            $('#paket').append('<option value="" disabled>Gagal memuat paket</option>');
                         }
                     });
                 }
