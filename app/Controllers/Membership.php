@@ -413,6 +413,162 @@ class Membership extends BaseController
         return redirect()->to(base_url('membership'));
     }
 
+    // =========================================================
+    // NON MEMBERSHIP (Paket Pervisit / Gym Non Membership)
+    // =========================================================
+
+    private function getNonMemberCatId(): ?int
+    {
+        $cat = $this->modelmemcat->where('catname', 'Gym Non Membership')->first();
+        return $cat ? (int) $cat['catid'] : null;
+    }
+
+    public function non_membership()
+    {
+        $nmCatId = $this->getNonMemberCatId();
+
+        $data = [
+            'title'      => 'Paket Non Membership',
+            'packages'   => $nmCatId ? $this->modelmembership->get_join_paket_by_cat($nmCatId) : [],
+            'permission' => $this->permission,
+            'role_array' => $this->role_array,
+            'nm_cat_id'  => $nmCatId,
+        ];
+        return view('modules/member/nonmember_packages', $data);
+    }
+
+    public function nm_create()
+    {
+        $nmCatId = $this->getNonMemberCatId();
+
+        $data = [
+            'title'    => 'Tambah Paket Non Membership',
+            'action'   => base_url('/nonmembership/store'),
+            'readonly' => '',
+            'button'   => 'Create',
+            'btn_class'=> 'btn btn-primary',
+            'id'       => old('id'),
+            'catid'    => $nmCatId,
+            'kota'     => old('kota'),
+            'nama'     => old('nama'),
+            'nominal'  => old('nominal'),
+            'expired'  => old('expired'),
+            'deskripsi'=> old('deskripsi'),
+            'cities'   => $this->modelcabang->get_kota(),
+            'nm_cat_id'=> $nmCatId,
+        ];
+
+        return view('modules/member/nonmember_form', $data);
+    }
+
+    public function nm_store()
+    {
+        helper('text');
+
+        $nmCatId = $this->getNonMemberCatId();
+        if (!$nmCatId) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger">Kategori Gym Non Membership tidak ditemukan. Jalankan SQL terlebih dahulu.</div>');
+            return redirect()->to(base_url('nonmembership'));
+        }
+
+        $lastId = $this->modelmembership->get_count()->jml;
+        $lastId += 1;
+
+        if (strlen($lastId) == 1) {
+            $newId = 'NMS' . date('my') . '00' . $lastId;
+        } else if (strlen($lastId) == 2) {
+            $newId = 'NMS' . date('my') . '0' . $lastId;
+        } else {
+            $newId = 'NMS' . date('my') . $lastId;
+        }
+
+        $data = [
+            'id'       => $newId,
+            'nama'     => $this->request->getPost('nama'),
+            'catid'    => $nmCatId,
+            'kota'     => $this->request->getPost('kota'),
+            'nominal'  => $this->request->getPost('nominal'),
+            'expired'  => $this->request->getPost('expired') ?? 0,
+            'deskripsi'=> $this->request->getPost('deskripsi'),
+            'user'     => $this->userId,
+        ];
+
+        $simpan = $this->modelmembership->insert($data);
+        if ($simpan === false) {
+            return redirect()->back()->withInput()->with('errors', $this->modelmembership->errors());
+        }
+
+        $pesan = '<div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                Data Tersimpan
+            </div>';
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to(base_url('nonmembership'));
+    }
+
+    public function nm_edit($id)
+    {
+        $find    = $this->modelmembership->get_membership($id);
+        $nmCatId = $this->getNonMemberCatId();
+
+        $data = [
+            'title'    => 'Edit Paket Non Membership',
+            'action'   => base_url('/nonmembership/update'),
+            'readonly' => '',
+            'button'   => 'Edit',
+            'btn_class'=> 'btn btn-warning',
+            'id'       => old('id', $find['id']),
+            'catid'    => $nmCatId,
+            'kota'     => old('kota', $find['kota']),
+            'nama'     => old('nama', $find['nama']),
+            'nominal'  => old('nominal', $find['nominal']),
+            'expired'  => old('expired', $find['expired']),
+            'deskripsi'=> old('deskripsi', $find['deskripsi']),
+            'cities'   => $this->modelcabang->get_kota(),
+            'nm_cat_id'=> $nmCatId,
+        ];
+
+        return view('modules/member/nonmember_form', $data);
+    }
+
+    public function nm_update()
+    {
+        $id      = $this->request->getPost('id');
+        $nmCatId = $this->getNonMemberCatId();
+
+        $data = [
+            'nama'     => $this->request->getPost('nama'),
+            'catid'    => $nmCatId,
+            'kota'     => $this->request->getPost('kota'),
+            'nominal'  => $this->request->getPost('nominal'),
+            'expired'  => $this->request->getPost('expired') ?? 0,
+            'deskripsi'=> $this->request->getPost('deskripsi'),
+            'user'     => $this->userId,
+        ];
+
+        $update = $this->modelmembership->update($id, $data);
+        if ($update === false) {
+            return redirect()->back()->withInput()->with('errors', $this->modelmembership->errors());
+        }
+
+        $pesan = '<div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                Data Berhasil di Rubah
+            </div>';
+        session()->setFlashdata('pesan', $pesan);
+        return redirect()->to(base_url('nonmembership'));
+    }
+
+    public function nm_delete($id)
+    {
+        $this->modelmembership->delete($id);
+        return redirect()->to(base_url('nonmembership'));
+    }
+
     public function forgot_password()
     {
         $data = [

@@ -42,6 +42,14 @@ $routes->post('/membership/delete/(:segment)', 'Membership::delete/$1');
 $routes->get('/membership/getPaketByCabang/(:segment)', 'Membership::getPaketByCabang/$1');
 $routes->get('/membership/getPervisitBycabang/(:segment)', 'Membership::getPervisitBycabang/$1');
 
+// Non Membership (Paket Pervisit / Non Member)
+$routes->get('/nonmembership', 'Membership::non_membership');
+$routes->get('/nonmembership/create', 'Membership::nm_create');
+$routes->post('/nonmembership/store', 'Membership::nm_store');
+$routes->get('/nonmembership/edit/(:segment)', 'Membership::nm_edit/$1');
+$routes->post('/nonmembership/update', 'Membership::nm_update');
+$routes->post('/nonmembership/delete/(:segment)', 'Membership::nm_delete/$1');
+
 $routes->get('/payment/pay/(:segment)', 'Payment::index/$1');
 $routes->post('/webhook/midtrans', 'MidtransWebhook::index');
 

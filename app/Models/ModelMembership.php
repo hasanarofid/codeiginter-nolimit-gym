@@ -127,6 +127,17 @@ class ModelMembership extends Model
         return $builder->get()->getResultArray();
     }
 
+    public function get_join_paket_by_cat(int $catId)
+    {
+        $builder = $this->db->table($this->table);
+        $builder->select("membership.id, membership.nama, membership.kota, membership.nominal, membership.expired, membership.deskripsi, membership_cat.catname");
+        $builder->join('membership_cat', 'membership_cat.catid = membership.catid', 'left');
+        $builder->where('membership.catid', $catId);
+        $builder->where('membership.deleted_at IS NULL');
+        $builder->orderBy('membership.id', 'ASC');
+        return $builder->get()->getResultArray();
+    }
+
     public function get_count()
     {
         $builder = $this->db->table($this->table);
