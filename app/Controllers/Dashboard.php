@@ -52,7 +52,7 @@ class Dashboard extends BaseController
             $db = \Config\Database::connect();
             $prevCount = $db->table('membership_trans')
                             ->where('custid', $tr->custid)
-                            ->where('payment_date <', $tr->payment_date)
+                            ->where('created_at <', $tr->created_at)
                             ->where('status', 1)
                             ->countAllResults();
             $tr->is_renew = ($prevCount > 0);

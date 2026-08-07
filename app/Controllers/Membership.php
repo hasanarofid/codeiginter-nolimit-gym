@@ -734,53 +734,37 @@ class Membership extends BaseController
         $customer   = $this->modelcustomer->get_customer($idcust);
 
         $getpaket = $this->modelmembership->get_membership($paket);
-        $transid = $this->generateUniqueId($cabang);
-        $trans = [
-            'id' => $transid,
-            'custid' => $idcust,
-            'membershipid' => $paket,
-            'nominal' => $getpaket['nominal'],
-            'payment_type' => $payment,
-            'expired_date' => null,
-            'status' => 0,
-            'user' => null
-        ];
-
-
-        // Cek apakah transaksi dengan tanggal ini sudah ada
-        $existingTransaction = $this->modeltrans->where('custid', $idcust)
-            ->where('DATE(created_at)', date('Y-m-d'))
-            ->first();
-            
         $tgl = $this->request->getVar('payment_date');
         $tgl = empty($tgl) ? date('Y-m-d') : $tgl;
-        
-        $expired_date = date('Y-m-d 23:59:00', strtotime("+$getpaket[expired] month", strtotime($tgl)));
-        
-        // Ubah status keanggotaan lama menjadi 2 (Expired)
-        $this->modeltrans->ubah_status($idcust, $transid, ['status' => 2]);
 
-        if ($existingTransaction) {
-            $update = [
-                'custid' => $idcust,
-                'membershipid' => $paket,
-                'nominal' => $getpaket['nominal'],
-                'payment_type' => $payment,
-                'payment_date' => date('Y-m-d', strtotime($tgl)),
-                'expired_date' => $expired_date,
-                'status' => 1,
-                'user' => $this->userId
-            ];
-            // Update transaksi jika sudah ada
-            $this->modeltrans->update($existingTransaction['id'], $update);
+        // Cek apakah customer memiliki membership aktif saat ini
+        $activeExp = $this->modeltrans->get_expired($idcust);
+
+        // Jika memiliki membership aktif yang kadaluarsanya masih di masa depan, akumulasikan dari expired_date tersebut
+        if ($activeExp && !empty($activeExp->expired_date) && strtotime($activeExp->expired_date) >= strtotime($tgl)) {
+            $baseTimestamp = strtotime($activeExp->expired_date);
         } else {
-            $trans['payment_date'] = date('Y-m-d', strtotime($tgl));
-            $trans['expired_date'] = $expired_date;
-            $trans['status'] = 1;
-            $trans['user'] = $this->userId;
-            // Tambahkan transaksi baru jika belum ada
-            $this->modeltrans->insert($trans);
+            $baseTimestamp = strtotime($tgl . ' 00:00:00');
         }
+
+        $monthsToAdd  = (int) $getpaket['expired'];
+        $expired_date = date('Y-m-d 23:59:00', strtotime("+$monthsToAdd month", $baseTimestamp));
+
+        $transid = $this->generateUniqueId($cabang);
+        $trans   = [
+            'id'           => $transid,
+            'custid'       => $idcust,
+            'membershipid' => $paket,
+            'nominal'      => $getpaket['nominal'],
+            'payment_type' => $payment,
+            'payment_date' => date('Y-m-d', strtotime($tgl)),
+            'expired_date' => $expired_date,
+            'status'       => 1,
+            'user'         => $this->userId
+        ];
+
+        // Selalu simpan transaksi baru untuk setiap perpanjangan
+        $this->modeltrans->insert($trans);
 
         // SendPush Notification
         $message = "Perpanjangan member an. " . $customer['nama'] . " dengan ID : " . $idcust;

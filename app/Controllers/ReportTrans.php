@@ -132,7 +132,7 @@ class ReportTrans extends BaseController
             $db = \Config\Database::connect();
             $prevCount = $db->table('membership_trans')
                             ->where('custid', $transaction->custid)
-                            ->where('payment_date <', $transaction->payment_date)
+                            ->where('created_at <', $transaction->created_at)
                             ->where('status', 1)
                             ->countAllResults();
             

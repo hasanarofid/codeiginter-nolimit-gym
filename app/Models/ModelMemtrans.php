@@ -49,17 +49,13 @@ class ModelMemtrans extends Model
         $builder->join('membership', 'membership.id = membership_trans.membershipid', 'left');
         $builder->where('membership_trans.custid', $custid);
         $builder->where('membership_trans.status', 1);
+        $builder->orderBy('membership_trans.expired_date', 'DESC');
         return $builder->get()->getRow();
     }
 
     public function kadaluarsa($custid)
     {
-        $builder = $this->db->table($this->table);
-        $builder->select('membership_trans.*, membership.nama');
-        $builder->join('membership', 'membership.id = membership_trans.membershipid', 'left');
-        $builder->where('membership_trans.custid', $custid);
-        $builder->where('membership_trans.status', 1);
-        return $builder->get()->getRow();
+        return $this->get_expired($custid);
     }
 
     public function get_count()
@@ -148,7 +144,7 @@ class ModelMemtrans extends Model
     {
         $db = db_connect();
         $d = $db->table($this->table . ' m'); // Tambahkan alias 'm' untuk tabel utama
-        $d->select("m.id AS idtx, k.id AS custid, k.nama AS nmcust, CONCAT(mc.catname,' ', p.nama) AS pkgname, m.payment_date, m.nominal, m.expired_date, m.status,m.payment_type, c.id AS idcab, c.nama AS nmcab");
+        $d->select("m.id AS idtx, m.created_at AS created_at, k.id AS custid, k.nama AS nmcust, CONCAT(mc.catname,' ', p.nama) AS pkgname, m.payment_date, m.nominal, m.expired_date, m.status,m.payment_type, c.id AS idcab, c.nama AS nmcab");
         $d->join('customers k', 'k.id = m.custid', 'left');
         $d->join('cabang c', 'c.id = k.kdcab', 'left');
         $d->join('membership p', 'p.id = m.membershipid', 'left');
@@ -163,7 +159,7 @@ class ModelMemtrans extends Model
             $d->where('m.payment_date <=', $end_date);
         }
 
-        $d->orderBy('m.payment_date', 'desc');
+        $d->orderBy('m.created_at', 'desc');
 
         /**
         // Cetak query SQL sebelum dieksekusi
