@@ -30,7 +30,8 @@ class ManajemenUser extends BaseController
     {
         if ($r = $this->guardAdmin()) return $r;
 
-        $users = $this->db->table('user')
+        $db = \Config\Database::connect();
+        $users = $db->table('user')
             ->select('user.UserID, user.Nama, user.UserGroup, user.Ket, user.kdcab, user_group.nama AS group_nama, cabang.nama AS cabang_nama')
             ->join('user_group', 'user_group.groupid = user.UserGroup', 'left')
             ->join('cabang', 'cabang.id = user.kdcab', 'left')
