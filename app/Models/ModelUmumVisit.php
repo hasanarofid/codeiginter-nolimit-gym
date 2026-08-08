@@ -31,6 +31,7 @@ class ModelUmumVisit extends Model
         if ($cabang != '%') {
             $this->where('cabang', $cabang);
         }
+        $this->orderBy('created_at', 'DESC');
         return $this->findAll();
     }
 

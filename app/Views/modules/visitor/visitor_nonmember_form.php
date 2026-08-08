@@ -118,6 +118,7 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
+                                    <th>Tanggal</th>
                                     <th>Nama Pengunjung</th>
                                     <th>In</th>
                                     <th>Out</th>
@@ -134,7 +135,8 @@
                                     $btn_out = $pengunjung['updated_at'] == null ? '' : ' disabled';
                                 ?>
                                     <tr>
-                                        <td><?= $nnn; ?></td>
+                                        <td><?= $nnn++; ?></td>
+                                        <td><?= date('d/m/Y', strtotime($pengunjung['created_at'])) ?></td>
                                         <td><?= $pengunjung['nama'] ?></td>
                                         <td><?= date('H:i', strtotime($pengunjung['created_at'])) ?></td>
                                         <td><?= $out ?></td>

@@ -70,6 +70,22 @@ $(document).ready(function() {
     const table = $('#rekapHarianTable').DataTable({
         "processing": true,
         "serverSide": false,
+        "language": {
+            "emptyTable": "Data tidak ditemukan / Kosong",
+            "zeroRecords": "Data tidak ditemukan / Kosong",
+            "processing": "Memuat data...",
+            "search": "Cari:",
+            "lengthMenu": "Tampilkan _MENU_ data",
+            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            "infoEmpty": "Menampilkan 0 sampai 0 dari 0 data",
+            "infoFiltered": "(disaring dari _MAX_ total data)",
+            "paginate": {
+                "first": "Pertama",
+                "last": "Terakhir",
+                "next": "Selanjutnya",
+                "previous": "Sebelumnya"
+            }
+        },
         "ajax": {
             "url": "<?= base_url('/report/fetch_rekap_harian') ?>",
             "type": "GET",
@@ -89,7 +105,9 @@ $(document).ready(function() {
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api();
-            $('#totalAmount').html('<strong>' + api.ajax.json().total_amount + '</strong>');
+            var json = api.ajax.json();
+            var total = json && json.total_amount ? json.total_amount : '0,00';
+            $('#totalAmount').html('<strong>' + total + '</strong>');
         }
     });
 

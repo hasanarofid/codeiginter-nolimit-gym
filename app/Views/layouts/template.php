@@ -526,12 +526,30 @@
     <!-- Reports membership trx-->
     <script>
         $(document).ready(function() {
+            var dtLanguage = {
+                emptyTable: "Data tidak ditemukan / Kosong",
+                zeroRecords: "Data tidak ditemukan / Kosong",
+                processing: "Memuat data...",
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                infoFiltered: "(disaring dari _MAX_ total data)",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                }
+            };
+
             // Initialize DataTables
             var table = $('#transactionTable').DataTable({
                 columnDefs: [{
-                    targets: 0, // Kolom pertama (No)
+                    targets: 0,
                     orderable: false
-                }]
+                }],
+                language: dtLanguage
             });
 
             $('#searchBtn').on('click', function() {
@@ -549,25 +567,23 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        // Clear existing rows
                         table.clear();
-
-                        // Add new data rows
-                        var nomor = 1; // Nomor urut dimulai dari 1
-                        response.data.forEach(function(item) {
-                            table.row.add([
-                                nomor++, // Menambahkan nomor urut
-                                item[0], // pkgname
-                                item[1], // Nama cust
-                                item[2], // cabang
-                                item[3], // payment date
-                                item[4], // payment type
-                                item[5] // Nominal
-                            ]).draw();
-                        });
-
-                        // Update total amount
-                        $('#totalAmount').html(response.total_amount);
+                        var nomor = 1;
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(item) {
+                                table.row.add([
+                                    nomor++,
+                                    item[0],
+                                    item[1],
+                                    item[2],
+                                    item[3],
+                                    item[4],
+                                    item[5]
+                                ]);
+                            });
+                        }
+                        table.draw();
+                        $('#totalAmount').html('<strong>' + (response.total_amount || '0,00') + '</strong>');
                     }
                 });
             });
@@ -577,12 +593,30 @@
     <!-- Reports non member visit trx-->
     <script>
         $(document).ready(function() {
+            var dtLanguage = {
+                emptyTable: "Data tidak ditemukan / Kosong",
+                zeroRecords: "Data tidak ditemukan / Kosong",
+                processing: "Memuat data...",
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                infoFiltered: "(disaring dari _MAX_ total data)",
+                paginate: {
+                    first: "Pertama",
+                    last: "Terakhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                }
+            };
+
             // Initialize DataTables
             var table = $('#trxumum').DataTable({
                 columnDefs: [{
-                    targets: 0, // Kolom pertama (No)
+                    targets: 0,
                     orderable: false
-                }]
+                }],
+                language: dtLanguage
             });
 
             $('#srcTrx').on('click', function() {
@@ -600,26 +634,23 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        console.log(response); // Debug response data
-                        // Clear existing rows
                         table.clear();
-
-                        // Add new data rows
-                        var nomor = 1; // Nomor urut dimulai dari 1
-                        response.data.forEach(function(item) {
-                            table.row.add([
-                                nomor++, // Menambahkan nomor urut
-                                item[0], // pkgname
-                                item[1], // Nama cust
-                                item[2], // cabang
-                                item[3], // payment date
-                                item[4], // payment type
-                                item[5] // Nominal
-                            ]).draw();
-                        });
-
-                        // Update total amount
-                        $('#total').html(response.total_amount);
+                        var nomor = 1;
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(item) {
+                                table.row.add([
+                                    nomor++,
+                                    item[0],
+                                    item[1],
+                                    item[2],
+                                    item[3],
+                                    item[4],
+                                    item[5]
+                                ]);
+                            });
+                        }
+                        table.draw();
+                        $('#total').html('<strong>' + (response.total_amount || '0,00') + '</strong>');
                     }
                 });
             });

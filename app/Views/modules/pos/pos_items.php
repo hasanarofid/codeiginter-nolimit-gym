@@ -33,7 +33,7 @@
                             <?php $no = 1; foreach ($items as $row): ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
-                                    <td><?= $row->iditem ?></td>
+                                    <td><?= str_starts_with($row->iditem, '%') ? str_replace('%', 'ALL-', $row->iditem) : $row->iditem ?></td>
                                     <td><?= $row->nama ?></td>
                                     <td><?= $row->kategori_nama ?></td>
                                     <td class="text-center font-weight-bold <?= $row->stok <= 5 ? 'text-danger' : 'text-success' ?>"><?= $row->stok ?></td>

@@ -42,14 +42,34 @@ class Dashboard extends BaseController
             'schedule_boxing' => $modelKlsBoxing->tabel_bothai($cabang_id),
         ];
 
-        // data pendapatan yang muncul di dashboard
-        // menyesuaikan level admin & cabang
-        $daily_earning = $this->modelmemtrans->get_daily_earning($getUser->kdcab);
+        // data pendapatan yang muncul di dashboard (Membership + NonMember)
+        $db = \Config\Database::connect();
+
+        // 1. Daily Earning
+        $daily_mem = $this->modelmemtrans->get_daily_earning($getUser->kdcab)->total ?? 0;
+        $nmDailyQuery = $db->table('nonmember_visit')->select('SUM(nominal) as total')->where('DATE(created_at) = CURDATE()')->where('deleted_at IS NULL');
+        if ($getUser->kdcab !== '%') { $nmDailyQuery->where('cabang', $getUser->kdcab); }
+        $daily_nm = $nmDailyQuery->get()->getRow()->total ?? 0;
+        $daily_earning_total = $daily_mem + $daily_nm;
+
+        // 2. Monthly Earning
+        $monthly_mem = $this->modelmemtrans->earnings_this_month($getUser->kdcab)->total ?? 0;
+        $nmMonthlyQuery = $db->table('nonmember_visit')->select('SUM(nominal) as total')->where('MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())')->where('deleted_at IS NULL');
+        if ($getUser->kdcab !== '%') { $nmMonthlyQuery->where('cabang', $getUser->kdcab); }
+        $monthly_nm = $nmMonthlyQuery->get()->getRow()->total ?? 0;
+        $monthly_earning_total = $monthly_mem + $monthly_nm;
+
+        // 3. Annual Earning
+        $anual_mem = $this->modelmemtrans->earnings_this_year($getUser->kdcab)->total ?? 0;
+        $nmAnnualQuery = $db->table('nonmember_visit')->select('SUM(nominal) as total')->where('YEAR(created_at) = YEAR(CURDATE())')->where('deleted_at IS NULL');
+        if ($getUser->kdcab !== '%') { $nmAnnualQuery->where('cabang', $getUser->kdcab); }
+        $anual_nm = $nmAnnualQuery->get()->getRow()->total ?? 0;
+        $anual_earning_total = $anual_mem + $anual_nm;
+
         $today_transactions = $this->modelmemtrans->get_mem_trans($getUser->kdcab, date('Y-m-d'), date('Y-m-d'));
         
         $transactions_with_status = [];
         foreach ($today_transactions as $tr) {
-            $db = \Config\Database::connect();
             $prevCount = $db->table('membership_trans')
                             ->where('custid', $tr->custid)
                             ->where('created_at <', $tr->created_at)
@@ -61,7 +81,6 @@ class Dashboard extends BaseController
         }
 
         // Ambil kunjungan Non-Member hari ini dan gabungkan
-        $db = \Config\Database::connect();
         $nmQuery = $db->table('nonmember_visit nv')
             ->select("nv.idx AS idtx, nv.created_at, NULL AS custid, nv.nama AS nmcust,
                       CONCAT(mc.catname, ' ', mp.nama) AS pkgname,
@@ -86,12 +105,11 @@ class Dashboard extends BaseController
         // Urutkan gabungan berdasarkan waktu terbaru
         usort($transactions_with_status, fn($a, $b) => strtotime($b->created_at) - strtotime($a->created_at));
 
-
         // total dari cabang2, lihat detail dari report
         $data['report'] = [
-            'daily_earning' => 'Rp.' . number_format($daily_earning->total ?? 0, 0, ',', '.'),
-            'monthly_earning' => 'Rp.' . number_format($monthly_earning, 0, ',', '.'),
-            'anual_earning' => 'Rp.' . number_format($anual_earning, 0, ',', '.'),
+            'daily_earning' => 'Rp.' . number_format($daily_earning_total, 0, ',', '.'),
+            'monthly_earning' => 'Rp.' . number_format($monthly_earning_total, 0, ',', '.'),
+            'anual_earning' => 'Rp.' . number_format($anual_earning_total, 0, ',', '.'),
             'pending_req' => $pending_req,
             'member_active' => $active_member,
             'customer_visit' => 115,
