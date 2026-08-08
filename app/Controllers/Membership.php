@@ -763,7 +763,12 @@ class Membership extends BaseController
             'user'         => $this->userId
         ];
 
-        // Selalu simpan transaksi baru untuk setiap perpanjangan
+        // Tandai semua transaksi aktif lama sebagai status=2 (superseded/sudah diperpanjang)
+        // agar COUNT(DISTINCT custid) di dashboard tidak menghitung ganda.
+        // History tetap tersimpan di DB.
+        $this->modeltrans->ubah_status($idcust, $transid, ['status' => 2]);
+
+        // Simpan transaksi baru untuk perpanjangan ini
         $this->modeltrans->insert($trans);
 
         // SendPush Notification

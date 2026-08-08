@@ -118,8 +118,10 @@ class ModelMemtrans extends Model
     public function get_member_active($cabang)
     {
         $v = $this->table($this->table);
-        $v->select('COUNT(id) AS jml');
+        // Hitung member unik (DISTINCT custid) yang masih aktif dan belum kadaluarsa
+        $v->select('COUNT(DISTINCT custid) AS jml');
         $v->where('status', 1);
+        $v->where('expired_date >=', date('Y-m-d H:i:s'));
 
         if ($cabang != '%') {
             $v->like('id', $cabang, 'after');
