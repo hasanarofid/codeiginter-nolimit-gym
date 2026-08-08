@@ -136,7 +136,7 @@
                                 ?>
                                     <tr>
                                         <td><?= $nnn++; ?></td>
-                                        <td><?= date('d/m/Y', strtotime($pengunjung['created_at'])) ?></td>
+                                        <td data-order="<?= strtotime($pengunjung['created_at']) ?>"><?= date('d/m/Y', strtotime($pengunjung['created_at'])) ?></td>
                                         <td><?= $pengunjung['nama'] ?></td>
                                         <td><?= date('H:i', strtotime($pengunjung['created_at'])) ?></td>
                                         <td><?= $out ?></td>

@@ -194,9 +194,7 @@
                     orderable: false,
                     targets: 0,
                 }, ],
-                order: [
-                    [1, 'asc']
-                ],
+                order: [],
             });
 
             t.on('order.dt search.dt', function() {
