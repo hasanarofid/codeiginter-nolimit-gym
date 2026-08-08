@@ -388,7 +388,8 @@
         });
     </script>
 
-    <!-- Pusher -->
+    <?php if (in_array(session()->group, ['SA', 'AD', 'OP'])) : ?>
+    <!-- Pusher - hanya untuk SA, AD, OP (Admin & Kasir) -->
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
         // Enable pusher logging - don't include this in production
@@ -400,8 +401,6 @@
 
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
-            // alert(JSON.stringify(data));
-
             // Set konten notifikasi di modal
             document.getElementById('notificationMessage').innerText = data.message;
 
@@ -431,6 +430,8 @@
             }, 500); // Delay 500ms
         });
     </script>
+    <?php endif; ?>
+
 
     <!-- Menampilkan AJAX data customer -->
     <script>
