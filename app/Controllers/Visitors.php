@@ -34,7 +34,7 @@ class Visitors extends BaseController
             'idmember' => old('idmember'),
             'locker' => old('locker'),
             'handuk' => old('handuk'),
-            'members' => $this->modelcustomer->get_by_cabang($this->user_cabang),
+            'members' => $this->modelcustomer->get_by_cabang('%'),
             'visitors' => $this->modelvisitor->get_visitor(null, $this->user_cabang),
         ];
 

@@ -241,12 +241,14 @@
     <script>
         $(document).ready(function() {
             $('#table-member').on('click', '.select-member', function() {
-
                 var currentRow = $(this).closest('tr');
-                var col1 = currentRow.find("td:eq(1)").text();
-                var col2 = currentRow.find("td:eq(2)").text();
+                var col1 = currentRow.find("td:eq(1)").text().trim();
+                var col2 = currentRow.find("td:eq(2)").text().trim();
 
-                $('#scanner_input').val(col1);
+                $('#scanner_input').val(col1).trigger('change');
+                if (typeof checkMember === 'function') {
+                    checkMember();
+                }
                 $('#nama').val(col2);
             });
         });
