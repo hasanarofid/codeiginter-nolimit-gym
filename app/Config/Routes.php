@@ -154,9 +154,18 @@ $routes->post('/expenses/store', 'Expenses::store');
 $routes->get('/expenses/delete/(:num)', 'Expenses::delete/$1');
 
 
-// Users
+// Users (profil diri sendiri)
 $routes->get('/user', 'AkunPengguna::index');
 $routes->post('/user/update_pass', 'AkunPengguna::update');
+
+// Admin - Manajemen User (hanya SA & AD)
+$routes->get('/admin/users', 'ManajemenUser::index');
+$routes->get('/admin/users/create', 'ManajemenUser::create');
+$routes->post('/admin/users/store', 'ManajemenUser::store');
+$routes->get('/admin/users/edit/(:segment)', 'ManajemenUser::edit/$1');
+$routes->post('/admin/users/update', 'ManajemenUser::update');
+$routes->post('/admin/users/toggle/(:segment)', 'ManajemenUser::toggle/$1');
+
 
 // theme
 $routes->get('/theme-one', 'Themes::tema_satu');
