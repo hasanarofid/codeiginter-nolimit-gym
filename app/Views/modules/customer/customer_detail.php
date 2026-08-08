@@ -37,7 +37,14 @@
                         <p class="card-text mt-2"><?= $detail['tgl_lhr'] == null ? 'N.A' : date('d/m/Y', strtotime($detail['tgl_lhr'])) ?></p>
                         <p class="card-text mt-2"><?= $detail['alamat'] ?></p>
                         <br />
-                        <img class="img-fluid" src="/img/uploads/member/ktp/<?= $detail['idcard_image'] ?>" width="350" />
+                        <?php if (!empty($detail['idcard_image'])): ?>
+                            <img class="img-fluid" src="/img/uploads/member/ktp/<?= $detail['idcard_image'] ?>" width="350" /><br/>
+                            <a href="<?= base_url('img/uploads/member/ktp/' . $detail['idcard_image']) ?>" download="KTP_<?= $detail['id'] ?>" class="btn btn-sm btn-success mt-2">
+                                <i class="fas fa-download mr-1"></i> Download Foto KTP
+                            </a>
+                        <?php else: ?>
+                            <small class="text-muted">Foto KTP belum diunggah</small>
+                        <?php endif; ?>
                     </div>
                     <div class="position-absolute profile-pic-wrapper">
                         <img src="/img/uploads/member/fp/<?= $detail['fp_image'] ?>" width="64" class="rounded-circle img-thumbnail" alt="Mads Obel">

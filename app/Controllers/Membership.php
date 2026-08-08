@@ -180,7 +180,7 @@ class Membership extends BaseController
 
             $this->modeltrans->insert($trans);
 
-            // SendPush Notification
+            // SendPush Notification (Cegah duplikasi)
             $message = "Pendaftaran baru an. " . $nama . " dengan ID : " . $newId;
             $dataNotif = [
                 'title'   => "Pendaftaran Member Baru",
@@ -190,9 +190,14 @@ class Membership extends BaseController
             ];
 
             $modelNotification = new \App\Models\Model_notification();
-            $modelNotification->insert($dataNotif);
-
-            sendPusherNotification('my-channel', 'my-event', $dataNotif);
+            $existNotif = $modelNotification->where('title', $dataNotif['title'])
+                                            ->where('message', $dataNotif['message'])
+                                            ->where('created_at >=', date('Y-m-d H:i:s', strtotime('-1 minute')))
+                                            ->first();
+            if (!$existNotif) {
+                $modelNotification->insert($dataNotif);
+                sendPusherNotification('my-channel', 'my-event', $dataNotif);
+            }
 
             // Send confirmation email
             $getCabang = $this->modelcabang->get_detail($cabang);
@@ -771,7 +776,7 @@ class Membership extends BaseController
         // Simpan transaksi baru untuk perpanjangan ini
         $this->modeltrans->insert($trans);
 
-        // SendPush Notification
+        // SendPush Notification (Cegah duplikasi)
         $message = "Perpanjangan member an. " . $customer['nama'] . " dengan ID : " . $idcust;
         $dataNotif = [
             'title'   => "Perpanjangan Member",
@@ -781,9 +786,14 @@ class Membership extends BaseController
         ];
 
         $modelNotification = new \App\Models\Model_notification();
-        $modelNotification->insert($dataNotif);
-
-        sendPusherNotification('my-channel', 'my-event', $dataNotif);
+        $existNotif = $modelNotification->where('title', $dataNotif['title'])
+                                        ->where('message', $dataNotif['message'])
+                                        ->where('created_at >=', date('Y-m-d H:i:s', strtotime('-1 minute')))
+                                        ->first();
+        if (!$existNotif) {
+            $modelNotification->insert($dataNotif);
+            sendPusherNotification('my-channel', 'my-event', $dataNotif);
+        }
         // return $this->response->setJSON(['status' => 'success']);
 
 

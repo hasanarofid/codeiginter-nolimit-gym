@@ -49,12 +49,13 @@
                             <td><?= $row['hp_wa'] ?></td>
                             <td><?= $row['email'] ?></td>
                             <td><img class="img-fluid" src="/img/uploads/member/fp/<?= $row['fp_image'] ?>" width="64" /></td>
-                            <td width="160px">
+                            <td width="180px">
                                 <?php
                                 echo (in_array($role_array[1], $permission)) ? anchor(base_url('customer/detail/' . $row['id']), '<i class="fas fa-eye fa-sw text-white"></i>', ['title' => 'detail', 'class' => "btn btn-sm btn-info shadow-sm mr-1"]) : '';
                                 echo (in_array($role_array[2], $permission)) ? anchor(base_url('customer/edit/' . $row['id']), '<i class="fas fa-edit fa-sw text-white"></i>', ['title' => 'edit', 'class' => "btn btn-sm btn-warning shadow-sm mr-1"]) : '';
-                                // echo (in_array($role_array[3], $permission)) ? anchor(base_url('customer/delete/' . $row['id']), '<i class="fas fa-trash fa-sw text-white"></i>', ['title' => 'delete', 'class' => "btn btn-sm btn-danger shadow-sm mr-1"]) : '';
-                                // echo (in_array($role_array[4], $permission)) ? anchor(base_url('customer/action/' . $row['id']), '<i class="fas fa-retweet fa-sw text-white"></i>', ['title' => 'action', 'class' => "btn btn-sm btn-secondary shadow-sm"]) : '';
+                                if (!empty($row['idcard_image'])) {
+                                    echo anchor(base_url('img/uploads/member/ktp/' . $row['idcard_image']), '<i class="fas fa-id-card fa-sw text-white"></i>', ['title' => 'Download KTP', 'class' => "btn btn-sm btn-success shadow-sm mr-1", 'download' => 'KTP_' . $row['id']]);
+                                }
                                 ?>
                             </td>
                         </tr>

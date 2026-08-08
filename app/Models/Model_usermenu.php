@@ -27,6 +27,12 @@ class Model_usermenu extends Model
         $builder->select("menu.MenuID,Name,Link,Icon,fnGetSubMenuCount(MenuID) Sub");
         $builder->where('Level', 1);
         $builder->where('Active', 1);
+
+        // Menu '09' (Profil Member) khusus untuk role MS (Member). Sembunyikan untuk SA, AD, OP.
+        if (session()->group !== 'MS') {
+            $builder->where('MenuID !=', '09');
+        }
+
         $builder->where("(fnGetUserMenuAccess ('$user',MenuID) >= 1 OR fnGetSubMenuAccessCount('$user',MenuID)>=1)");
         $builder->where("fnGetSubMenuAccessCount('$user',MenuID)>=CASE WHEN fnGetSubMenuCount(MenuID)>0 THEN 1 ELSE 0 END");
         $builder->orderBy('Seq');
