@@ -118,7 +118,15 @@
                                         <td><?= $i++ ?></td>
                                         <td><?= ucwords(strtolower($trx->nmcust)) ?></td>
                                         <td><?= $trx->pkgname ?></td>
-                                        <td><?= $trx->is_renew ? '<span class="badge badge-info">Renew</span>' : '<span class="badge badge-success">Join</span>' ?></td>
+                                        <td>
+                                            <?php if (!empty($trx->is_nonmember)): ?>
+                                                <span class="badge badge-warning">Non-Member</span>
+                                            <?php elseif ($trx->is_renew): ?>
+                                                <span class="badge badge-info">Renew</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-success">Join</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><?= $trx->nmcab ?></td>
                                         <td><?= $trx->payment_type ?></td>
                                         <td>Rp.<?= number_format($trx->nominal, 0, ',', '.') ?></td>

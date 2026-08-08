@@ -55,9 +55,37 @@ class Dashboard extends BaseController
                             ->where('created_at <', $tr->created_at)
                             ->where('status', 1)
                             ->countAllResults();
-            $tr->is_renew = ($prevCount > 0);
+            $tr->is_renew      = ($prevCount > 0);
+            $tr->is_nonmember  = false;
             $transactions_with_status[] = $tr;
         }
+
+        // Ambil kunjungan Non-Member hari ini dan gabungkan
+        $db = \Config\Database::connect();
+        $nmQuery = $db->table('nonmember_visit nv')
+            ->select("nv.idx AS idtx, nv.created_at, NULL AS custid, nv.nama AS nmcust,
+                      CONCAT(mc.catname, ' ', mp.nama) AS pkgname,
+                      nv.created_at AS payment_date, nv.nominal,
+                      NULL AS expired_date, 1 AS status, nv.payment_method AS payment_type,
+                      c.id AS idcab, c.nama AS nmcab, 0 AS is_renew, 1 AS is_nonmember")
+            ->join('membership mp', 'mp.id = nv.paket_id', 'left')
+            ->join('membership_cat mc', 'mc.catid = mp.catid', 'left')
+            ->join('cabang c', 'c.id = nv.cabang', 'left')
+            ->where('DATE(nv.created_at)', date('Y-m-d'))
+            ->where('nv.deleted_at IS NULL');
+
+        if ($getUser->kdcab !== '%') {
+            $nmQuery->where('nv.cabang', $getUser->kdcab);
+        }
+
+        $nm_transactions = $nmQuery->orderBy('nv.created_at', 'DESC')->get()->getResult();
+        foreach ($nm_transactions as $nm) {
+            $transactions_with_status[] = $nm;
+        }
+
+        // Urutkan gabungan berdasarkan waktu terbaru
+        usort($transactions_with_status, fn($a, $b) => strtotime($b->created_at) - strtotime($a->created_at));
+
 
         // total dari cabang2, lihat detail dari report
         $data['report'] = [
