@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/home_template'); ?>
 <?= $this->section('contenthome'); ?>
 
-<div class="priscing_area" id="pricing" style="padding-top: 150px; padding-bottom: 120px;">
+<div class="priscing_area" id="pricing" style="padding-top: 180px; padding-bottom: 120px;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">

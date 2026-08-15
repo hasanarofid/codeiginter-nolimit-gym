@@ -672,8 +672,15 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 <!-- new_boxing_muaythai_end -->
 
+<style>
+@media (max-width: 991px) {
+    .slider_area {
+        padding-top: 75px !important;
+    }
+}
+</style>
 <!-- pricing_area_start -->
-<div class="priscing_area" id="pricing" style="display: none;">
+<div class="priscing_area" id="pricing">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">

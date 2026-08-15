@@ -28,7 +28,7 @@
 
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6 col-lg-4 offset-xl-1">
+                <div class="col-xl-2 col-lg-2 col-md-6 mb-4 mb-lg-0">
                     <div class="footer_widget">
                         <h3 class="footer_title">
                             Useful Links
@@ -43,28 +43,71 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6 col-lg-4">
+
+                <?php
+                $loc_part1 = [];
+                $loc_part2 = [];
+                foreach ($cabang_footer as $c) {
+                    $nama_lower = strtolower($c['nama']);
+                    if (strpos($nama_lower, 'muladi') !== false || strpos($nama_lower, 'gik') !== false || strpos($nama_lower, 'muldom') !== false) {
+                        $loc_part2[] = $c;
+                    } else {
+                        $loc_part1[] = $c;
+                    }
+                }
+                if (empty($loc_part2) && count($cabang_footer) > 3) {
+                    $loc_part1 = array_slice($cabang_footer, 0, 3);
+                    $loc_part2 = array_slice($cabang_footer, 3);
+                }
+                ?>
+
+                <!-- Column 3: Our Location (Part 1) -->
+                <div class="col-xl-3 col-lg-3 col-md-6 mb-4 mb-lg-0">
                     <div class="footer_widget">
                         <h3 class="footer_title">
                             Our Location
                         </h3>
-                        <?php foreach ($cabang_footer as $row): ?>
+                        <?php foreach ($loc_part1 as $row): ?>
                             <p class="newsletter_text" style="margin-bottom: 20px;">
-                                <strong style="color: #ffffff; font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px;">
+                                <strong style="color: #ffffff; font-size: 14px; font-weight: 800; display: block; margin-bottom: 3px; letter-spacing: 0.5px;">
                                     <?= strtoupper(esc($row['nama'])) ?>
                                 </strong>
-                                <span style="color: #cccccc; display: block; margin-bottom: 4px; line-height: 1.5;">
+                                <span style="color: #cccccc; display: block; margin-bottom: 4px; line-height: 1.4; font-size: 12px;">
                                     <?= esc($row['alamat']) ?>
                                 </span>
                                 <?php 
                                     $phone = !empty($row['hp']) ? $row['hp'] : (!empty($row['telp']) ? $row['telp'] : '0818-0249-0343');
                                 ?>
-                                <span style="color: #ff1414; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                <span style="color: #ff1414; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 5px;">
                                     <i class="fa fa-phone"></i> <?= esc($phone) ?>
                                 </span>
                             </p>
                         <?php endforeach; ?>
+                    </div>
+                </div>
 
+                <!-- Column 4: Our Location (Part 2: Muladi Dome & GIK UGM) -->
+                <div class="col-xl-4 col-lg-4 col-md-6">
+                    <div class="footer_widget">
+                        <h3 class="footer_title d-none d-lg-block" style="opacity: 0;">
+                            Location Part 2
+                        </h3>
+                        <?php foreach ($loc_part2 as $row): ?>
+                            <p class="newsletter_text" style="margin-bottom: 20px;">
+                                <strong style="color: #ffffff; font-size: 14px; font-weight: 800; display: block; margin-bottom: 3px; letter-spacing: 0.5px;">
+                                    <?= strtoupper(esc($row['nama'])) ?>
+                                </strong>
+                                <span style="color: #cccccc; display: block; margin-bottom: 4px; line-height: 1.4; font-size: 12px;">
+                                    <?= esc($row['alamat']) ?>
+                                </span>
+                                <?php 
+                                    $phone = !empty($row['hp']) ? $row['hp'] : (!empty($row['telp']) ? $row['telp'] : '0818-0249-0343');
+                                ?>
+                                <span style="color: #ff1414; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fa fa-phone"></i> <?= esc($phone) ?>
+                                </span>
+                            </p>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>

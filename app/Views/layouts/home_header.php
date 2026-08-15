@@ -4,17 +4,17 @@
             <div class="container-fluid ">
                 <div class="header_bottom_border">
                     <div class="row align-items-center">
-                        <div class="col-6 d-lg-none">
+                        <div class="col-6 col-md-4 d-lg-none">
                             <div class="logo">
-                                <a href="<?= site_url() ?>">
-                                    <div style="background: #ffffff; padding: 5px 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                        <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS" style="max-height: 18px; width: auto;">
-                                        <span style="font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 700; color: #444444; line-height: 1; margin-top: 1px; text-transform: none;">Training Facility</span>
+                                <a href="<?= site_url() ?>" style="text-decoration: none;">
+                                    <div style="background: #000000; padding: 6px 14px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);">
+                                        <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS" style="max-height: 18px; width: auto; display: block; margin-bottom: 2px;">
+                                        <span style="font-family: 'Inter', 'Montserrat', sans-serif; font-size: 8px; font-weight: 700; color: #ffffff; line-height: 1; text-transform: none; display: block;">Training Facility</span>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="col-6 col-lg-12">
+                        <div class="col-6 col-md-8 col-lg-12">
                             <div class="main-menu d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation" class="d-flex justify-content-center align-items-center" style="margin-bottom:0; padding:0;">
@@ -189,14 +189,90 @@ ul#navigation li a i.ti-user {
     display: none !important;
 }
 
-/* Mobile Menu Adjustments */
+/* Mobile Header & Hamburger Menu Adjustments */
 @media (max-width: 991px) {
+    body {
+        padding-top: 75px !important;
+    }
     .header-area .main-header-area {
-        height: 70px !important;
+        height: 75px !important;
         padding: 0 15px !important;
+        background-color: #141414 !important;
     }
     .mobile_menu {
-        top: 20px !important;
+        position: static !important;
+        float: right !important;
+        width: auto !important;
+        margin-top: 0 !important;
+    }
+    .slicknav_menu {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        position: static !important;
+    }
+    .slicknav_btn {
+        background: #000000 !important;
+        border: 1px solid #FF1414 !important;
+        border-radius: 6px !important;
+        padding: 8px 10px !important;
+        margin: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        float: right !important;
+        display: inline-block !important;
+        box-shadow: 0 4px 10px rgba(255, 20, 20, 0.3) !important;
+    }
+    .slicknav_menu .slicknav_icon-bar {
+        background-color: #ffffff !important;
+        height: 2px !important;
+        width: 22px !important;
+        margin: 4px 0 !important;
+        display: block !important;
+        transition: all 0.3s ease;
+    }
+    .slicknav_btn:hover .slicknav_icon-bar,
+    .slicknav_btn.slicknav_open .slicknav_icon-bar {
+        background-color: #FF1414 !important;
+    }
+    .slicknav_nav {
+        background: #141414 !important;
+        position: fixed !important;
+        top: 75px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        border-top: 2px solid #FF1414 !important;
+        border-bottom: 3px solid #FF1414 !important;
+        padding: 10px 0 !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95) !important;
+        z-index: 999999 !important;
+        margin: 0 !important;
+    }
+    .slicknav_nav li {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+        margin: 0 !important;
+    }
+    .slicknav_nav li a {
+        color: #ffffff !important;
+        font-family: 'Inter', 'Montserrat', sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        padding: 14px 20px !important;
+        display: block !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+    .slicknav_nav li a:hover,
+    .slicknav_nav li a:active {
+        background: #FF1414 !important;
+        color: #000000 !important;
     }
 }
 </style>
