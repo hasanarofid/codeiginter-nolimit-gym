@@ -104,8 +104,104 @@ class Home extends BaseController
         return view('home_section', $data);
     }
 
+    public function about()
+    {
+        $data = [
+            'title' => '| About Us',
+            'cabangs' => $this->modelcabang->get_cabang('%'),
+            'cabang_footer' => $this->mcabangku->findAll(),
+        ];
+        return view('about_section', $data);
+    }
+
+    public function classes()
+    {
+        $data = [
+            'title' => '| Classes',
+            'cabangs' => $this->modelcabang->get_cabang('%'),
+            'cabang_footer' => $this->mcabangku->findAll(),
+            'classes' => $this->modelkelas,
+            'bothai'  => $this->modelboxing,
+        ];
+        return view('classes_section', $data);
+    }
+
+    public function pricing()
+    {
+        $cities = $this->modelcabang->get_kota();
+
+        $package = '';
+        foreach ($cities as $ct) {
+            $pkgs = $this->modelpaket->where('kota', $ct->kota)->orderBy('nominal', 'ASC')->findAll();
+            
+            if(count($pkgs) == 0) continue;
+
+            $package .= '
+            <div class="row mb-5 justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="membership-box text-center">
+                        <div class="membership-box-content">
+                            <div class="d-flex flex-column align-items-center mb-4">
+                                <table class="table table-borderless text-white mb-0" style="width: auto; font-weight: 700; font-size: 1.15rem; text-align: left; letter-spacing: 0.5px;">
+                                    <tbody>
+            ';
+            
+            foreach ($pkgs as $p) {
+                $nom = $p['nominal'];
+                $nom_str = number_format($nom / 1000, 0, ',', '.') . 'K';
+                
+                $package .= '
+                                        <tr>
+                                            <td style="padding: 6px 30px; text-transform: uppercase;">' . $p['nama'] . '</td>
+                                            <td style="padding: 6px 30px; text-align: right;">' . $nom_str . '</td>
+                                        </tr>
+                ';
+            }
+            
+            $package .= '
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 35px; line-height: 1.6; letter-spacing: 0.5px;">
+                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase;">“ALL MEMBERSHIP PACKAGE INCLUDES GYM AND FIGHT CLASSES”</p>
+                                <p style="margin-bottom: 20px; color: #AAA;">(GYM, KICKBOXING, BOXING, MUAYTHAI)</p>
+                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase; font-weight: 700;">FACILITY</p>
+                                <p style="margin-bottom: 0; color: #AAA;">(TOWEL, LOCKER, SHOWER, WATER STATION)</p>
+                            </div>
+                            
+                            <a href="' . base_url('/registration') . '" class="boxed-btn3 membership-join-btn">
+                                JOIN NOW
+                            </a>
+                            
+                            <div style="margin-top: 15px;">
+                                <a href="https://wa.me/6281802490343" target="_blank" class="membership-wa-link">
+                                    <i class="fa fa-whatsapp"></i> 0818-0249-0343
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+
+        $data = [
+            'title' => '| Membership',
+            'packages' => $package,
+            'cabangs' => $this->modelcabang->get_cabang('%'),
+            'cabang_footer' => $this->mcabangku->findAll(),
+        ];
+        return view('membership_section', $data);
+    }
+
     public function maintenance()
     {
-        return view('maintenance');
+        $data = [
+            'title' => '| Maintenance',
+            'cabangs' => $this->modelcabang->get_cabang('%'),
+            'cabang_footer' => $this->mcabangku->findAll(),
+        ];
+        return view('maintenance', $data);
     }
 }

@@ -34,14 +34,12 @@
                             Useful Links
                         </h3>
                         <ul class="links">
-                            <li><a href="#about-us">About</a></li>
-                            <li><a href="#features">Features</a></li>
-                            <li><a href="#class_schedule">Class Schedule</a></li>
-                            <li><a href="#boxing_muaythai">Boxing /Muaythai</a></li>
-                            <li><a href="#pricing">Pricing</a></li>
-                            <li><a href="#trainer_area">Personal Trainer</a></li>
-                            <li><a href="#coach_area">Coach Trainer</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="<?= base_url('/about-us') ?>">ABOUT US</a></li>
+                            <li><a href="<?= base_url('/classes') ?>">CLASSES</a></li>
+                            <li><a href="<?= base_url('/events') ?>">EVENT</a></li>
+                            <li><a href="<?= base_url('/pricing') ?>">MEMBERSHIP</a></li>
+                            <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
+                            <li><a href="<?= base_url('/login') ?>">MEMBER LOGIN</a></li>
                         </ul>
                     </div>
                 </div>
@@ -50,16 +48,22 @@
                         <h3 class="footer_title">
                             Our Location
                         </h3>
-                        <?php
-                        foreach ($cabang_footer as $row):
-                        ?>
-                            <p class="newsletter_text">
-                                <?= $row['alamat'] ?>
+                        <?php foreach ($cabang_footer as $row): ?>
+                            <p class="newsletter_text" style="margin-bottom: 20px;">
+                                <strong style="color: #ffffff; font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px;">
+                                    <?= strtoupper(esc($row['nama'])) ?>
+                                </strong>
+                                <span style="color: #cccccc; display: block; margin-bottom: 4px; line-height: 1.5;">
+                                    <?= esc($row['alamat']) ?>
+                                </span>
+                                <?php 
+                                    $phone = !empty($row['hp']) ? $row['hp'] : (!empty($row['telp']) ? $row['telp'] : '0818-0249-0343');
+                                ?>
+                                <span style="color: #ff1414; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fa fa-phone"></i> <?= esc($phone) ?>
+                                </span>
                             </p>
-                            <br />
-                        <?php
-                        endforeach;
-                        ?>
+                        <?php endforeach; ?>
 
                     </div>
                 </div>

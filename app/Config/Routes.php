@@ -6,6 +6,11 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('/about-us', 'Home::about');
+$routes->get('/classes', 'Home::classes');
+$routes->get('/pricing', 'Home::pricing');
+$routes->get('/events', 'Home::maintenance');
+$routes->get('/merch', 'Home::maintenance');
 $routes->get('/maintenance', 'Home::maintenance');
 
 // Notification

@@ -68,7 +68,7 @@
     <div class="branch-tabs-container" style="padding-top: 30px; padding-bottom: 30px;">
         <div class="container d-flex justify-content-center align-items-center flex-wrap" style="gap: 40px; padding-left: 15px; padding-right: 15px;">
             <?php foreach ($cabangs as $index => $cab): ?>
-                <button type="button" class="branch-tab-btn" data-index="<?= $index ?>">
+                <button type="button" class="branch-tab-btn <?= ($index === 0) ? 'active' : '' ?>" data-index="<?= $index ?>">
                     <?= strtoupper($cab['nama']) ?>
                 </button>
             <?php endforeach; ?>
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Slides Container -->
-    <div class="branch-slides-container" style="position: relative; overflow: hidden; background: #000; display: none;">
+    <div class="branch-slides-container" style="position: relative; overflow: hidden; background: #000; display: block;">
         <?php foreach ($cabangs as $index => $cab): ?>
             <?php
                 // Check if this branch is Muladi Dome
@@ -93,7 +93,7 @@
                     $slide_img = base_url('img/nolimit-muladi-dom-slider.webp');
                 }
             ?>
-            <div class="branch-slide-panel" id="branch-panel-<?= $index ?>" style="display: none; position: relative; width: 100%;">
+            <div class="branch-slide-panel" id="branch-panel-<?= $index ?>" style="display: <?= ($index === 0) ? 'block' : 'none' ?>; position: relative; width: 100%;">
                 <a href="<?= $map_url ?>" target="_blank" style="display: block; width: 100%; position: relative; line-height: 0;">
                     <img src="<?= $slide_img ?>" alt="<?= esc($cab['nama']) ?>" style="width: 100%; height: auto; display: block;" />
                     
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var tabBtns = jQuery('.branch-tab-btn');
         var slidesContainer = jQuery('.branch-slides-container');
         var slidePanels = jQuery('.branch-slide-panel');
-        var currentActiveIndex = null;
+        var currentActiveIndex = 0;
 
         tabBtns.on('click', function() {
             var index = jQuery(this).data('index');
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 <!-- slider_area_start -->
-<div class="bradcam_area" id="about-us">
+<div class="bradcam_area" id="about-us" style="display: none;">
     <div class="single_bradcam d-flex align-items-center" style="background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('<?= base_url("img/bg-about-us.webp") ?>'); background-size: cover; background-position: center center; padding: 80px 0;">
         <div class="container text-center">
             <div class="row justify-content-center">
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- slider_area_end -->
 
 <!-- new_boxing_muaythai_start -->
-<div class="muaythai-schedule-section" id="boxing_muaythai">
+<div class="muaythai-schedule-section" id="boxing_muaythai" style="display: none;">
     <div class="container">
         <div class="row align-items-center">
             <!-- Tables Column -->
@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- new_boxing_muaythai_end -->
 
 <!-- pricing_area_start -->
-<div class="priscing_area" id="pricing">
+<div class="priscing_area" id="pricing" style="display: none;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">

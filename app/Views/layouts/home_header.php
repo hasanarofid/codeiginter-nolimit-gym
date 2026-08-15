@@ -18,20 +18,21 @@
                             <div class="main-menu d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation" class="d-flex justify-content-center align-items-center" style="margin-bottom:0; padding:0;">
-                                        <li><a href="#about-us">ABOUT US</a></li>
-                                        <li><a href="#class_schedule">CLASSES</a></li>
-                                        <li><a href="<?= base_url('/events') ?>">EVENT</a></li>
-                                        
-                                        <li class="d-none d-lg-block logo-nav-item">
-                                            <a href="<?= site_url() ?>" class="logo-nav-link">
-                                                <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS">
-                                                <span class="logo-subtitle">Training Facility</span>
-                                            </a>
-                                        </li>
+                                         <li><a href="<?= base_url('/about-us') ?>">ABOUT US</a></li>
+                                         <li><a href="<?= base_url('/classes') ?>">CLASSES</a></li>
+                                         <li><a href="<?= base_url('/events') ?>">EVENT</a></li>
+                                         
+                                         <li class="d-none d-lg-block logo-nav-item">
+                                             <a href="<?= site_url() ?>" class="logo-nav-link">
+                                                 <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS">
+                                                 <span class="logo-subtitle">Training Facility</span>
+                                             </a>
+                                         </li>
 
-                                        <li><a href="#pricing">MEMBERSHIP</a></li>
-                                        <li><a href="<?= base_url('/maintenance') ?>">MERCH</a></li>
-                                        <li><a href="<?= base_url('/maintenance') ?>"><i class="ti-shopping-cart" style="font-size: 1.2em;"></i></a></li>
+                                         <li><a href="<?= base_url('/pricing') ?>">MEMBERSHIP</a></li>
+                                         <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
+                                         <li><a href="<?= base_url('/maintenance') ?>"><i class="ti-shopping-cart" style="font-size: 1.2em;"></i></a></li>
+                                         <li><a href="<?= base_url('/login') ?>" title="Login Member"><i class="ti-user" style="font-size: 1.2em;"></i></a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -177,8 +178,9 @@ ul#navigation li.logo-nav-item {
     font-size: 10px !important;
 }
 
-/* Shopping Cart styling */
-ul#navigation li a i.ti-shopping-cart {
+/* Shopping Cart & User Icon styling */
+ul#navigation li a i.ti-shopping-cart,
+ul#navigation li a i.ti-user {
     font-size: 1.3em !important;
 }
 
