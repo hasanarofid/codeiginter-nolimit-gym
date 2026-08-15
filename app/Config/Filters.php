@@ -42,6 +42,12 @@ class Filters extends BaseConfig
             'Authentication' => [
                 'except' => [
                     '/',
+                    '/about-us',
+                    '/classes',
+                    '/pricing',
+                    '/events',
+                    '/merch',
+                    '/maintenance',
                     '/registration',
                     '/registration/save',
                     '/registration/get_package',
