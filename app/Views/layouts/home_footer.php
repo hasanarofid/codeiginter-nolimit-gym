@@ -1,5 +1,16 @@
 <!-- footer_start  -->
 <footer class="footer" id="contact">
+    <style>
+    .footer .footer_widget .links li a {
+        color: #cccccc !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        transition: color 0.2s ease !important;
+    }
+    .footer .footer_widget .links li a:hover {
+        color: #ff1414 !important;
+    }
+    </style>
     <div class="footer_top">
         <div class="container">
             <div class="row">
@@ -119,11 +130,9 @@
             <div class="row">
                 <div class="col-xl-12">
                     <p class="copy_right text-center">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;<script>
                             document.write(new Date().getFullYear());
-                        </script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </script> All rights reserved | Developer with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://www.cekotechnology.com/" target="_blank" style="color: #ff1414; font-weight: 700;">Cekotechnology</a>
                     </p>
                 </div>
             </div>

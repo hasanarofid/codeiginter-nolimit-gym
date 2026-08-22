@@ -21,7 +21,8 @@
     background-image: url('<?= base_url("img/bg-3.jpeg") ?>') !important;
     background-size: cover !important;
     background-position: center center !important;
-    padding: 100px 0 !important;
+    padding-top: 180px !important;
+    padding-bottom: 120px !important;
     position: relative !important;
 }
 #pricing::before {

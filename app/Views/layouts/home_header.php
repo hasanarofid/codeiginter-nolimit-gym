@@ -4,18 +4,27 @@
             <div class="container-fluid ">
                 <div class="header_bottom_border">
                     <div class="row align-items-center">
-                        <div class="col-6 col-md-4 d-lg-none">
+                        <div class="col-7 col-sm-6 d-lg-none">
                             <div class="logo">
                                 <a href="<?= site_url() ?>" style="text-decoration: none;">
-                                    <div style="background: #000000; padding: 6px 14px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);">
+                                    <div style="background: #000000; padding: 6px 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);">
                                         <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS" style="max-height: 18px; width: auto; display: block; margin-bottom: 2px;">
                                         <span style="font-family: 'Inter', 'Montserrat', sans-serif; font-size: 8px; font-weight: 700; color: #ffffff; line-height: 1; text-transform: none; display: block;">Training Facility</span>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="col-6 col-md-8 col-lg-12">
-                            <div class="main-menu d-none d-lg-block">
+                        <div class="col-5 col-sm-6 d-lg-none d-flex align-items-center justify-content-end" style="gap: 8px;">
+                            <a href="<?= base_url('/maintenance') ?>" style="color: #ffffff; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #000000; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; text-decoration: none;" title="Cart">
+                                <i class="ti-shopping-cart"></i>
+                            </a>
+                            <a href="<?= base_url('/login') ?>" style="color: #ffffff; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #000000; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; text-decoration: none;" title="Login Member">
+                                <i class="ti-user"></i>
+                            </a>
+                            <div class="mobile_menu"></div>
+                        </div>
+                        <div class="col-12 d-none d-lg-block">
+                            <div class="main-menu">
                                 <nav>
                                     <ul id="navigation" class="d-flex justify-content-center align-items-center" style="margin-bottom:0; padding:0;">
                                          <li><a href="<?= base_url('/about-us') ?>">ABOUT US</a></li>
@@ -31,12 +40,11 @@
 
                                          <li><a href="<?= base_url('/pricing') ?>">MEMBERSHIP</a></li>
                                          <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
-                                         <li><a href="<?= base_url('/maintenance') ?>"><i class="ti-shopping-cart" style="font-size: 1.2em;"></i></a></li>
-                                         <li><a href="<?= base_url('/login') ?>" title="Login Member"><i class="ti-user" style="font-size: 1.2em;"></i></a></li>
+                                         <li class="mobile-hide-nav"><a href="<?= base_url('/maintenance') ?>"><i class="ti-shopping-cart" style="font-size: 1.2em;"></i></a></li>
+                                         <li class="mobile-hide-nav"><a href="<?= base_url('/login') ?>" title="Login Member"><i class="ti-user" style="font-size: 1.2em;"></i></a></li>
                                     </ul>
                                 </nav>
                             </div>
-                            <div class="mobile_menu d-block d-lg-none"></div>
                         </div>
                     </div>
                 </div>
@@ -184,16 +192,14 @@ ul#navigation li a i.ti-user {
     font-size: 1.3em !important;
 }
 
-/* Hide logo inside slicknav mobile menu */
-.slicknav_nav .logo-nav-item {
+/* Hide logo and icon items inside slicknav mobile menu */
+.slicknav_nav .logo-nav-item,
+.slicknav_nav .mobile-hide-nav {
     display: none !important;
 }
 
 /* Mobile Header & Hamburger Menu Adjustments */
 @media (max-width: 991px) {
-    body {
-        padding-top: 75px !important;
-    }
     .header-area .main-header-area {
         height: 75px !important;
         padding: 0 15px !important;
