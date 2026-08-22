@@ -84,6 +84,11 @@
 </aside>
 
 <style>
+/* Global Header Offset */
+body {
+    padding-top: 90px !important;
+}
+
 /* Custom Navbar Styles to match mockup */
 .header-area {
     position: fixed !important;
@@ -221,6 +226,10 @@ ul#navigation li a i.ti-user {
 
 /* Mobile Header Elements */
 @media (max-width: 991px) {
+    body {
+        padding-top: 70px !important;
+    }
+
     .header-area .main-header-area {
         height: 70px !important;
         padding: 0 15px !important;

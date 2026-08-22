@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/home_template'); ?>
 <?= $this->section('contenthome'); ?>
 
-<div class="priscing_area" id="pricing" style="padding-top: 180px; padding-bottom: 120px;">
+<div class="priscing_area" id="pricing" style="padding-bottom: 90px;">
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
@@ -21,13 +21,13 @@
     background-image: url('<?= base_url("img/bg-3.jpeg") ?>') !important;
     background-size: cover !important;
     background-position: center center !important;
-    padding-top: 140px !important;
+    padding-top: 50px !important;
     padding-bottom: 90px !important;
     position: relative !important;
 }
 @media (max-width: 768px) {
     #pricing {
-        padding-top: 100px !important;
+        padding-top: 30px !important;
         padding-bottom: 60px !important;
     }
     #pricing .section_title h2 {

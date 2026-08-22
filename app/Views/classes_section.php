@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/home_template'); ?>
 <?= $this->section('contenthome'); ?>
 
-<div class="muaythai-schedule-section" id="boxing_muaythai" style="padding-top: 180px;">
+<div class="muaythai-schedule-section" id="boxing_muaythai" style="padding-top: 50px; padding-bottom: 60px;">
     <div class="container">
         <div class="row align-items-center">
             <!-- Tables Column -->

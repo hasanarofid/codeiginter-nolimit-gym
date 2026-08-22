@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/home_template'); ?>
 <?= $this->section('contenthome'); ?>
 
-<div class="maintenance-area" style="padding: 180px 20px 120px 20px; background-color: #121212; min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+<div class="maintenance-area" style="padding: 60px 20px 80px 20px; background-color: #121212; min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">

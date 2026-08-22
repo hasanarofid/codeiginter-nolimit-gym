@@ -54,11 +54,11 @@
 
 <style>
 .bradcam_area#about-us {
-    padding-top: 90px;
+    padding-top: 0;
     background-color: #000000;
 }
 .single_bradcam {
-    padding: 90px 20px 100px 20px;
+    padding: 50px 20px 80px 20px;
     min-height: calc(100vh - 90px);
 }
 .about-title {
