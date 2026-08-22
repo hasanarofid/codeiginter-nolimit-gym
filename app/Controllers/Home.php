@@ -37,26 +37,22 @@ class Home extends BaseController
 
             $package .= '
             <div class="row mb-5 justify-content-center">
-                <div class="col-md-8 col-lg-6">
+                <div class="col-12 col-md-8 col-lg-6">
                     <div class="membership-box text-center">
                         <div class="membership-box-content">
-                            <div class="d-flex flex-column align-items-center mb-4">
-                                <table class="table table-borderless text-white mb-0" style="width: auto; font-weight: 700; font-size: 1.15rem; text-align: left; letter-spacing: 0.5px;">
+                            <div class="d-flex flex-column align-items-center mb-3">
+                                <table class="table table-borderless text-white mb-0 membership-table" style="width: 100%; max-width: 320px; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px;">
                                     <tbody>
             ';
             
             foreach ($pkgs as $p) {
                 $nom = $p['nominal'];
-                if ($nom % 1000000 == 0) {
-                    $nom_str = number_format($nom / 1000, 0, ',', '.') . 'K';
-                } else {
-                    $nom_str = number_format($nom / 1000, 0, ',', '.') . 'K';
-                }
+                $nom_str = number_format($nom / 1000, 0, ',', '.') . 'K';
                 
                 $package .= '
                                         <tr>
-                                            <td style="padding: 6px 30px; text-transform: uppercase;">' . $p['nama'] . '</td>
-                                            <td style="padding: 6px 30px; text-align: right;">' . $nom_str . '</td>
+                                            <td class="text-left" style="padding: 6px 10px; text-transform: uppercase; font-family: \'Inter\', \'Montserrat\', sans-serif;">' . $p['nama'] . '</td>
+                                            <td class="text-right" style="padding: 6px 10px; text-align: right; font-family: \'Inter\', \'Montserrat\', sans-serif;">' . $nom_str . '</td>
                                         </tr>
                 ';
             }
@@ -66,23 +62,19 @@ class Home extends BaseController
                                 </table>
                             </div>
                             
-                            <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 35px; line-height: 1.6; letter-spacing: 0.5px;">
-                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase;">“ALL MEMBERSHIP PACKAGE INCLUDES GYM AND FIGHT CLASSES”</p>
-                                <p style="margin-bottom: 20px; color: #AAA;">(GYM, KICKBOXING, BOXING, MUAYTHAI)</p>
-                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase; font-weight: 700;">FACILITY</p>
-                                <p style="margin-bottom: 0; color: #AAA;">(TOWEL, LOCKER, SHOWER, WATER STATION)</p>
-                            </div>
-                            
-                            <a href="' . base_url('/registration') . '" class="boxed-btn3 membership-join-btn">
-                                JOIN NOW
-                            </a>
-                            
-                            <div style="margin-top: 15px;">
-                                <a href="https://wa.me/6281802490343" target="_blank" class="membership-wa-link">
-                                    <i class="fa fa-whatsapp"></i> 0818-0249-0343
-                                </a>
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; letter-spacing: 0.3px; color: #CCCCCC;">
+                                <p style="margin-bottom: 4px; color: #FFFFFF; text-transform: uppercase;">“ALL MEMBERSHIP PACKAGE INCLUDES GYM AND FIGHT CLASSES”</p>
+                                <p style="margin-bottom: 16px; color: #999999; font-size: 0.8rem;">(GYM, KICKBOXING, BOXING, MUAYTHAI)</p>
+                                <p style="margin-bottom: 4px; color: #FFFFFF; text-transform: uppercase; font-weight: 700;">FACILITY</p>
+                                <p style="margin-bottom: 0; color: #999999; font-size: 0.8rem;">(TOWEL, LOCKER, SHOWER, WATER STATION)</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="text-center mt-3 mb-2">
+                        <a href="' . base_url('/registration') . '" class="boxed-btn3 membership-join-btn">
+                            JOIN NOW
+                        </a>
                     </div>
                 </div>
             </div>
@@ -138,11 +130,11 @@ class Home extends BaseController
 
             $package .= '
             <div class="row mb-5 justify-content-center">
-                <div class="col-md-8 col-lg-6">
+                <div class="col-12 col-md-8 col-lg-6">
                     <div class="membership-box text-center">
                         <div class="membership-box-content">
-                            <div class="d-flex flex-column align-items-center mb-4">
-                                <table class="table table-borderless text-white mb-0" style="width: auto; font-weight: 700; font-size: 1.15rem; text-align: left; letter-spacing: 0.5px;">
+                            <div class="d-flex flex-column align-items-center mb-3">
+                                <table class="table table-borderless text-white mb-0 membership-table" style="width: 100%; max-width: 320px; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px;">
                                     <tbody>
             ';
             
@@ -152,8 +144,8 @@ class Home extends BaseController
                 
                 $package .= '
                                         <tr>
-                                            <td style="padding: 6px 30px; text-transform: uppercase;">' . $p['nama'] . '</td>
-                                            <td style="padding: 6px 30px; text-align: right;">' . $nom_str . '</td>
+                                            <td class="text-left" style="padding: 6px 10px; text-transform: uppercase; font-family: \'Inter\', \'Montserrat\', sans-serif;">' . $p['nama'] . '</td>
+                                            <td class="text-right" style="padding: 6px 10px; text-align: right; font-family: \'Inter\', \'Montserrat\', sans-serif;">' . $nom_str . '</td>
                                         </tr>
                 ';
             }
@@ -163,23 +155,19 @@ class Home extends BaseController
                                 </table>
                             </div>
                             
-                            <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 35px; line-height: 1.6; letter-spacing: 0.5px;">
-                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase;">“ALL MEMBERSHIP PACKAGE INCLUDES GYM AND FIGHT CLASSES”</p>
-                                <p style="margin-bottom: 20px; color: #AAA;">(GYM, KICKBOXING, BOXING, MUAYTHAI)</p>
-                                <p style="margin-bottom: 5px; color: #FFF; text-transform: uppercase; font-weight: 700;">FACILITY</p>
-                                <p style="margin-bottom: 0; color: #AAA;">(TOWEL, LOCKER, SHOWER, WATER STATION)</p>
-                            </div>
-                            
-                            <a href="' . base_url('/registration') . '" class="boxed-btn3 membership-join-btn">
-                                JOIN NOW
-                            </a>
-                            
-                            <div style="margin-top: 15px;">
-                                <a href="https://wa.me/6281802490343" target="_blank" class="membership-wa-link">
-                                    <i class="fa fa-whatsapp"></i> 0818-0249-0343
-                                </a>
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; letter-spacing: 0.3px; color: #CCCCCC;">
+                                <p style="margin-bottom: 4px; color: #FFFFFF; text-transform: uppercase;">“ALL MEMBERSHIP PACKAGE INCLUDES GYM AND FIGHT CLASSES”</p>
+                                <p style="margin-bottom: 16px; color: #999999; font-size: 0.8rem;">(GYM, KICKBOXING, BOXING, MUAYTHAI)</p>
+                                <p style="margin-bottom: 4px; color: #FFFFFF; text-transform: uppercase; font-weight: 700;">FACILITY</p>
+                                <p style="margin-bottom: 0; color: #999999; font-size: 0.8rem;">(TOWEL, LOCKER, SHOWER, WATER STATION)</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="text-center mt-3 mb-2">
+                        <a href="' . base_url('/registration') . '" class="boxed-btn3 membership-join-btn">
+                            JOIN NOW
+                        </a>
                     </div>
                 </div>
             </div>

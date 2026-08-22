@@ -200,17 +200,24 @@ class ModelMemtrans extends Model
         return $bd->get()->getResult();
     }
 
-    public function get_expiring_memberships($days = 3)
+    public function get_expiring_memberships($days = [3, 1, 0])
     {
-        $db =  db_connect();
+        $db = db_connect();
         $bd = $db->table($this->table . ' mt');
-        $bd->select("c.id AS idcust, b.nama AS cabang, c.nama AS nmcust, c.hp_wa, c.email, CONCAT(mc.catname,' ',m.nama) AS pkgname, mt.expired_date");
+        $bd->select("c.id AS idcust, b.nama AS cabang, b.hp AS hp_cabang, c.nama AS nmcust, c.hp_wa, c.email, CONCAT(mc.catname,' ',m.nama) AS pkgname, mt.expired_date, DATEDIFF(mt.expired_date, CURRENT_DATE()) AS days_left");
         $bd->join('customers c', 'c.id = mt.custid', 'left');
         $bd->join('membership m', 'm.id = mt.membershipid', 'left');
         $bd->join('membership_cat mc', 'mc.catid = m.catid', 'left');
         $bd->join('cabang b', 'b.id = c.kdcab', 'left');
         $bd->where('mt.status', 1);
-        $bd->where('DATEDIFF(mt.expired_date, NOW())', $days);
+
+        if (is_array($days)) {
+            $bd->whereIn('DATEDIFF(mt.expired_date, CURRENT_DATE())', $days);
+        } else {
+            $bd->where('DATEDIFF(mt.expired_date, CURRENT_DATE())', $days);
+        }
+
+        $bd->orderBy('mt.expired_date', 'ASC');
 
         return $bd->get()->getResult();
     }

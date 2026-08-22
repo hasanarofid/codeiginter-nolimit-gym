@@ -1,28 +1,39 @@
 <header>
-    <div class="header-area ">
+    <div class="header-area">
         <div id="sticky-header" class="main-header-area">
-            <div class="container-fluid ">
+            <div class="container-fluid">
                 <div class="header_bottom_border">
-                    <div class="row align-items-center">
-                        <div class="col-7 col-sm-6 d-lg-none">
+                    <div class="row align-items-center justify-content-between">
+                        
+                        <!-- Mobile Header Left: Hamburger Toggle -->
+                        <div class="col-3 col-sm-3 d-lg-none d-flex align-items-center justify-content-start">
+                            <button type="button" id="mobile-drawer-toggle" class="mobile-drawer-btn" aria-label="Toggle Menu">
+                                <span class="hamburger-bar"></span>
+                                <span class="hamburger-bar"></span>
+                                <span class="hamburger-bar"></span>
+                            </button>
+                        </div>
+
+                        <!-- Mobile Header Center: Logo Box -->
+                        <div class="col-6 col-sm-6 d-lg-none d-flex align-items-center justify-content-center">
                             <div class="logo">
                                 <a href="<?= site_url() ?>" style="text-decoration: none;">
-                                    <div style="background: #000000; padding: 6px 12px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);">
-                                        <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS" style="max-height: 18px; width: auto; display: block; margin-bottom: 2px;">
-                                        <span style="font-family: 'Inter', 'Montserrat', sans-serif; font-size: 8px; font-weight: 700; color: #ffffff; line-height: 1; text-transform: none; display: block;">Training Facility</span>
+                                    <div class="mobile-logo-box">
+                                        <img src="<?= base_url('img/logo_text.PNG'); ?>" alt="NO LIMITS" class="mobile-logo-img">
+                                        <span class="mobile-logo-subtitle">Training Facility</span>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="col-5 col-sm-6 d-lg-none d-flex align-items-center justify-content-end" style="gap: 8px;">
-                            <a href="<?= base_url('/maintenance') ?>" style="color: #ffffff; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #000000; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; text-decoration: none;" title="Cart">
+
+                        <!-- Mobile Header Right: Shopping Cart Icon -->
+                        <div class="col-3 col-sm-3 d-lg-none d-flex align-items-center justify-content-end">
+                            <a href="<?= base_url('/maintenance') ?>" class="mobile-cart-btn" title="Cart">
                                 <i class="ti-shopping-cart"></i>
                             </a>
-                            <a href="<?= base_url('/login') ?>" style="color: #ffffff; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #000000; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; text-decoration: none;" title="Login Member">
-                                <i class="ti-user"></i>
-                            </a>
-                            <div class="mobile_menu"></div>
                         </div>
+
+                        <!-- Desktop Navigation Menu -->
                         <div class="col-12 d-none d-lg-block">
                             <div class="main-menu">
                                 <nav>
@@ -46,17 +57,34 @@
                                 </nav>
                             </div>
                         </div>
+
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </header>
 <!-- header-end -->
 
+<!-- Mobile Offcanvas Side Drawer Overlay -->
+<div id="mobile-drawer-backdrop" class="mobile-drawer-backdrop"></div>
+<aside id="mobile-offcanvas-drawer" class="mobile-offcanvas-drawer">
+    <div class="drawer-content">
+        <nav class="drawer-nav">
+            <ul>
+                <li><a href="<?= site_url() ?>">HOME</a></li>
+                <li><a href="<?= base_url('/about-us') ?>">ABOUT US</a></li>
+                <li><a href="<?= base_url('/classes') ?>">CLASSES</a></li>
+                <li><a href="<?= base_url('/pricing') ?>">MEMBERSHIP</a></li>
+                <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="drawer-bg-image"></div>
+</aside>
+
 <style>
-/* Custom Premium Navbar Styles to match mockup */
+/* Custom Navbar Styles to match mockup */
 .header-area {
     position: fixed !important;
     top: 0;
@@ -133,12 +161,11 @@ ul#navigation li a {
 ul#navigation li a:hover {
     color: #FF1414 !important;
 }
-/* Disable default hover line from template */
 ul#navigation li a::before {
     display: none !important;
 }
 
-/* Black Box Logo Container (Punjul / Protruding) */
+/* Black Box Logo Container (Punjul / Protruding Desktop) */
 ul#navigation li.logo-nav-item {
     background-color: #000000 !important;
     height: 120px !important;
@@ -192,93 +219,210 @@ ul#navigation li a i.ti-user {
     font-size: 1.3em !important;
 }
 
-/* Hide logo and icon items inside slicknav mobile menu */
-.slicknav_nav .logo-nav-item,
-.slicknav_nav .mobile-hide-nav {
-    display: none !important;
-}
-
-/* Mobile Header & Hamburger Menu Adjustments */
+/* Mobile Header Elements */
 @media (max-width: 991px) {
     .header-area .main-header-area {
-        height: 75px !important;
+        height: 70px !important;
         padding: 0 15px !important;
         background-color: #141414 !important;
     }
-    .mobile_menu {
-        position: static !important;
-        float: right !important;
-        width: auto !important;
-        margin-top: 0 !important;
+    
+    /* Hamburger Menu Toggle Button */
+    .mobile-drawer-btn {
+        background: transparent;
+        border: none;
+        padding: 5px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        outline: none !important;
+        z-index: 10001;
     }
-    .slicknav_menu {
-        background: transparent !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        position: static !important;
-    }
-    .slicknav_btn {
-        background: #000000 !important;
-        border: 1px solid #FF1414 !important;
-        border-radius: 6px !important;
-        padding: 8px 10px !important;
-        margin: 0 !important;
-        position: relative !important;
-        top: 0 !important;
-        float: right !important;
-        display: inline-block !important;
-        box-shadow: 0 4px 10px rgba(255, 20, 20, 0.3) !important;
-    }
-    .slicknav_menu .slicknav_icon-bar {
-        background-color: #ffffff !important;
-        height: 2px !important;
-        width: 22px !important;
-        margin: 4px 0 !important;
-        display: block !important;
+    .mobile-drawer-btn .hamburger-bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background-color: #ffffff;
+        border-radius: 2px;
         transition: all 0.3s ease;
     }
-    .slicknav_btn:hover .slicknav_icon-bar,
-    .slicknav_btn.slicknav_open .slicknav_icon-bar {
-        background-color: #FF1414 !important;
+    .mobile-drawer-btn:hover .hamburger-bar {
+        background-color: #FF1414;
     }
-    .slicknav_nav {
-        background: #141414 !important;
-        position: fixed !important;
-        top: 75px !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100vw !important;
-        max-width: 100vw !important;
-        border-top: 2px solid #FF1414 !important;
-        border-bottom: 3px solid #FF1414 !important;
-        padding: 10px 0 !important;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95) !important;
-        z-index: 999999 !important;
-        margin: 0 !important;
+
+    /* Mobile Logo Centered Black Box */
+    .mobile-logo-box {
+        background: #000000;
+        padding: 8px 18px 10px 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+        position: relative;
+        top: 8px;
     }
-    .slicknav_nav li {
-        width: 100% !important;
-        text-align: center !important;
-        display: block !important;
-        margin: 0 !important;
+    .mobile-logo-img {
+        max-height: 20px;
+        width: auto;
+        display: block;
+        margin-bottom: 2px;
     }
-    .slicknav_nav li a {
+    .mobile-logo-subtitle {
+        font-family: 'Inter', 'Montserrat', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1;
+        text-transform: none;
+        display: block;
+    }
+
+    /* Mobile Shopping Cart Button */
+    .mobile-cart-btn {
         color: #ffffff !important;
-        font-family: 'Inter', 'Montserrat', sans-serif !important;
-        font-size: 16px !important;
-        font-weight: 800 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1px !important;
-        padding: 14px 20px !important;
-        display: block !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-decoration: none !important;
-        transition: all 0.2s ease !important;
+        transition: color 0.2s ease;
     }
-    .slicknav_nav li a:hover,
-    .slicknav_nav li a:active {
-        background: #FF1414 !important;
-        color: #000000 !important;
+    .mobile-cart-btn:hover {
+        color: #FF1414 !important;
     }
 }
+
+/* Offcanvas Drawer Navigation Styles (Matching Image 2) */
+.mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 100000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.mobile-drawer-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-offcanvas-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 55vw;
+    max-width: 280px;
+    min-width: 220px;
+    height: 100vh;
+    background-color: #050505;
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+}
+.mobile-offcanvas-drawer.active {
+    left: 0;
+}
+
+.drawer-content {
+    padding: 90px 25px 30px 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.drawer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.drawer-nav ul li a {
+    font-family: 'Inter', 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    text-decoration: none;
+    display: inline-block;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.drawer-nav ul li a:hover,
+.drawer-nav ul li a:active {
+    color: #FF1414;
+    transform: translateX(4px);
+}
+
+.drawer-bg-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(5, 5, 5, 1)), url('<?= base_url("img/bg-3.jpeg") ?>');
+    background-size: cover;
+    background-position: bottom left;
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 1;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var drawerToggle = document.getElementById('mobile-drawer-toggle');
+    var drawer = document.getElementById('mobile-offcanvas-drawer');
+    var backdrop = document.getElementById('mobile-drawer-backdrop');
+    var drawerLinks = document.querySelectorAll('.drawer-nav ul li a');
+
+    function openDrawer() {
+        if (drawer && backdrop) {
+            drawer.classList.add('active');
+            backdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeDrawer() {
+        if (drawer && backdrop) {
+            drawer.classList.remove('active');
+            backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    if (drawerToggle) {
+        drawerToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (drawer.classList.contains('active')) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        });
+    }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', closeDrawer);
+    }
+
+    drawerLinks.forEach(function(link) {
+        link.addEventListener('click', closeDrawer);
+    });
+});
+</script>

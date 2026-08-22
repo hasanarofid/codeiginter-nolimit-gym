@@ -16,14 +16,34 @@
 </div>
 
 <style>
-/* Custom Premium Membership Package styling to match mockup */
+/* Custom Membership Package styling to match mockup */
 #pricing {
     background-image: url('<?= base_url("img/bg-3.jpeg") ?>') !important;
     background-size: cover !important;
     background-position: center center !important;
-    padding-top: 180px !important;
-    padding-bottom: 120px !important;
+    padding-top: 140px !important;
+    padding-bottom: 90px !important;
     position: relative !important;
+}
+@media (max-width: 768px) {
+    #pricing {
+        padding-top: 100px !important;
+        padding-bottom: 60px !important;
+    }
+    #pricing .section_title h2 {
+        font-size: 2.2rem !important;
+    }
+    .membership-box {
+        padding: 30px 15px 20px 15px !important;
+        border-width: 2px !important;
+        border-radius: 16px !important;
+    }
+    .membership-join-btn {
+        width: 85% !important;
+        max-width: 280px !important;
+        padding: 12px 20px !important;
+        font-size: 1.2rem !important;
+    }
 }
 #pricing::before {
     content: "";
@@ -32,7 +52,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
     z-index: 1;
 }
 #pricing .container {
@@ -42,12 +62,12 @@
 .membership-box {
     position: relative !important;
     background: rgba(0, 0, 0, 0.85) !important;
-    border: 3px solid #ff1414 !important;
-    border-radius: 20px !important;
-    padding: 50px 30px 45px 30px !important;
+    border: 2px solid #ff1414 !important;
+    border-radius: 18px !important;
+    padding: 45px 30px 30px 30px !important;
     color: #FFF !important;
     overflow: hidden !important;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.6) !important;
 }
 .membership-box::before {
     content: "" !important;
@@ -71,37 +91,27 @@
 .membership-join-btn {
     background: #ff1414 !important;
     color: #000000 !important;
-    font-weight: 800 !important;
+    font-weight: 900 !important;
     font-style: italic !important;
     font-family: 'Inter', 'Montserrat', sans-serif !important;
-    padding: 14px 50px !important;
-    font-size: 1.35rem !important;
+    padding: 12px 60px !important;
+    font-size: 1.3rem !important;
     display: inline-block !important;
+    margin-top: 10px !important;
     margin-bottom: 5px !important;
     text-transform: uppercase !important;
     border: none !important;
-    border-radius: 0px !important;
+    border-radius: 2px !important;
     transition: all 0.3s ease !important;
     line-height: 1 !important;
+    text-decoration: none !important;
 }
 .membership-join-btn:hover {
     background: #e61010 !important;
     color: #000000 !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.03) !important;
     box-shadow: 0 5px 15px rgba(255, 20, 20, 0.4) !important;
-}
-.membership-wa-link {
-    color: #FFF !important;
-    font-weight: 800 !important;
-    font-size: 1.2rem !important;
     text-decoration: none !important;
-    transition: color 0.3s ease !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-.membership-wa-link:hover {
-    color: #ff1414 !important;
 }
 .membership-box table,
 .membership-box table tr,

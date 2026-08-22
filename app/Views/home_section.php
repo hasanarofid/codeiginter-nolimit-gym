@@ -108,20 +108,49 @@
 </div>
 
 <style>
+.branch-tabs-container .container {
+    display: flex !important;
+    justify-content: center !items;
+    align-items: center !important;
+    gap: 30px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+@media (max-width: 768px) {
+    .branch-tabs-container {
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .branch-tabs-container .container {
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 15px !important;
+        width: max-content !important;
+        margin: 0 auto !important;
+    }
+    .branch-tab-btn {
+        font-size: 11px !important;
+        padding: 5px 8px !important;
+        letter-spacing: 0.5px !important;
+    }
+}
 .branch-tab-btn {
     background: none !important;
     border: none !important;
     color: #656565 !important;
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
     letter-spacing: 1.5px !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
-    padding: 5px 20px !important;
+    padding: 5px 15px !important;
     outline: none !important;
     position: relative !important;
     font-family: 'Inter', 'Montserrat', sans-serif !important;
+    white-space: nowrap !important;
 }
 .branch-tab-btn:hover,
 .branch-tab-btn.active {
