@@ -33,15 +33,15 @@
                         
                         <!-- QR Code -->
                         <div class="qr-box-wrap">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://wa.me/628786686030" alt="QR Code" class="qr-code-img">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://wa.me/6287866860310" alt="QR Code" class="qr-code-img">
                         </div>
                         
-                        <a href="https://wa.me/628786686030" target="_blank" class="about-social-icon" title="WhatsApp">
+                        <a href="https://wa.me/6287866860310" target="_blank" class="about-social-icon" title="WhatsApp">
                             <i class="fa fa-whatsapp"></i>
                         </a>
                     </div>
                     <div>
-                        <a href="https://wa.me/628786686030" target="_blank" class="about-wa-link">
+                        <a href="https://wa.me/6287866860310" target="_blank" class="about-wa-link">
                             <i class="fa fa-whatsapp"></i> 0818-0249-0343
                         </a>
                     </div>
