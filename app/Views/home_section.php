@@ -283,12 +283,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <a href="#" style="color: #FFF; font-size: 3rem; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'"><i class="fa fa-instagram"></i></a>
                         
                         <!-- QR Code Placeholder -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://wa.me/6281802490343" alt="QR Code" style="width: 100px; height: 100px; border: 2px solid #FFF; padding: 5px; border-radius: 10px; background: #FFF;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://wa.me/628786686030" alt="QR Code" style="width: 100px; height: 100px; border: 2px solid #FFF; padding: 5px; border-radius: 10px; background: #FFF;">
                         
-                        <a href="https://wa.me/6281802490343" target="_blank" style="color: #FFF; font-size: 3rem; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'"><i class="fa fa-whatsapp"></i></a>
+                        <a href="https://wa.me/628786686030" target="_blank" style="color: #FFF; font-size: 3rem; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'"><i class="fa fa-whatsapp"></i></a>
                     </div>
                     <div>
-                        <a href="https://wa.me/6281802490343" target="_blank" style="color: #FFF; font-weight: bold; font-size: 1.2rem; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'">
+                        <a href="https://wa.me/628786686030" target="_blank" style="color: #FFF; font-weight: bold; font-size: 1.2rem; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'">
                             <i class="fa fa-whatsapp"></i> 0818-0249-0343
                         </a>
                     </div>

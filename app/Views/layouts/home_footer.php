@@ -137,7 +137,7 @@
                             <a href="https://youtube.com/@nolimitstrainingfacility" target="_blank" class="footer-social-icon" title="YouTube">
                                 <i class="fa fa-youtube-play"></i>
                             </a>
-                            <a href="https://wa.me/6281802490343" target="_blank" class="footer-social-icon" title="WhatsApp">
+                            <a href="https://wa.me/628786686030" target="_blank" class="footer-social-icon" title="WhatsApp">
                                 <i class="fa fa-whatsapp"></i>
                             </a>
                         </div>
