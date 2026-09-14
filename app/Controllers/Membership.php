@@ -848,9 +848,15 @@ class Membership extends BaseController
         return $this->response->setJSON($pkt);
     }
 
-    public function getPervisitBycabang($idcabang)
+    public function getPervisitBycabang($idcabang = null)
     {
+        if (empty($idcabang)) {
+            return $this->response->setJSON([]);
+        }
         $cabang = $this->modelcabang->get_detail($idcabang);
+        if (!$cabang || empty($cabang->kota)) {
+            return $this->response->setJSON([]);
+        }
         $pkt = $this->modelmembership->pkgPervisit($cabang->kota);
 
         // dd($pkt);

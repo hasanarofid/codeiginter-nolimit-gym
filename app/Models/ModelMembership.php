@@ -162,7 +162,7 @@ class ModelMembership extends Model
         $builder = $this->db->table($this->table);
         $builder->select("membership.id, CONCAT(membership_cat.catname,' ', membership.nama, ' - ',membership.kota) AS paket, membership.nominal");
         $builder->join('membership_cat', 'membership_cat.catid = membership.catid', 'left');
-        $builder->where('membership.kota', $kota);
+        $builder->where('LOWER(TRIM(membership.kota))', strtolower(trim($kota)));
         $builder->where('membership.expired = 0');
         $builder->where('membership.deleted_at IS NULL');
         return $builder->get()->getResultArray();

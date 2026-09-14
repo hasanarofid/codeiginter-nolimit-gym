@@ -24,16 +24,11 @@
                                     <select name="cabang" id="cabang" class="form-control <?= session('errors.cabang') ? 'is-invalid' : '' ?>">
                                         <option value="">: Pilih</option>
                                         <?php
-                                        $x = 0;
+                                        $selectedCabang = old('cabang', $user_cabang);
                                         foreach ($cabang as $cab) {
-                                            if ($user_cabang == $cab['id']) {
-                                                echo "<option value='$cab[id]'>$cab[nama]</option>";
-                                            } else {
-                                                echo "<option value='$cab[id]'>$cab[nama]</option>";
-                                            }
-                                            $x++;
+                                            $sel = ($selectedCabang == $cab['id']) ? 'selected="selected"' : '';
+                                            echo "<option value='{$cab['id']}' {$sel}>{$cab['nama']}</option>";
                                         }
-                                        // dd($prices);
                                         ?>
                                     </select>
                                     <div class="invalid-feedback">
@@ -206,9 +201,9 @@
 
 <script>
     $(document).ready(function() {
-        // Load paket member berdasarkan cabang
-        $('#cabang').on('change', function() {
-            const selectedCabangId = $(this).val();
+        const oldPaket = "<?= old('paket') ?>";
+
+        function loadPaket(selectedCabangId) {
             $('#paket').empty().append('<option value="">: Pilih</option>');
             if (selectedCabangId) {
                 $.ajax({
@@ -217,14 +212,24 @@
                     dataType: 'json',
                     success: function(response) {
                         response.forEach(function(paket) {
-                            $('#paket').append(`<option value="${paket.id}">${paket.paket} - ${paket.nominal}</option>`);
+                            const isSelected = (oldPaket && oldPaket == paket.id) ? 'selected' : '';
+                            $('#paket').append(`<option value="${paket.id}" ${isSelected}>${paket.paket} - ${paket.nominal}</option>`);
                         });
                     }
                 });
-
-                // alert('yuhuu..');
             }
+        }
+
+        // Load paket member berdasarkan cabang
+        $('#cabang').on('change', function() {
+            loadPaket($(this).val());
         });
+
+        // Trigger loading paket on page load if cabang is selected
+        const currentCabang = $('#cabang').val();
+        if (currentCabang) {
+            loadPaket(currentCabang);
+        }
     });
 </script>
 <?= $this->endSection(); ?>

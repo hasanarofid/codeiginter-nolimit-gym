@@ -215,9 +215,9 @@ class Visitors extends BaseController
             'nama' => ['required' => 'Nama harus di isi'],
             'locker' => ['required' => 'No. Locker harus di isi'],
             'handuk' => ['required' => 'Handuk harus di pilih'],
-            'paket' => ['required' => 'Handuk harus di pilih'],
-            'payment' => ['required' => 'Handuk harus di pilih'],
-            'cabang' => ['required' => 'Handuk harus di pilih'],
+            'paket' => ['required' => 'Biaya harus di pilih'],
+            'payment' => ['required' => 'Pembayaran harus di pilih'],
+            'cabang' => ['required' => 'Cabang harus di pilih'],
         ]);
 
         if (!$this->validation->withRequest($this->request)->run()) {
