@@ -553,7 +553,7 @@
             });
 
             $('#searchBtn').on('click', function() {
-                var branch = $('#branch_location').val();
+                var branch = $('#branch_location').val() || '%';
                 var start_date = $('#start_date').val();
                 var end_date = $('#end_date').val();
 
@@ -586,6 +586,13 @@
                         $('#totalAmount').html('<strong>' + (response.total_amount || '0,00') + '</strong>');
                     }
                 });
+            });
+
+            $('#exportBtnMem').on('click', function() {
+                var branch = $('#branch_location').val() || '%';
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+                window.location.href = "<?= base_url('report/export_trans_membership') ?>?branch_location=" + encodeURIComponent(branch) + "&start_date=" + encodeURIComponent(start_date) + "&end_date=" + encodeURIComponent(end_date);
             });
         });
     </script>
@@ -620,7 +627,7 @@
             });
 
             $('#srcTrx').on('click', function() {
-                var branch = $('#cabang').val();
+                var branch = $('#cabang').val() || '%';
                 var start_date = $('#date_satu').val();
                 var end_date = $('#date_dua').val();
 
@@ -653,6 +660,13 @@
                         $('#total').html('<strong>' + (response.total_amount || '0,00') + '</strong>');
                     }
                 });
+            });
+
+            $('#exportBtnUmum').on('click', function() {
+                var branch = $('#cabang').val() || '%';
+                var start_date = $('#date_satu').val();
+                var end_date = $('#date_dua').val();
+                window.location.href = "<?= base_url('report/export_nonmember_trx') ?>?cabang=" + encodeURIComponent(branch) + "&date_satu=" + encodeURIComponent(start_date) + "&date_dua=" + encodeURIComponent(end_date);
             });
         });
     </script>

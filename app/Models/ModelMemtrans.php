@@ -157,10 +157,11 @@ class ModelMemtrans extends Model
         }
 
         if ($start_date && $end_date) {
-            $d->where('m.payment_date >=', $start_date);
-            $d->where('m.payment_date <=', $end_date);
+            $d->where('DATE(COALESCE(m.payment_date, m.created_at)) >=', $start_date);
+            $d->where('DATE(COALESCE(m.payment_date, m.created_at)) <=', $end_date);
         }
 
+        $d->where('m.status', 1);
         $d->orderBy('m.created_at', 'desc');
 
         /**

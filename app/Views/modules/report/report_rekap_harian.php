@@ -16,20 +16,27 @@
                     <select id="branch_location" class="form-control">
                         <option value="">: Pilih Cabang</option>
                         <?php if ($cab_def == '%'): ?>
-                            <option value="%">Semua Cabang</option>
+                            <option value="%" selected>Semua Cabang</option>
                         <?php endif; ?>
                         <?php foreach ($branches as $branch): ?>
-                            <option value="<?= $branch['id'] ?>"><?= $branch['nama'] ?></option>
+                            <option value="<?= $branch['id'] ?>" <?= ($cab_def == $branch['id']) ? 'selected' : '' ?>><?= $branch['nama'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="report_date">Tanggal <span class="text-danger">*</span></label>
-                    <input type="text" id="report_date" class="form-control datepicker" value="<?= date('Y-m-d') ?>" placeholder="____-__-__" readonly="true">
+                    <input type="text" id="report_date" class="form-control datepicker" value="<?= date('Y-m-d') ?>" placeholder="YYYY-MM-DD" autocomplete="off">
                 </div>
                 <div class="col-md-4">
                     <label>&nbsp;</label>
-                    <button type="button" id="searchBtn" class="btn btn-primary form-control">Cari</button>
+                    <div class="d-flex">
+                        <button type="button" id="searchBtn" class="btn btn-primary flex-fill mr-2">
+                            <i class="fas fa-search fa-sm"></i> Cari
+                        </button>
+                        <button type="button" id="exportBtn" class="btn btn-success flex-fill">
+                            <i class="fas fa-file-excel fa-sm"></i> Export Excel
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -38,6 +45,7 @@
             <table class="table table-sm table-bordered" id="rekapHarianTable">
                 <thead>
                     <tr>
+                        <th width="5%">No.</th>
                         <th>Nama Paket</th>
                         <th>Nama Member</th>
                         <th>Status</th>
@@ -50,7 +58,7 @@
                 <tbody></tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="6"><strong>Total Nominal</strong></td>
+                        <td colspan="7"><strong>Total Nominal</strong></td>
                         <td id="totalAmount"><strong>0</strong></td>
                     </tr>
                 </tfoot>
@@ -61,10 +69,10 @@
 
 <script>
 $(document).ready(function() {
-    $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-        todayHighlight: true
+    $(".datepicker").datepicker({
+        dateFormat: "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true
     });
 
     const table = $('#rekapHarianTable').DataTable({
@@ -90,7 +98,7 @@ $(document).ready(function() {
             "url": "<?= base_url('/report/fetch_rekap_harian') ?>",
             "type": "GET",
             "data": function(d) {
-                d.branch_location = $('#branch_location').val();
+                d.branch_location = $('#branch_location').val() || '%';
                 d.date = $('#report_date').val();
             }
         },
@@ -101,7 +109,8 @@ $(document).ready(function() {
             { "data": 3 },
             { "data": 4 },
             { "data": 5 },
-            { "data": 6 }
+            { "data": 6 },
+            { "data": 7 }
         ],
         "footerCallback": function (row, data, start, end, display) {
             var api = this.api();
@@ -112,11 +121,13 @@ $(document).ready(function() {
     });
 
     $('#searchBtn').click(function() {
-        if ($('#branch_location').val() == '') {
-            alert('Pilih Cabang Terlebih Dahulu');
-            return false;
-        }
         table.ajax.reload();
+    });
+
+    $('#exportBtn').click(function() {
+        var branch = $('#branch_location').val() || '%';
+        var date = $('#report_date').val();
+        window.location.href = "<?= base_url('/report/export_rekap_harian') ?>?branch_location=" + encodeURIComponent(branch) + "&date=" + encodeURIComponent(date);
     });
 });
 </script>

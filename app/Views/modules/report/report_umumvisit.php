@@ -43,7 +43,14 @@
                 </div>
                 <div class="col-md-3">
                     <label>&nbsp;</label>
-                    <button type="button" id="srcTrx" class="btn btn-primary form-control">Cari</button>
+                    <div class="d-flex">
+                        <button type="button" id="srcTrx" class="btn btn-primary flex-fill mr-2">
+                            <i class="fas fa-search fa-sm"></i> Cari
+                        </button>
+                        <button type="button" id="exportBtnUmum" class="btn btn-success flex-fill">
+                            <i class="fas fa-file-excel fa-sm"></i> Export Excel
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>

@@ -140,10 +140,13 @@ $routes->post('/cabang/delete/(:segment)', 'Cabang::delete/$1');
 // reports
 $routes->get('/report/trans_membership', 'ReportTrans::transaksi_membership');
 $routes->get('/report/fetch_transactions', 'ReportTrans::fetch_transactions');
+$routes->get('/report/export_trans_membership', 'ReportTrans::export_membership');
 $routes->get('/report/umumvisit', 'ReportTrans::transaksi_umumvisit');
 $routes->get('/report/fetch_nonmember_trx', 'ReportTrans::fetch_nonmember_trx');
+$routes->get('/report/export_nonmember_trx', 'ReportTrans::export_nonmember_trx');
 $routes->get('/report/rekap_harian', 'ReportTrans::rekap_harian');
 $routes->get('/report/fetch_rekap_harian', 'ReportTrans::fetch_rekap_harian');
+$routes->get('/report/export_rekap_harian', 'ReportTrans::export_rekap_harian');
 
 // POS (Snack & Minuman)
 $routes->get('/pos', 'Pos::index');
