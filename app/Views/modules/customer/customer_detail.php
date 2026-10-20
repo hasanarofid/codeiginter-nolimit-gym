@@ -11,6 +11,14 @@
                 <i class="fas fa-plus fa-sm text-white-50"></i> Perpanjang
             </button>
         <?php endif; ?>
+        <?php if (in_array(session()->group, ['SA', 'AD']) || in_array($role_array[3] ?? '', $permission ?? [])): ?>
+            <form action="<?= base_url('customer/delete/' . $detail['id']) ?>" method="post" class="d-inline float-right mr-2" onsubmit="return confirm('Apakah Anda yakin ingin menghapus member <?= esc($detail['nama']) ?> (<?= esc($detail['id']) ?>)? Semua data membership dan kunjungan terkait juga akan dihapus.')">
+                <?= csrf_field() ?>
+                <button type="submit" class="btn btn-sm btn-danger shadow-sm">
+                    <i class="fas fa-trash fa-sm text-white-50"></i> Hapus Member
+                </button>
+            </form>
+        <?php endif; ?>
     </div>
     <div class="card-body">
         <div class="row">
@@ -139,15 +147,16 @@
                                         ?>
                                     </td>
                                     <td>
-                                        <?php
-                                        if ($mbr->payment_date == null) :
-                                        ?>
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#exampleModal<?= $no ?>">
+                                        <?php if ($mbr->payment_date == null) : ?>
+                                            <button type="button" class="btn btn-sm btn-secondary mr-1 mb-1" data-toggle="modal" data-target="#exampleModal<?= $no ?>">
                                                 Pembayaran
                                             </button>
-                                        <?php
-                                        endif;
-                                        ?>
+                                        <?php endif; ?>
+                                        <?php if (in_array(session()->group, ['SA', 'AD', 'OP'])): ?>
+                                            <button type="button" class="btn btn-sm btn-info mr-1 mb-1" data-toggle="modal" data-target="#modalEditDate<?= $no ?>" title="Edit Tanggal Membership">
+                                                <i class="fas fa-calendar-alt"></i> Edit Tanggal
+                                            </button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
 
@@ -200,6 +209,68 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php if (in_array(session()->group, ['SA', 'AD', 'OP'])): ?>
+                                <!-- Modal Edit Tanggal -->
+                                <div class="modal fade" id="modalEditDate<?= $no ?>" tabindex="-1" aria-labelledby="modalEditDateLabel<?= $no ?>" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalEditDateLabel<?= $no ?>">Edit Tanggal Membership</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form method="post" action="<?= base_url('membership/update-dates') ?>">
+                                                <?= csrf_field(); ?>
+                                                <div class="modal-body text-left">
+                                                    <div class="alert alert-info py-2">
+                                                        <small><strong>Paket:</strong> <?= esc(ucwords(strtolower($mbr->nama))) ?> | <strong>ID:</strong> <?= esc($mbr->id) ?></small>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_payment_date<?= $no ?>">Tgl. Mulai (Periode) <span class="text-danger">*</span></label>
+                                                        <input type="text" name="payment_date" id="edit_payment_date<?= $no ?>" class="form-control datepicker" placeholder="yyyy-mm-dd" value="<?= $mbr->payment_date ? date('Y-m-d', strtotime($mbr->payment_date)) : date('Y-m-d') ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_expired_date<?= $no ?>">Tgl. Expired (Berakhir) <span class="text-danger">*</span></label>
+                                                        <input type="text" name="expired_date" id="edit_expired_date<?= $no ?>" class="form-control datepicker" placeholder="yyyy-mm-dd" value="<?= $mbr->expired_date ? date('Y-m-d', strtotime($mbr->expired_date)) : '' ?>" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="edit_status<?= $no ?>">Status Transaksi</label>
+                                                        <select name="status" id="edit_status<?= $no ?>" class="form-control">
+                                                            <option value="1" <?= $mbr->status == 1 ? 'selected' : '' ?>>Active</option>
+                                                            <option value="2" <?= $mbr->status == 2 ? 'selected' : '' ?>>Expired</option>
+                                                            <option value="0" <?= $mbr->status == 0 ? 'selected' : '' ?>>Pending / Not Active</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <input type="hidden" name="idtrx" value="<?= $mbr->id ?>">
+                                                    <input type="hidden" name="idcust" value="<?= $detail['id'] ?>">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                                </div>
+                                            </form>
+                                            <script>
+                                                $(function() {
+                                                    $("#edit_payment_date<?= $no ?>, #edit_expired_date<?= $no ?>").datepicker({
+                                                        dateFormat: "yy-mm-dd",
+                                                        changeMonth: true,
+                                                        changeYear: true,
+                                                        yearRange: "c-80:c+10",
+                                                        beforeShow: function(input) {
+                                                            return {
+                                                                appendTo: $(input).closest('.modal-body')
+                                                            };
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
                             <?php
                                 $no++;
                             endforeach;
@@ -311,6 +382,19 @@
                         <label>Tgl. Mulai (Periode) <span class="text-danger">*</span></label>
                         <input type="text" name="payment_date" id="renew_payment_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="<?= date('Y-m-d') ?>" required="required">
                     </div>
+                    <div class="form-group">
+                        <label>Tgl. Berakhir (Expired) <span class="text-danger">*</span></label>
+                        <input type="text" name="expired_date" id="renew_expired_date" class="form-control datepicker" placeholder="yyyy-mm-dd" required="required">
+                        <small class="form-text text-muted">Tanggal expired terisi otomatis sesuai durasi paket, namun dapat diubah manual.</small>
+                    </div>
+                    <?php if ($expired && !empty($expired->expired_date) && strtotime($expired->expired_date) >= strtotime(date('Y-m-d'))): ?>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="renew_accumulate" name="accumulate" value="1">
+                        <label class="form-check-label" for="renew_accumulate">
+                            Akumulasikan dari sisa membership aktif (s/d <?= date('d-m-Y', strtotime($expired->expired_date)) ?>)
+                        </label>
+                    </div>
+                    <?php endif; ?>
                     <input type="hidden" name="idcust" value="<?= $detail['id'] ?>">
                 </div>
                 <div class="modal-footer">
@@ -356,17 +440,45 @@
 
 <script>
 $(document).ready(function() {
-    $("#renew_payment_date").datepicker({
+    $("#renew_payment_date, #renew_expired_date").datepicker({
         dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
-        yearRange: "c-80:c+0",
+        yearRange: "c-80:c+10",
         beforeShow: function(input) {
             return {
                 appendTo: $(input).closest('.modal-body')
             };
         }
     });
+
+    const activeExpDate = "<?= ($expired && !empty($expired->expired_date)) ? date('Y-m-d', strtotime($expired->expired_date)) : '' ?>";
+
+    function updateCalculatedExpired() {
+        const selectedOption = $('#renew_paket').find('option:selected');
+        const months = parseInt(selectedOption.data('expired')) || 0;
+        const isAccumulate = $('#renew_accumulate').is(':checked');
+        
+        let baseDateStr = $('#renew_payment_date').val();
+        if (isAccumulate && activeExpDate) {
+            baseDateStr = activeExpDate;
+        }
+
+        if (baseDateStr && months > 0) {
+            const parts = baseDateStr.split('-');
+            if (parts.length === 3) {
+                const year = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1; // 0-indexed
+                const day = parseInt(parts[2], 10);
+                
+                const d = new Date(year, month + months, day);
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                $('#renew_expired_date').val(yyyy + '-' + mm + '-' + dd);
+            }
+        }
+    }
 
     function loadPaket(cabangId) {
         if (cabangId) {
@@ -379,8 +491,10 @@ $(document).ready(function() {
                     $('#renew_paket').empty().append('<option value="">: Pilih Paket</option>');
                     response.forEach(function(paket) {
                         let nominal = 'Rp ' + parseInt(paket.nominal).toLocaleString('id-ID');
-                        $('#renew_paket').append('<option value="' + paket.id + '">' + paket.category + ' - ' + paket.nama + ' (' + nominal + ')</option>');
+                        let expMonths = parseInt(paket.expired) || 1;
+                        $('#renew_paket').append('<option value="' + paket.id + '" data-expired="' + expMonths + '">' + paket.category + ' - ' + paket.nama + ' (' + nominal + ')</option>');
                     });
+                    updateCalculatedExpired();
                 },
                 error: function(xhr, status, error) {
                     console.error("Error loading paket:", error);
@@ -395,6 +509,18 @@ $(document).ready(function() {
 
     $('#renew_cabang').on('change', function() {
         loadPaket($(this).val());
+    });
+
+    $('#renew_paket').on('change', function() {
+        updateCalculatedExpired();
+    });
+
+    $('#renew_payment_date').on('change', function() {
+        updateCalculatedExpired();
+    });
+
+    $('#renew_accumulate').on('change', function() {
+        updateCalculatedExpired();
     });
 });
 </script>

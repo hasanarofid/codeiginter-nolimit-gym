@@ -741,19 +741,28 @@ class Membership extends BaseController
         $getpaket = $this->modelmembership->get_membership($paket);
         $tgl = $this->request->getVar('payment_date');
         $tgl = empty($tgl) ? date('Y-m-d') : $tgl;
+        $custom_expired = $this->request->getVar('expired_date');
+        $accumulate     = $this->request->getVar('accumulate');
 
-        // Cek apakah customer memiliki membership aktif saat ini
-        $activeExp = $this->modeltrans->get_expired($idcust);
-
-        // Jika memiliki membership aktif yang kadaluarsanya masih di masa depan, akumulasikan dari expired_date tersebut
-        if ($activeExp && !empty($activeExp->expired_date) && strtotime($activeExp->expired_date) >= strtotime($tgl)) {
-            $baseTimestamp = strtotime($activeExp->expired_date);
+        // Jika user menginputkan tanggal expired kustom secara manual
+        if (!empty($custom_expired)) {
+            $expired_date = date('Y-m-d 23:59:00', strtotime($custom_expired));
         } else {
-            $baseTimestamp = strtotime($tgl . ' 00:00:00');
+            $monthsToAdd = (int) ($getpaket['expired'] ?? 1);
+            // Akumulasi hanya jika opsi accumulate dicentang
+            if ($accumulate == '1') {
+                $activeExp = $this->modeltrans->get_expired($idcust);
+                if ($activeExp && !empty($activeExp->expired_date) && strtotime($activeExp->expired_date) >= strtotime($tgl)) {
+                    $baseTimestamp = strtotime($activeExp->expired_date);
+                } else {
+                    $baseTimestamp = strtotime($tgl . ' 00:00:00');
+                }
+            } else {
+                // Default: mulai dari tgl pembayaran / periode baru yang dipilih
+                $baseTimestamp = strtotime($tgl . ' 00:00:00');
+            }
+            $expired_date = date('Y-m-d 23:59:00', strtotime("+$monthsToAdd month", $baseTimestamp));
         }
-
-        $monthsToAdd  = (int) $getpaket['expired'];
-        $expired_date = date('Y-m-d 23:59:00', strtotime("+$monthsToAdd month", $baseTimestamp));
 
         $transid = $this->generateUniqueId($cabang);
         $trans   = [
@@ -796,8 +805,51 @@ class Membership extends BaseController
         }
         // return $this->response->setJSON(['status' => 'success']);
 
-
         return redirect()->to(base_url('/customer/detail/' . $customer['id']));
+    }
+
+    public function update_dates()
+    {
+        // Restrict to Management Only
+        if (!in_array(session()->group, ['SA', 'AD', 'OP'])) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger" role="alert"><strong>Akses Ditolak:</strong> Anda tidak memiliki izin untuk mengubah tanggal membership.</div>');
+            return redirect()->back();
+        }
+
+        $idtrx        = $this->request->getPost('idtrx');
+        $idcust       = $this->request->getPost('idcust');
+        $payment_date = $this->request->getPost('payment_date');
+        $expired_date = $this->request->getPost('expired_date');
+        $status       = $this->request->getPost('status');
+
+        $trx = $this->modeltrans->find($idtrx);
+        if (!$trx) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger" role="alert"><strong>Gagal:</strong> Transaksi membership tidak ditemukan.</div>');
+            return redirect()->to(base_url('customer/detail/' . $idcust));
+        }
+
+        $updateData = [];
+        if (!empty($payment_date)) {
+            $updateData['payment_date'] = date('Y-m-d H:i:s', strtotime($payment_date));
+        }
+        if (!empty($expired_date)) {
+            $updateData['expired_date'] = date('Y-m-d 23:59:00', strtotime($expired_date));
+        }
+        if ($status !== null && $status !== '') {
+            $updateData['status'] = (int) $status;
+        }
+
+        if (!empty($updateData)) {
+            $this->modeltrans->update($idtrx, $updateData);
+            session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Sukses!</strong> Tanggal membership berhasil diperbarui.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>');
+        }
+
+        return redirect()->to(base_url('customer/detail/' . $idcust));
     }
 
     private function randPass($n)

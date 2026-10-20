@@ -60,7 +60,9 @@ class Customers extends BaseController
                 'membership' => $memberships,
                 'expired' => $expired,
                 'renewal' => count($memberships),
-                'barcode' => '<img class="img-fluid" src="' . base_url('customer/barcode/' . $id) . '" alt="' . $id . '">'
+                'barcode' => '<img class="img-fluid" src="' . base_url('customer/barcode/' . $id) . '" alt="' . $id . '">',
+                'permission' => $this->permission,
+                'role_array' => $this->role_array
             ];
 
             return view('modules/customer/customer_detail', $data);
@@ -638,6 +640,65 @@ class Customers extends BaseController
             session()->setFlashdata('pesan', '<div class="alert alert-info">Import Selesai. Baru: ' . $success . ', Update: ' . $updated . ', Gagal: ' . $failed . '</div>');
         } else {
             session()->setFlashdata('pesan', '<div class="alert alert-danger">File tidak valid.</div>');
+        }
+
+        return redirect()->to(base_url('customer'));
+    }
+
+    public function delete($id)
+    {
+        // Cek izin (Role 'D' atau Group SA/AD)
+        if (!in_array('D', $this->permission) && !in_array(session()->group, ['SA', 'AD'])) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger" role="alert">
+                <strong>Akses Ditolak:</strong> Anda tidak memiliki izin untuk menghapus member.
+            </div>');
+            return redirect()->to(base_url('customer'));
+        }
+
+        $customer = $this->modelcustomer->get_customer($id);
+        if (!$customer) {
+            session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
+                <strong>Oops:</strong> Data member tidak ditemukan.
+            </div>');
+            return redirect()->to(base_url('customer'));
+        }
+
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            // 1. Soft delete riwayat transaksi membership
+            $this->modeltransmem->where('custid', $id)->delete();
+
+            // 2. Soft delete riwayat kunjungan member
+            $modelVisitor = new \App\Models\ModelVisitor();
+            $modelVisitor->where('idmember', $id)->delete();
+
+            // 3. Hapus akun login user terkait jika ada
+            if (!empty($customer['email'])) {
+                $db->table('user')->where('UserID', $customer['email'])->where('UserGroup', 'MS')->delete();
+            }
+
+            // 4. Soft delete data customer
+            $this->modelcustomer->delete($id);
+
+            $db->transCommit();
+
+            session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Berhasil!</strong> Data member <strong>' . esc($customer['nama']) . ' (' . esc($id) . ')</strong> beserta seluruh riwayat terkait berhasil dihapus.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>');
+        } catch (\Exception $e) {
+            $db->transRollback();
+            log_message('error', 'Gagal menghapus member: ' . $e->getMessage());
+            session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Gagal:</strong> Terjadi kesalahan saat menghapus data member.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>');
         }
 
         return redirect()->to(base_url('customer'));

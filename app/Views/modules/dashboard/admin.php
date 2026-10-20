@@ -227,8 +227,21 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Tgl. Mulai (Periode) <span class="text-danger">*</span></label>
-                                                            <input type="text" name="payment_date" class="form-control datepicker renew_payment_date" placeholder="yyyy-mm-dd" value="<?= date('Y-m-d') ?>" required="required">
+                                                            <input type="text" name="payment_date" id="admin_payment_date<?= $n ?>" class="form-control datepicker renew_payment_date" placeholder="yyyy-mm-dd" value="<?= date('Y-m-d') ?>" required="required">
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label>Tgl. Berakhir (Expired) <span class="text-danger">*</span></label>
+                                                            <input type="text" name="expired_date" id="admin_expired_date<?= $n ?>" class="form-control datepicker" placeholder="yyyy-mm-dd" required="required">
+                                                            <small class="form-text text-muted">Tanggal expired terisi otomatis sesuai durasi paket, namun dapat diubah manual.</small>
+                                                        </div>
+                                                        <?php if (!empty($exp->expired_date) && strtotime($exp->expired_date) >= strtotime(date('Y-m-d'))): ?>
+                                                        <div class="form-group form-check">
+                                                            <input type="checkbox" class="form-check-input" id="admin_accumulate<?= $n ?>" name="accumulate" value="1">
+                                                            <label class="form-check-label" for="admin_accumulate<?= $n ?>">
+                                                                Akumulasikan dari sisa membership aktif (s/d <?= date('d-m-Y', strtotime($exp->expired_date)) ?>)
+                                                            </label>
+                                                        </div>
+                                                        <?php endif; ?>
 
                                                         <input type="hidden" name="idcust" value="<?= $exp->idcust ?>" />
                                                     </div>
@@ -239,12 +252,39 @@
                                                 </form>
                                                 <script>
                                                     $(document).ready(function() {
-                                                        $(".renew_payment_date").datepicker({
+                                                        $("#admin_payment_date<?= $n ?>, #admin_expired_date<?= $n ?>").datepicker({
                                                             dateFormat: "yy-mm-dd",
                                                             changeMonth: true,
                                                             changeYear: true,
-                                                            yearRange: "c-80:c+0"
+                                                            yearRange: "c-80:c+10"
                                                         });
+
+                                                        const activeExpDate<?= $n ?> = "<?= (!empty($exp->expired_date)) ? date('Y-m-d', strtotime($exp->expired_date)) : '' ?>";
+
+                                                        function updateAdminExpired<?= $n ?>() {
+                                                            const selectedOption = $('#paket<?= $n; ?>').find('option:selected');
+                                                            const months = parseInt(selectedOption.data('expired')) || 0;
+                                                            const isAccumulate = $('#admin_accumulate<?= $n ?>').is(':checked');
+                                                            
+                                                            let baseDateStr = $('#admin_payment_date<?= $n ?>').val();
+                                                            if (isAccumulate && activeExpDate<?= $n ?>) {
+                                                                baseDateStr = activeExpDate<?= $n ?>;
+                                                            }
+
+                                                            if (baseDateStr && months > 0) {
+                                                                const parts = baseDateStr.split('-');
+                                                                if (parts.length === 3) {
+                                                                    const year = parseInt(parts[0], 10);
+                                                                    const month = parseInt(parts[1], 10) - 1;
+                                                                    const day = parseInt(parts[2], 10);
+                                                                    const d = new Date(year, month + months, day);
+                                                                    const yyyy = d.getFullYear();
+                                                                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                                                                    const dd = String(d.getDate()).padStart(2, '0');
+                                                                    $('#admin_expired_date<?= $n ?>').val(yyyy + '-' + mm + '-' + dd);
+                                                                }
+                                                            }
+                                                        }
 
                                                         // Load paket member berdasarkan cabang
                                                         $('#cabang<?= $n; ?>').on('change', function() {
@@ -258,8 +298,10 @@
                                                                     success: function(response) {
                                                                         $('#paket<?= $n; ?>').empty().append('<option value="">: Paket Membership</option>');
                                                                         response.forEach(function(paket) {
-                                                                            $('#paket<?= $n; ?>').append('<option value="' + paket.id + '">' + paket.category + ' ' + paket.nama + ' - ' + paket.nominal + '</option>');
+                                                                            let expMonths = parseInt(paket.expired) || 1;
+                                                                            $('#paket<?= $n; ?>').append('<option value="' + paket.id + '" data-expired="' + expMonths + '">' + paket.category + ' ' + paket.nama + ' - ' + paket.nominal + '</option>');
                                                                         });
+                                                                        updateAdminExpired<?= $n ?>();
                                                                     },
                                                                     error: function(xhr, status, error) {
                                                                         console.error("Error loading paket:", error);
@@ -269,6 +311,16 @@
                                                             } else {
                                                                 $('#paket<?= $n; ?>').empty().append('<option value="">: Paket Membership</option>');
                                                             }
+                                                        });
+
+                                                        $('#paket<?= $n; ?>').on('change', function() {
+                                                            updateAdminExpired<?= $n ?>();
+                                                        });
+                                                        $('#admin_payment_date<?= $n ?>').on('change', function() {
+                                                            updateAdminExpired<?= $n ?>();
+                                                        });
+                                                        $('#admin_accumulate<?= $n ?>').on('change', function() {
+                                                            updateAdminExpired<?= $n ?>();
                                                         });
 
                                                         // Trigger loading paket when modal opens

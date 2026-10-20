@@ -39,6 +39,7 @@ class ModelMemtrans extends Model
         $builder->select('membership_trans.*, membership.nama');
         $builder->join('membership', 'membership.id = membership_trans.membershipid', 'left');
         $builder->where('membership_trans.custid', $custid);
+        $builder->where('membership_trans.deleted_at IS NULL');
         return $builder->get()->getResult();
     }
 
@@ -49,6 +50,7 @@ class ModelMemtrans extends Model
         $builder->join('membership', 'membership.id = membership_trans.membershipid', 'left');
         $builder->where('membership_trans.custid', $custid);
         $builder->where('membership_trans.status', 1);
+        $builder->where('membership_trans.deleted_at IS NULL');
         $builder->orderBy('membership_trans.expired_date', 'DESC');
         return $builder->get()->getRow();
     }
@@ -177,7 +179,7 @@ class ModelMemtrans extends Model
     {
         $db =  db_connect();
         $bd = $db->table($this->table . ' mt');
-        $bd->select("c.id AS idcust, b.nama AS cabang, c.nama AS nmcust, c.hp_wa, CONCAT(mc.catname,' ',m.nama) AS pkgname, DATEDIFF(mt.expired_date,now()) AS expired_day, b.id AS branchid");
+        $bd->select("c.id AS idcust, b.nama AS cabang, c.nama AS nmcust, c.hp_wa, CONCAT(mc.catname,' ',m.nama) AS pkgname, DATEDIFF(mt.expired_date,now()) AS expired_day, b.id AS branchid, mt.expired_date");
         $bd->join('customers c', 'c.id = mt.custid', 'left');
         $bd->join('membership m', 'm.id = mt.membershipid', 'left');
         $bd->join('membership_cat mc', 'mc.catid = m.catid', 'left');

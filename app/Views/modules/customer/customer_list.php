@@ -49,12 +49,18 @@
                             <td><?= $row['hp_wa'] ?></td>
                             <td><?= $row['email'] ?></td>
                             <td><img class="img-fluid" src="/img/uploads/member/fp/<?= $row['fp_image'] ?>" width="64" /></td>
-                            <td width="180px">
+                            <td width="210px">
                                 <?php
                                 echo (in_array($role_array[1], $permission)) ? anchor(base_url('customer/detail/' . $row['id']), '<i class="fas fa-eye fa-sw text-white"></i>', ['title' => 'detail', 'class' => "btn btn-sm btn-info shadow-sm mr-1"]) : '';
                                 echo (in_array($role_array[2], $permission)) ? anchor(base_url('customer/edit/' . $row['id']), '<i class="fas fa-edit fa-sw text-white"></i>', ['title' => 'edit', 'class' => "btn btn-sm btn-warning shadow-sm mr-1"]) : '';
                                 if (!empty($row['idcard_image'])) {
                                     echo anchor(base_url('img/uploads/member/ktp/' . $row['idcard_image']), '<i class="fas fa-id-card fa-sw text-white"></i>', ['title' => 'Download KTP', 'class' => "btn btn-sm btn-success shadow-sm mr-1", 'download' => 'KTP_' . $row['id']]);
+                                }
+                                if (in_array($role_array[3], $permission) || in_array(session()->group, ['SA', 'AD'])) {
+                                    echo '<form action="' . base_url('customer/delete/' . $row['id']) . '" method="post" class="d-inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus member ' . esc($row['nama']) . ' (' . esc($row['id']) . ')?\')">';
+                                    echo csrf_field();
+                                    echo '<button type="submit" class="btn btn-sm btn-danger shadow-sm mr-1" title="Hapus Member"><i class="fas fa-trash fa-sw text-white"></i></button>';
+                                    echo '</form>';
                                 }
                                 ?>
                             </td>

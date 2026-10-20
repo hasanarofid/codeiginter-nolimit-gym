@@ -28,6 +28,7 @@ $routes->post('/forgot-password/process', 'Membership::forgot_process');
 $routes->get('/reset-password', 'Membership::resetPassword');
 $routes->post('/reset-password', 'Membership::updatePassword');
 $routes->post('/membership-renewal', 'Membership::set_perpanjangan');
+$routes->post('/membership/update-dates', 'Membership::update_dates');
 
 $routes->get('/membership/category', 'MembershipCategory::index');
 $routes->get('/membership/category/detail/(:num)', 'MembershipCategory::detail/$1');
@@ -91,6 +92,7 @@ $routes->get('/customer/edit/(:alphanum)', 'Customers::edit/$1');
 $routes->post('/customer/update', 'Customers::update');
 $routes->post('/customer/update_foto', 'Customers::adm_up_fp');
 $routes->post('/customer/update_ktp', 'Customers::adm_up_ktp');
+$routes->post('/customer/delete/(:segment)', 'Customers::delete/$1');
 
 // addons
 $routes->get('/addon', 'Addons::index');
