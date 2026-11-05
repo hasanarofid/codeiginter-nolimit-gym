@@ -28,14 +28,19 @@ class Visitors extends BaseController
 
     public function index()
     {
+        $start_date = $this->request->getGet('start_date') ?: date('Y-m-d');
+        $end_date = $this->request->getGet('end_date') ?: date('Y-m-d');
+
         $data = [
             'title' => 'Histori Pengunjung',
             'action' => base_url('visitors/store'),
             'idmember' => old('idmember'),
             'locker' => old('locker'),
             'handuk' => old('handuk'),
+            'start_date' => $start_date,
+            'end_date' => $end_date,
             'members' => $this->modelcustomer->get_by_cabang('%'),
-            'visitors' => $this->modelvisitor->get_visitor(null, $this->user_cabang),
+            'visitors' => $this->modelvisitor->get_visitor(null, $this->user_cabang, $start_date, $end_date),
         ];
 
         return view('modules/visitor/visitor_form', $data);
@@ -186,6 +191,9 @@ class Visitors extends BaseController
 
         $json = json_decode(json_encode($prices), true);
 
+        $start_date = $this->request->getGet('start_date') ?: date('Y-m-d');
+        $end_date = $this->request->getGet('end_date') ?: date('Y-m-d');
+
         // dd($json);
         $data = [
             'title' => 'Histori Pengunjung Non Member',
@@ -194,9 +202,11 @@ class Visitors extends BaseController
             'locker' => old('locker'),
             'handuk' => old('handuk'),
             'prices' => $json,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
             'cabang' => $this->modelcabang->get_cabang('%'),
             'user_cabang' => $this->user_cabang,
-            'visitors' => $this->modelumum->get_visitor('%'),
+            'visitors' => $this->modelumum->get_visitor('%', $start_date, $end_date),
         ];
 
         return view('modules/visitor/visitor_nonmember_form', $data);

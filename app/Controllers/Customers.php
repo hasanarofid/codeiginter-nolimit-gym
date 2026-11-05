@@ -26,9 +26,12 @@ class Customers extends BaseController
 
     public function index()
     {
+        $status_filter = $this->request->getGet('membership_status') ?? '';
+
         $data = [
             'title' => 'Daftar Customer',
-            'customers' => $this->modelcustomer->getByCabang('%'),
+            'customers' => $this->modelcustomer->getByCabang('%', $status_filter ?: null),
+            'status_filter' => $status_filter,
             'permission' => $this->permission,
             'role_array' => $this->role_array
         ];
@@ -502,7 +505,8 @@ class Customers extends BaseController
 
     public function export()
     {
-        $customers = $this->modelcustomer->getByCabang('%');
+        $status_filter = $this->request->getGet('membership_status') ?? '';
+        $customers = $this->modelcustomer->getByCabang('%', $status_filter ?: null);
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -514,6 +518,8 @@ class Customers extends BaseController
         $sheet->setCellValue('F1', 'No. HP / WA');
         $sheet->setCellValue('G1', 'Email');
         $sheet->setCellValue('H1', 'Alamat');
+        $sheet->setCellValue('I1', 'Status Membership');
+        $sheet->setCellValue('J1', 'Expired Date');
 
         $row = 2;
         foreach ($customers as $c) {
@@ -525,6 +531,16 @@ class Customers extends BaseController
             $sheet->setCellValue('F' . $row, $c['hp_wa']);
             $sheet->setCellValue('G' . $row, $c['email']);
             $sheet->setCellValue('H' . $row, $c['alamat']);
+            
+            $status_label = 'N.A';
+            if ($c['membership_status'] === 'aktif') {
+                $status_label = 'Aktif';
+            } elseif ($c['membership_status'] === 'tidak_aktif') {
+                $status_label = 'Tidak Aktif';
+            }
+            $sheet->setCellValue('I' . $row, $status_label);
+            $sheet->setCellValue('J' . $row, !empty($c['expired_date']) ? date('d-m-Y', strtotime($c['expired_date'])) : '-');
+
             $row++;
         }
 

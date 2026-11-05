@@ -179,11 +179,33 @@
                 </div>
 
                 <div class=" row mt-5" style="padding-top:25px;border-top: 0.1em solid #CCC;">
+                    <div class="col-12 mb-3">
+                        <form method="get" action="<?= base_url('visitors/member') ?>" class="form-inline">
+                            <label class="font-weight-bold mr-2"><i class="fas fa-calendar-alt mr-1"></i> Filter Tanggal Kunjungan:</label>
+                            <div class="input-group input-group-sm mr-2 mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Dari</span>
+                                </div>
+                                <input type="date" name="start_date" class="form-control" value="<?= esc($start_date) ?>" required>
+                            </div>
+                            <div class="input-group input-group-sm mr-2 mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Sampai</span>
+                                </div>
+                                <input type="date" name="end_date" class="form-control" value="<?= esc($end_date) ?>" required>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary mb-2 mr-2"><i class="fas fa-filter mr-1"></i> Tampilkan</button>
+                            <?php if ($start_date !== date('Y-m-d') || $end_date !== date('Y-m-d')): ?>
+                                <a href="<?= base_url('visitors/member') ?>" class="btn btn-sm btn-outline-secondary mb-2">Hari Ini</a>
+                            <?php endif; ?>
+                        </form>
+                    </div>
                     <div class="col">
                         <table class="table table-sm table-bordered data-tabless">
                             <thead>
                                 <tr>
                                     <th>No.</th>
+                                    <th>Tanggal</th>
                                     <th>ID Member</th>
                                     <th>Nama Lengkap</th>
                                     <th>In</th>
@@ -202,6 +224,7 @@
                                 ?>
                                     <tr>
                                         <td><?= $nnn; ?></td>
+                                        <td data-order="<?= strtotime($pengunjung->created_at) ?>"><?= date('d/m/Y', strtotime($pengunjung->created_at)) ?></td>
                                         <td><?= $pengunjung->id ?></td>
                                         <td><?= $pengunjung->nama ?></td>
                                         <td><?= date('H:i', strtotime($pengunjung->created_at)) ?></td>

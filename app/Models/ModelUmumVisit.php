@@ -26,10 +26,16 @@ class ModelUmumVisit extends Model
     // Callback untuk sebelum insert
     protected $beforeInsert = ['removeUpdatedAt'];
 
-    public function get_visitor($cabang)
+    public function get_visitor($cabang, $start_date = null, $end_date = null)
     {
         if ($cabang != '%') {
             $this->where('cabang', $cabang);
+        }
+        if (!empty($start_date) && !empty($end_date)) {
+            $this->where('DATE(created_at) >=', $start_date);
+            $this->where('DATE(created_at) <=', $end_date);
+        } elseif (!empty($start_date)) {
+            $this->where('DATE(created_at)', $start_date);
         }
         $this->orderBy('created_at', 'DESC');
         return $this->findAll();

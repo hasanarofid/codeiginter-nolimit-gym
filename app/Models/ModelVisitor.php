@@ -26,7 +26,7 @@ class ModelVisitor extends Model
     // Callback untuk sebelum insert
     protected $beforeInsert = ['removeUpdatedAt'];
 
-    public function get_visitor($id, $cabang)
+    public function get_visitor($id, $cabang, $start_date = null, $end_date = null)
     {
         $bld = $this->db->table($this->table);
         $bld->select('member_visit.*, customers.id, customers.nama');
@@ -35,17 +35,22 @@ class ModelVisitor extends Model
         if ($cabang != '%') {
             $bld->where('member_visit.cabang', $cabang);
         }
-        $bld->where('DATE(member_visit.created_at) = DATE(CURDATE())');
+
+        if (!empty($start_date) && !empty($end_date)) {
+            $bld->where('DATE(member_visit.created_at) >=', $start_date);
+            $bld->where('DATE(member_visit.created_at) <=', $end_date);
+        } elseif (!empty($start_date)) {
+            $bld->where('DATE(member_visit.created_at)', $start_date);
+        } else {
+            $bld->where('DATE(member_visit.created_at) = DATE(CURDATE())');
+        }
 
         if (($id != false) || ($id != null)) {
             $bld->where('customers.id', $id);
             return $bld->get()->getRow();
         }
 
-        $bld->orderBy('TIME(member_visit.created_at)', 'ASC');
-        // Debug query SQL
-        // echo $bld->getCompiledSelect();
-        // exit;
+        $bld->orderBy('member_visit.created_at', 'DESC');
         return $bld->get()->getResult();
     }
 
