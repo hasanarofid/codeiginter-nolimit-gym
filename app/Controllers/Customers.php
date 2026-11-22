@@ -41,7 +41,8 @@ class Customers extends BaseController
 
     public function detail($id = null)
     {
-        if ($id == null) {
+        $detail = ($id !== null) ? $this->modelcustomer->get_customer($id) : null;
+        if (!$detail) {
             session()->setFlashdata('pesan', '<div class="alert alert-warning" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -49,27 +50,25 @@ class Customers extends BaseController
                 <strong>Oops: </strong> Data customer tidak ditemukan.
             </div>');
             return redirect()->to(base_url('/customer'));
-        } else {
-            $expired = $this->modeltransmem->kadaluarsa($id);
-            $detail = $this->modelcustomer->get_customer($id);
-            $memberships = $this->modeltransmem->get_by_custid($id);
-
-            // dd($expired);
-            $data = [
-                'title' => 'Detail Customer',
-                'detail' => $detail,
-                'cabang' => $this->modelcabang->get_detail($detail['kdcab']),
-                'cabangs' => $this->modelcabang->get_cabang('%'),
-                'membership' => $memberships,
-                'expired' => $expired,
-                'renewal' => count($memberships),
-                'barcode' => '<img class="img-fluid" src="' . base_url('customer/barcode/' . $id) . '" alt="' . $id . '">',
-                'permission' => $this->permission,
-                'role_array' => $this->role_array
-            ];
-
-            return view('modules/customer/customer_detail', $data);
         }
+
+        $expired = $this->modeltransmem->kadaluarsa($id);
+        $memberships = $this->modeltransmem->get_by_custid($id);
+
+        $data = [
+            'title' => 'Detail Customer',
+            'detail' => $detail,
+            'cabang' => $this->modelcabang->get_detail($detail['kdcab']),
+            'cabangs' => $this->modelcabang->get_cabang('%'),
+            'membership' => $memberships,
+            'expired' => $expired,
+            'renewal' => count($memberships),
+            'barcode' => '<img class="img-fluid" src="' . base_url('customer/barcode/' . $id) . '" alt="' . $id . '">',
+            'permission' => $this->permission,
+            'role_array' => $this->role_array
+        ];
+
+        return view('modules/customer/customer_detail', $data);
     }
 
     public function profil()
