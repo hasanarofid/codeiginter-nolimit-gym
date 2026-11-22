@@ -167,4 +167,15 @@ class ModelMembership extends Model
         $builder->where('membership.deleted_at IS NULL');
         return $builder->get()->getResultArray();
     }
+
+    /**
+     * Ambil daftar paket aktif unik berdasarkan nama dan nominal agar tidak tampil ganda.
+     */
+    public function get_unique_packages(): array
+    {
+        return $this->select('MIN(id) AS id, UPPER(TRIM(nama)) AS nama, nominal')
+            ->groupBy('UPPER(TRIM(nama)), nominal')
+            ->orderBy('nominal', 'ASC')
+            ->findAll();
+    }
 }
