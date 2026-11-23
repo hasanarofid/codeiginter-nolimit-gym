@@ -592,6 +592,8 @@ class Customers extends BaseController
     {
         $file = $this->request->getFile('file_excel');
         if ($file && $file->isValid() && !$file->hasMoved()) {
+            set_time_limit(300);
+
             $spreadsheet = IOFactory::load($file->getTempName());
             $data = $spreadsheet->getActiveSheet()->toArray();
 
@@ -599,17 +601,24 @@ class Customers extends BaseController
             $updated = 0;
             $failed = 0;
 
+            $defaultPasswordHash = password_hash('nolimit123', PASSWORD_DEFAULT);
+            $nextIdSeq = [];
+            $insertBatch = [];
+
+            $db = \Config\Database::connect();
+            $db->transStart();
+
             foreach ($data as $index => $row) {
                 if ($index === 0) continue; // Skip header
 
-                $id = trim($row[0] ?? '');
-                $kdcab = trim($row[1] ?? '');
-                $nama = trim($row[2] ?? '');
-                $noktp = trim($row[3] ?? '');
-                $tgl_lhr = trim($row[4] ?? '');
-                $hp_wa = trim($row[5] ?? '');
-                $email = trim($row[6] ?? '');
-                $alamat = trim($row[7] ?? '');
+                $id = trim((string)($row[0] ?? ''));
+                $kdcab = trim((string)($row[1] ?? ''));
+                $nama = trim((string)($row[2] ?? ''));
+                $noktp = trim((string)($row[3] ?? ''));
+                $tgl_lhr = trim((string)($row[4] ?? ''));
+                $hp_wa = trim((string)($row[5] ?? ''));
+                $email = trim((string)($row[6] ?? ''));
+                $alamat = trim((string)($row[7] ?? ''));
 
                 if (empty($kdcab) || empty($nama) || empty($email)) {
                     $failed++;
@@ -624,7 +633,7 @@ class Customers extends BaseController
                     'hp_wa' => $hp_wa,
                     'email' => $email,
                     'alamat' => $alamat,
-                    'password' => password_hash('nolimit123', PASSWORD_DEFAULT),
+                    'password' => $defaultPasswordHash,
                     'user' => $this->userId
                 ];
 
@@ -641,16 +650,31 @@ class Customers extends BaseController
                         $failed++;
                     }
                 } else {
-                    // Baru, generate ID
-                    $newId = $this->modelcustomer->generateID($kdcab);
-                    $customerData['id'] = $newId;
-                    if ($this->modelcustomer->insert($customerData)) {
-                        $success++;
+                    // Baru, generate ID berurutan di memori per cabang
+                    if (!isset($nextIdSeq[$kdcab])) {
+                        $firstId = $this->modelcustomer->generateID($kdcab);
+                        $nextIdSeq[$kdcab] = (int) substr($firstId, strlen($kdcab));
                     } else {
-                        $failed++;
+                        $nextIdSeq[$kdcab]++;
+                    }
+
+                    $customerData['id'] = $kdcab . str_pad((string) $nextIdSeq[$kdcab], 4, '0', STR_PAD_LEFT);
+                    $insertBatch[] = $customerData;
+                }
+            }
+
+            if (!empty($insertBatch)) {
+                foreach (array_chunk($insertBatch, 500) as $chunk) {
+                    $inserted = $this->modelcustomer->insertBatch($chunk);
+                    if ($inserted !== false) {
+                        $success += count($chunk);
+                    } else {
+                        $failed += count($chunk);
                     }
                 }
             }
+
+            $db->transComplete();
 
             session()->setFlashdata('pesan', '<div class="alert alert-info">Import Selesai. Baru: ' . $success . ', Update: ' . $updated . ', Gagal: ' . $failed . '</div>');
         } else {
