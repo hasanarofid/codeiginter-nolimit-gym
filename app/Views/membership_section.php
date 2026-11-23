@@ -30,8 +30,11 @@
         padding-top: 25px !important;
         padding-bottom: 50px !important;
     }
+    #pricing .section_title {
+        margin-bottom: 1.5rem !important;
+    }
     #pricing .section_title h2 {
-        font-size: 1.5rem !important;
+        font-size: 1.45rem !important;
         letter-spacing: 1px !important;
     }
     .membership-box {

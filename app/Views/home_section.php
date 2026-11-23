@@ -65,13 +65,25 @@
 <!-- branch_locations_start -->
 <div class="branch-slider-wrapper" style="background: #212121; position: relative;">
     <!-- Tabs -->
-    <div class="branch-tabs-container" style="padding-top: 30px; padding-bottom: 30px;">
-        <div class="container d-flex justify-content-center align-items-center flex-wrap" style="gap: 40px; padding-left: 15px; padding-right: 15px;">
-            <?php foreach ($cabangs as $index => $cab): ?>
-                <button type="button" class="branch-tab-btn <?= ($index === 0) ? 'active' : '' ?>" data-index="<?= $index ?>">
-                    <?= strtoupper($cab['nama']) ?>
-                </button>
-            <?php endforeach; ?>
+    <div class="branch-tabs-outer" style="position: relative;">
+        <button type="button" class="branch-nav-arrow branch-nav-prev d-md-none" aria-label="Previous locations">
+            <i class="fa fa-chevron-left"></i>
+        </button>
+        <div class="branch-tabs-container" style="padding-top: 30px; padding-bottom: 30px;">
+            <div class="container d-flex justify-content-center align-items-center flex-wrap" style="gap: 40px; padding-left: 15px; padding-right: 15px;">
+                <?php foreach ($cabangs as $index => $cab): ?>
+                    <button type="button" class="branch-tab-btn <?= ($index === 0) ? 'active' : '' ?>" data-index="<?= $index ?>">
+                        <?= strtoupper($cab['nama']) ?>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <button type="button" class="branch-nav-arrow branch-nav-next d-md-none" aria-label="Next locations">
+            <i class="fa fa-chevron-right"></i>
+        </button>
+        <!-- Custom non-native scroll indicator for mobile -->
+        <div class="branch-scroll-track d-md-none">
+            <div class="branch-scroll-thumb"></div>
         </div>
     </div>
 
@@ -108,22 +120,60 @@
 </div>
 
 <style>
+.branch-tabs-container {
+    -webkit-user-select: none;
+    user-select: none;
+}
 .branch-tabs-container .container {
     display: flex !important;
-    justify-content: center !items;
+    justify-content: center !important;
     align-items: center !important;
     gap: 30px !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
 }
 @media (max-width: 768px) {
+    .branch-tabs-outer {
+        padding: 0 22px;
+        position: relative;
+    }
+    .branch-nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 28px;
+        background: rgba(33, 33, 33, 0.9);
+        border: none;
+        color: #cccccc;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        cursor: pointer;
+        padding: 0;
+    }
+    .branch-nav-arrow:active,
+    .branch-nav-arrow:hover {
+        color: #ff1414;
+    }
+    .branch-nav-prev { left: 0; }
+    .branch-nav-next { right: 0; }
     .branch-tabs-container {
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE 10+ */
+        cursor: grab;
     }
     .branch-tabs-container::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Edge */
@@ -131,16 +181,41 @@
     .branch-tabs-container .container {
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
-        gap: 8px !important;
-        width: max-content !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+        gap: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         margin: 0 !important;
     }
     .branch-tab-btn {
-        font-size: 11px !important;
-        padding: 4px 8px !important;
-        letter-spacing: 0.5px !important;
+        flex: 0 0 33.3333% !important;
+        max-width: 33.3333% !important;
+        width: 33.3333% !important;
+        scroll-snap-align: start;
+        font-size: 10px !important;
+        padding: 5px 2px !important;
+        letter-spacing: 0.3px !important;
+        text-align: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .branch-tab-btn::after {
+        bottom: -2px !important;
+    }
+    .branch-scroll-track {
+        width: 100%;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.12);
+        position: relative;
+        overflow: hidden;
+    }
+    .branch-scroll-thumb {
+        height: 100%;
+        width: 50%;
+        background: #ff1414;
+        border-radius: 2px;
+        transition: transform 0.15s ease-out;
     }
 }
 .branch-tab-btn {
@@ -193,7 +268,80 @@ document.addEventListener('DOMContentLoaded', function() {
         var slidePanels = jQuery('.branch-slide-panel');
         var currentActiveIndex = 0;
 
-        tabBtns.on('click', function() {
+        // Drag-to-scroll untuk tab lokasi (mendukung geser di mobile & desktop)
+        var tabsContainerEl = document.querySelector('.branch-tabs-container');
+        var isDragging = false;
+        var hasMoved = false;
+        var startX = 0;
+        var scrollLeftStart = 0;
+
+        if (tabsContainerEl) {
+            var scrollThumb = document.querySelector('.branch-scroll-thumb');
+            var prevArrow = document.querySelector('.branch-nav-prev');
+            var nextArrow = document.querySelector('.branch-nav-next');
+
+            function updateScrollIndicator() {
+                if (!scrollThumb) return;
+                var maxScroll = tabsContainerEl.scrollWidth - tabsContainerEl.clientWidth;
+                if (maxScroll <= 0) {
+                    scrollThumb.style.width = '100%';
+                    scrollThumb.style.transform = 'translateX(0)';
+                    return;
+                }
+                var ratio = tabsContainerEl.clientWidth / tabsContainerEl.scrollWidth;
+                var thumbWidthPct = Math.max(25, ratio * 100);
+                var progress = tabsContainerEl.scrollLeft / maxScroll;
+                var maxTranslatePct = (100 - thumbWidthPct) / thumbWidthPct * 100;
+                scrollThumb.style.width = thumbWidthPct + '%';
+                scrollThumb.style.transform = 'translateX(' + (progress * maxTranslatePct) + '%)';
+            }
+
+            tabsContainerEl.addEventListener('scroll', updateScrollIndicator, { passive: true });
+            window.addEventListener('resize', updateScrollIndicator);
+            setTimeout(updateScrollIndicator, 100);
+
+            if (prevArrow) {
+                prevArrow.addEventListener('click', function() {
+                    tabsContainerEl.scrollBy({ left: -tabsContainerEl.clientWidth, behavior: 'smooth' });
+                });
+            }
+            if (nextArrow) {
+                nextArrow.addEventListener('click', function() {
+                    tabsContainerEl.scrollBy({ left: tabsContainerEl.clientWidth, behavior: 'smooth' });
+                });
+            }
+
+            tabsContainerEl.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                hasMoved = false;
+                startX = e.pageX - tabsContainerEl.offsetLeft;
+                scrollLeftStart = tabsContainerEl.scrollLeft;
+                tabsContainerEl.style.cursor = 'grabbing';
+            });
+            window.addEventListener('mouseup', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                tabsContainerEl.style.cursor = 'grab';
+                setTimeout(function() { hasMoved = false; }, 50);
+            });
+            tabsContainerEl.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                var x = e.pageX - tabsContainerEl.offsetLeft;
+                var walk = (x - startX) * 1.5;
+                if (Math.abs(walk) > 5) hasMoved = true;
+                tabsContainerEl.scrollLeft = scrollLeftStart - walk;
+            });
+        }
+
+        tabBtns.on('click', function(e) {
+            if (hasMoved) {
+                e.preventDefault();
+                return;
+            }
+            if (this.scrollIntoView) {
+                this.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
             var index = jQuery(this).data('index');
             
             // If clicking the already active tab, slide it up and deactivate
@@ -496,7 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Bottom Warning/Disclaimer Note -->
         <div class="row">
             <div class="col-12">
-                <p class="muaythai-note">*Segala fasilitas permainan mohon dijaga agar tidak rusak/hilang, dan dikembalikan ke kasir setelah digunakan</p>
+                <p class="muaythai-note">*All classes are included in No Limits Training Facility Gym Membership</p>
             </div>
         </div>
     </div>
@@ -669,17 +817,15 @@ document.addEventListener('DOMContentLoaded', function() {
 .muaythai-note {
     width: 100%;
     text-align: center;
-    background-color: transparent;
-    color: #ff1414;
+    background-color: #212121;
+    color: #ffe2b6;
     font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: 15px;
-    padding: 8px 10px;
-    border: none;
-    box-shadow: none;
-}
+    font-style: italic;
+    margin-top: 30px;
+    letter-spacing: 0.5px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 226, 182, 0.15);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -734,6 +880,18 @@ document.addEventListener('DOMContentLoaded', function() {
     background-position: center center !important;
     padding: 100px 0 !important;
     position: relative !important;
+}
+@media (max-width: 768px) {
+    #pricing {
+        padding: 35px 0 50px 0 !important;
+    }
+    #pricing .section_title {
+        margin-bottom: 1.5rem !important;
+    }
+    #pricing .section_title h2 {
+        font-size: 1.45rem !important;
+        letter-spacing: 1px !important;
+    }
 }
 #pricing::before {
     content: "";
