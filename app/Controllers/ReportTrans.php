@@ -273,7 +273,7 @@ class ReportTrans extends BaseController
         return view('modules/report/report_rekap_harian', $data);
     }
 
-    private function get_rekap_data($branch, $date)
+    private function get_rekap_data($branch, $date, $payment_method = '%')
     {
         $date = $this->normalize_date($date);
         $db = \Config\Database::connect();
@@ -284,6 +284,17 @@ class ReportTrans extends BaseController
         $all_trx = [];
 
         foreach ($transactions as $transaction) {
+            $currentPayment = $transaction->payment_type ?: 'Cash';
+            if ($payment_method !== '%' && !empty($payment_method)) {
+                if (strcasecmp($payment_method, 'qris_all') === 0) {
+                    if (stripos($currentPayment, 'qris') === false) {
+                        continue;
+                    }
+                } elseif (strcasecmp($currentPayment, $payment_method) !== 0) {
+                    continue;
+                }
+            }
+
             $prevCount = $db->table('membership_trans')
                             ->where('custid', $transaction->custid)
                             ->where('created_at <', $transaction->created_at)
@@ -302,7 +313,7 @@ class ReportTrans extends BaseController
                 'status_html' => $status_badge,
                 'nmcab' => $transaction->nmcab,
                 'tgl_transaksi' => date('d/m/Y', strtotime($tglTrx)),
-                'payment_type' => $transaction->payment_type ?: 'Cash',
+                'payment_type' => $currentPayment,
                 'nominal' => (float)$transaction->nominal
             ];
         }
@@ -325,6 +336,17 @@ class ReportTrans extends BaseController
         $nm_list = $nmQuery->orderBy('nv.created_at', 'DESC')->get()->getResult();
 
         foreach ($nm_list as $nm) {
+            $currentPayment = $nm->payment_type ?: 'Cash';
+            if ($payment_method !== '%' && !empty($payment_method)) {
+                if (strcasecmp($payment_method, 'qris_all') === 0) {
+                    if (stripos($currentPayment, 'qris') === false) {
+                        continue;
+                    }
+                } elseif (strcasecmp($currentPayment, $payment_method) !== 0) {
+                    continue;
+                }
+            }
+
             $all_trx[] = [
                 'created_at' => $nm->created_at,
                 'pkgname' => $nm->pkgname ?: 'Visit Non Member',
@@ -333,7 +355,7 @@ class ReportTrans extends BaseController
                 'status_html' => '<span class="badge badge-warning">Non-Member</span>',
                 'nmcab' => $nm->nmcab,
                 'tgl_transaksi' => date('d/m/Y', strtotime($nm->created_at)),
-                'payment_type' => $nm->payment_type ?: 'Cash',
+                'payment_type' => $currentPayment,
                 'nominal' => (float)$nm->nominal
             ];
         }
@@ -350,11 +372,23 @@ class ReportTrans extends BaseController
     {
         $branch = $this->request->getVar('branch_location') ?: '%';
         $date   = $this->request->getVar('date');
+        $payment_method = $this->request->getVar('payment_method') ?: '%';
 
-        $all_trx = $this->get_rekap_data($branch, $date);
+        $all_trx = $this->get_rekap_data($branch, $date, $payment_method);
 
         $data = [];
         $total_amount = 0;
+        $total_cash = 0;
+        $total_qris = 0;
+        $qris_breakdown = [
+            'Qris BCA' => 0,
+            'Qris BNI' => 0,
+            'Qris BRI' => 0,
+            'Qris Mandiri' => 0,
+            'Qris Lainnya' => 0,
+        ];
+        $total_transfer = 0;
+
         $no = 1;
         foreach ($all_trx as $item) {
             $data[] = [
@@ -367,12 +401,43 @@ class ReportTrans extends BaseController
                 $item['payment_type'],
                 number_format($item['nominal'], 2, ',', '.')
             ];
-            $total_amount += $item['nominal'];
+            $nom = (float)$item['nominal'];
+            $total_amount += $nom;
+
+            $pm = trim($item['payment_type']);
+            if (stripos($pm, 'qris') !== false) {
+                $total_qris += $nom;
+                if (stripos($pm, 'bca') !== false) {
+                    $qris_breakdown['Qris BCA'] += $nom;
+                } elseif (stripos($pm, 'bni') !== false) {
+                    $qris_breakdown['Qris BNI'] += $nom;
+                } elseif (stripos($pm, 'bri') !== false) {
+                    $qris_breakdown['Qris BRI'] += $nom;
+                } elseif (stripos($pm, 'mandiri') !== false) {
+                    $qris_breakdown['Qris Mandiri'] += $nom;
+                } else {
+                    $qris_breakdown['Qris Lainnya'] += $nom;
+                }
+            } elseif (stripos($pm, 'transfer') !== false) {
+                $total_transfer += $nom;
+            } else {
+                $total_cash += $nom;
+            }
         }
 
         return $this->response->setJSON([
             'data' => $data,
-            'total_amount' => number_format($total_amount, 2, ',', '.')
+            'total_amount' => number_format($total_amount, 2, ',', '.'),
+            'total_cash' => number_format($total_cash, 2, ',', '.'),
+            'total_qris' => number_format($total_qris, 2, ',', '.'),
+            'total_transfer' => number_format($total_transfer, 2, ',', '.'),
+            'qris_breakdown' => [
+                'bca' => number_format($qris_breakdown['Qris BCA'], 2, ',', '.'),
+                'bni' => number_format($qris_breakdown['Qris BNI'], 2, ',', '.'),
+                'bri' => number_format($qris_breakdown['Qris BRI'], 2, ',', '.'),
+                'mandiri' => number_format($qris_breakdown['Qris Mandiri'], 2, ',', '.'),
+                'lainnya' => number_format($qris_breakdown['Qris Lainnya'], 2, ',', '.'),
+            ]
         ]);
     }
 
@@ -380,8 +445,9 @@ class ReportTrans extends BaseController
     {
         $branch = $this->request->getVar('branch_location') ?: '%';
         $date   = $this->request->getVar('date');
+        $payment_method = $this->request->getVar('payment_method') ?: '%';
 
-        $all_trx = $this->get_rekap_data($branch, $date);
+        $all_trx = $this->get_rekap_data($branch, $date, $payment_method);
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -399,6 +465,16 @@ class ReportTrans extends BaseController
         $row = 2;
         $no = 1;
         $total = 0;
+        $total_cash = 0;
+        $total_qris = 0;
+        $qris_breakdown = [
+            'Qris BCA' => 0,
+            'Qris BNI' => 0,
+            'Qris BRI' => 0,
+            'Qris Mandiri' => 0,
+            'Qris Lainnya' => 0,
+        ];
+        $total_transfer = 0;
 
         foreach ($all_trx as $trx) {
             $sheet->setCellValue('A' . $row, $no++);
@@ -409,19 +485,85 @@ class ReportTrans extends BaseController
             $sheet->setCellValue('F' . $row, $trx['tgl_transaksi']);
             $sheet->setCellValue('G' . $row, $trx['payment_type']);
             $sheet->setCellValue('H' . $row, $trx['nominal']);
-            $total += (float)$trx['nominal'];
+            
+            $nom = (float)$trx['nominal'];
+            $total += $nom;
+
+            $pm = trim($trx['payment_type']);
+            if (stripos($pm, 'qris') !== false) {
+                $total_qris += $nom;
+                if (stripos($pm, 'bca') !== false) {
+                    $qris_breakdown['Qris BCA'] += $nom;
+                } elseif (stripos($pm, 'bni') !== false) {
+                    $qris_breakdown['Qris BNI'] += $nom;
+                } elseif (stripos($pm, 'bri') !== false) {
+                    $qris_breakdown['Qris BRI'] += $nom;
+                } elseif (stripos($pm, 'mandiri') !== false) {
+                    $qris_breakdown['Qris Mandiri'] += $nom;
+                } else {
+                    $qris_breakdown['Qris Lainnya'] += $nom;
+                }
+            } elseif (stripos($pm, 'transfer') !== false) {
+                $total_transfer += $nom;
+            } else {
+                $total_cash += $nom;
+            }
+
             $row++;
         }
 
         // Total Row
-        $sheet->setCellValue('A' . $row, 'Total');
+        $sheet->setCellValue('A' . $row, 'Total Keseluruhan');
         $sheet->mergeCells("A{$row}:G{$row}");
         $sheet->setCellValue('H' . $row, $total);
+        $totalRow = $row;
+        $row += 2;
+
+        // Breakdown Summary
+        $sheet->setCellValue('A' . $row, 'RINGKASAN METODE PEMBAYARAN');
+        $sheet->mergeCells("A{$row}:C{$row}");
+        $sheet->getStyle('A' . $row)->getFont()->setBold(true);
+        $row++;
+
+        $sheet->setCellValue('A' . $row, 'Total Cash / Tunai');
+        $sheet->setCellValue('C' . $row, $total_cash);
+        $row++;
+
+        $sheet->setCellValue('A' . $row, 'Total Transfer Bank');
+        $sheet->setCellValue('C' . $row, $total_transfer);
+        $row++;
+
+        $sheet->setCellValue('A' . $row, 'Total QRIS (Semua Bank)');
+        $sheet->setCellValue('C' . $row, $total_qris);
+        $row++;
+
+        $sheet->setCellValue('B' . $row, '- Qris BCA');
+        $sheet->setCellValue('C' . $row, $qris_breakdown['Qris BCA']);
+        $row++;
+
+        $sheet->setCellValue('B' . $row, '- Qris BNI');
+        $sheet->setCellValue('C' . $row, $qris_breakdown['Qris BNI']);
+        $row++;
+
+        $sheet->setCellValue('B' . $row, '- Qris BRI');
+        $sheet->setCellValue('C' . $row, $qris_breakdown['Qris BRI']);
+        $row++;
+
+        $sheet->setCellValue('B' . $row, '- Qris Mandiri');
+        $sheet->setCellValue('C' . $row, $qris_breakdown['Qris Mandiri']);
+        $row++;
+
+        if ($qris_breakdown['Qris Lainnya'] > 0) {
+            $sheet->setCellValue('B' . $row, '- Qris Lainnya');
+            $sheet->setCellValue('C' . $row, $qris_breakdown['Qris Lainnya']);
+            $row++;
+        }
 
         // Styling
         $sheet->getStyle('A1:H1')->getFont()->setBold(true);
-        $sheet->getStyle("A{$row}:H{$row}")->getFont()->setBold(true);
-        $sheet->getStyle('H2:H' . $row)->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle("A{$totalRow}:H{$totalRow}")->getFont()->setBold(true);
+        $sheet->getStyle("H2:H{$totalRow}")->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle("C" . ($totalRow + 3) . ":C" . $row)->getNumberFormat()->setFormatCode('#,##0.00');
         foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }

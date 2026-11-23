@@ -341,16 +341,16 @@
 .muaythai-note {
     width: 100%;
     text-align: center;
-    background-color: #212121;
-    color: #ffe2b6;
-    font-size: 17px;
-    font-style: italic;
-    margin-top: 30px;
-    letter-spacing: 0.5px;
-    padding: 15px 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 226, 182, 0.15);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background-color: transparent;
+    color: #ff1414;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 15px;
+    padding: 8px 10px;
+    border: none;
+    box-shadow: none;
 }
 
 @media (max-width: 991px) {

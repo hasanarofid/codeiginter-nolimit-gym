@@ -118,21 +118,28 @@
 }
 @media (max-width: 768px) {
     .branch-tabs-container {
-        padding-top: 15px !important;
-        padding-bottom: 15px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE 10+ */
+    }
+    .branch-tabs-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
     }
     .branch-tabs-container .container {
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
-        gap: 15px !important;
+        gap: 8px !important;
         width: max-content !important;
-        margin: 0 auto !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin: 0 !important;
     }
     .branch-tab-btn {
         font-size: 11px !important;
-        padding: 5px 8px !important;
+        padding: 4px 8px !important;
         letter-spacing: 0.5px !important;
     }
 }
@@ -289,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div>
                         <a href="https://wa.me/6287866860310" target="_blank" style="color: #FFF; font-weight: bold; font-size: 1.2rem; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#FF1414'" onmouseout="this.style.color='#FFF'">
-                            <i class="fa fa-whatsapp"></i> 0818-0249-0343
+                            <i class="fa fa-whatsapp"></i> 0878-6686-0310
                         </a>
                     </div>
 
@@ -662,15 +669,17 @@ document.addEventListener('DOMContentLoaded', function() {
 .muaythai-note {
     width: 100%;
     text-align: center;
-    background-color: #212121;
-    color: #ffe2b6;
-    font-size: 17px;
-    font-style: italic;
-    margin-top: 30px;
-    letter-spacing: 0.5px;
-    padding: 15px 20px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 226, 182, 0.15);
+    background-color: transparent;
+    color: #ff1414;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 15px;
+    padding: 8px 10px;
+    border: none;
+    box-shadow: none;
+}
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 

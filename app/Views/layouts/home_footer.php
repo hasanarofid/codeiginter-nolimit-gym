@@ -113,12 +113,12 @@
     }
     </style>
 
-    <div class="footer_top">
+    <div class="footer_top" style="padding: 40px 0 30px 0; background-color: #0c0c0c;">
         <div class="container">
-            <div class="row">
-                <!-- Column 1: Brand Logo & Description & Social Links -->
-                <div class="col-xl-3 col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer_widget">
+            <div class="row justify-content-center text-center">
+                <!-- Brand Logo & Description & Social Links -->
+                <div class="col-xl-6 col-lg-8 col-md-10">
+                    <div class="footer_widget mb-0 d-flex flex-column align-items-center">
                         <div class="footer_logo mb-3">
                             <a href="<?= site_url() ?>" style="text-decoration: none;">
                                 <div style="background: #000000; padding: 10px 18px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);">
@@ -127,10 +127,10 @@
                                 </div>
                             </a>
                         </div>
-                        <p style="font-size: 13px; color: #888888; line-height: 1.6; margin-bottom: 20px;">
+                        <p style="font-size: 13px; color: #888888; line-height: 1.6; margin-bottom: 20px; max-width: 500px;">
                             No Limits is more than just a gym. It's a sanctuary to push your physical and mental boundaries.
                         </p>
-                        <div class="socail_links d-flex align-items-center" style="gap: 12px;">
+                        <div class="socail_links d-flex align-items-center justify-content-center" style="gap: 12px;">
                             <a href="https://www.instagram.com/nolimitstrainingfclty" target="_blank" class="footer-social-icon" title="Instagram">
                                 <i class="fa fa-instagram"></i>
                             </a>
@@ -143,76 +143,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Column 2: Useful Links -->
-                <div class="col-xl-2 col-lg-2 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">Useful Links</h3>
-                        <ul class="links">
-                            <li><a href="<?= base_url('/about-us') ?>">ABOUT US</a></li>
-                            <li><a href="<?= base_url('/classes') ?>">CLASSES</a></li>
-                            <li><a href="<?= base_url('/events') ?>">EVENT</a></li>
-                            <li><a href="<?= base_url('/pricing') ?>">MEMBERSHIP</a></li>
-                            <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
-                            <li><a href="<?= base_url('/login') ?>">MEMBER LOGIN</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <?php
-                $loc_part1 = [];
-                $loc_part2 = [];
-                if (!empty($cabang_footer)) {
-                    foreach ($cabang_footer as $c) {
-                        $nama_lower = strtolower($c['nama']);
-                        if (strpos($nama_lower, 'muladi') !== false || strpos($nama_lower, 'gik') !== false || strpos($nama_lower, 'muldom') !== false) {
-                            $loc_part2[] = $c;
-                        } else {
-                            $loc_part1[] = $c;
-                        }
-                    }
-                    if (empty($loc_part2) && count($cabang_footer) > 2) {
-                        $half = ceil(count($cabang_footer) / 2);
-                        $loc_part1 = array_slice($cabang_footer, 0, $half);
-                        $loc_part2 = array_slice($cabang_footer, $half);
-                    }
-                }
-                ?>
-
-                <!-- Column 3: Our Locations (Part 1) -->
-                <div class="col-xl-3 col-lg-3 col-md-6 mb-4 mb-lg-0">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">Our Locations</h3>
-                        <?php foreach ($loc_part1 as $row): ?>
-                            <div class="location-item">
-                                <strong><?= strtoupper(esc($row['nama'])) ?></strong>
-                                <p><?= esc($row['alamat']) ?></p>
-                                <?php $phone = !empty($row['hp']) ? $row['hp'] : (!empty($row['telp']) ? $row['telp'] : '0818-0249-0343'); ?>
-                                <a href="tel:<?= esc($phone) ?>" class="phone-link">
-                                    <i class="fa fa-phone"></i> <?= esc($phone) ?>
-                                </a>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Column 4: Our Locations (Part 2) -->
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="footer_widget">
-                        <h3 class="footer_title d-none d-lg-block" style="visibility: hidden;">More Locations</h3>
-                        <?php foreach ($loc_part2 as $row): ?>
-                            <div class="location-item">
-                                <strong><?= strtoupper(esc($row['nama'])) ?></strong>
-                                <p><?= esc($row['alamat']) ?></p>
-                                <?php $phone = !empty($row['hp']) ? $row['hp'] : (!empty($row['telp']) ? $row['telp'] : '0818-0249-0343'); ?>
-                                <a href="tel:<?= esc($phone) ?>" class="phone-link">
-                                    <i class="fa fa-phone"></i> <?= esc($phone) ?>
-                                </a>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

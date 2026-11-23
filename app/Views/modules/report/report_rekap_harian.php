@@ -11,7 +11,7 @@
         
         <form id="reportForm" method="GET" class="mb-5">
             <div class="form-row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="branch_location">Cabang <span class="text-danger">*</span></label>
                     <select id="branch_location" class="form-control">
                         <option value="">: Pilih Cabang</option>
@@ -23,11 +23,24 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="report_date">Tanggal <span class="text-danger">*</span></label>
                     <input type="text" id="report_date" class="form-control datepicker" value="<?= date('Y-m-d') ?>" placeholder="YYYY-MM-DD" autocomplete="off">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <label for="payment_method">Metode Pembayaran</label>
+                    <select id="payment_method" class="form-control">
+                        <option value="%" selected>Semua Metode</option>
+                        <option value="Cash">Cash / Tunai</option>
+                        <option value="qris_all">Semua QRIS</option>
+                        <option value="Qris BCA">Qris BCA</option>
+                        <option value="Qris BNI">Qris BNI</option>
+                        <option value="Qris BRI">Qris BRI</option>
+                        <option value="Qris Mandiri">Qris Mandiri</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label>&nbsp;</label>
                     <div class="d-flex">
                         <button type="button" id="searchBtn" class="btn btn-primary flex-fill mr-2">
@@ -40,6 +53,51 @@
                 </div>
             </div>
         </form>
+
+        <!-- Summary Cards for QRIS & Payment Methods -->
+        <div class="row mb-4" id="summaryCards">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Tunai (Cash)</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800" id="cardTotalCash">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Transfer Bank</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800" id="cardTotalTransfer">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total QRIS (Semua)</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800" id="cardTotalQris">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-left-dark shadow h-100 py-2">
+                    <div class="card-body py-2">
+                        <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Total Keseluruhan</div>
+                        <div class="h6 mb-0 font-weight-bold text-gray-800" id="cardTotalAll">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-1">
+                <div class="alert alert-light border py-2 mb-0" style="font-size: 13px;">
+                    <strong><i class="fas fa-qrcode mr-1 text-primary"></i> Rincian QRIS:</strong>
+                    <span class="badge badge-primary ml-2 px-2 py-1">BCA: <span id="qrisBca">0</span></span>
+                    <span class="badge badge-warning ml-2 px-2 py-1 text-dark">BNI: <span id="qrisBni">0</span></span>
+                    <span class="badge badge-info ml-2 px-2 py-1">BRI: <span id="qrisBri">0</span></span>
+                    <span class="badge badge-secondary ml-2 px-2 py-1">Mandiri: <span id="qrisMandiri">0</span></span>
+                </div>
+            </div>
+        </div>
 
         <div class="table-responsive mt-4">
             <table class="table table-sm table-bordered" id="rekapHarianTable">
@@ -100,6 +158,7 @@ $(document).ready(function() {
             "data": function(d) {
                 d.branch_location = $('#branch_location').val() || '%';
                 d.date = $('#report_date').val();
+                d.payment_method = $('#payment_method').val() || '%';
             }
         },
         "columns": [
@@ -117,6 +176,20 @@ $(document).ready(function() {
             var json = api.ajax.json();
             var total = json && json.total_amount ? json.total_amount : '0,00';
             $('#totalAmount').html('<strong>' + total + '</strong>');
+
+            if (json) {
+                $('#cardTotalAll').text('Rp ' + (json.total_amount || '0'));
+                $('#cardTotalCash').text('Rp ' + (json.total_cash || '0'));
+                $('#cardTotalTransfer').text('Rp ' + (json.total_transfer || '0'));
+                $('#cardTotalQris').text('Rp ' + (json.total_qris || '0'));
+
+                if (json.qris_breakdown) {
+                    $('#qrisBca').text('Rp ' + (json.qris_breakdown.bca || '0'));
+                    $('#qrisBni').text('Rp ' + (json.qris_breakdown.bni || '0'));
+                    $('#qrisBri').text('Rp ' + (json.qris_breakdown.bri || '0'));
+                    $('#qrisMandiri').text('Rp ' + (json.qris_breakdown.mandiri || '0'));
+                }
+            }
         }
     });
 
@@ -127,7 +200,8 @@ $(document).ready(function() {
     $('#exportBtn').click(function() {
         var branch = $('#branch_location').val() || '%';
         var date = $('#report_date').val();
-        window.location.href = "<?= base_url('/report/export_rekap_harian') ?>?branch_location=" + encodeURIComponent(branch) + "&date=" + encodeURIComponent(date);
+        var payment = $('#payment_method').val() || '%';
+        window.location.href = "<?= base_url('/report/export_rekap_harian') ?>?branch_location=" + encodeURIComponent(branch) + "&date=" + encodeURIComponent(date) + "&payment_method=" + encodeURIComponent(payment);
     });
 });
 </script>

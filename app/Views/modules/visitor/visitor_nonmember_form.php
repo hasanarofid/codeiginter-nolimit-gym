@@ -49,7 +49,7 @@
                                     <select name="payment" id="payment" class="form-control <?= session('errors.payment') ? 'is-invalid' : '' ?>">
                                         <option value="">: Metode Bayar</option>
                                         <?php
-                                        $arr_mtd = ['Cash', 'Qris'];
+                                        $arr_mtd = ['Cash', 'Qris BCA', 'Qris BNI', 'Qris BRI', 'Qris Mandiri'];
                                         for ($i = 0; $i < count($arr_mtd); $i++):
                                         ?>
                                             <option value="<?= $arr_mtd[$i] ?>"><?= $arr_mtd[$i] ?></option>

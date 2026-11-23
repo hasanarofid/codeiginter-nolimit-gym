@@ -27,22 +27,23 @@
 }
 @media (max-width: 768px) {
     #pricing {
-        padding-top: 30px !important;
-        padding-bottom: 60px !important;
+        padding-top: 25px !important;
+        padding-bottom: 50px !important;
     }
     #pricing .section_title h2 {
-        font-size: 2.2rem !important;
+        font-size: 1.5rem !important;
+        letter-spacing: 1px !important;
     }
     .membership-box {
-        padding: 30px 15px 20px 15px !important;
+        padding: 25px 15px 20px 15px !important;
         border-width: 2px !important;
-        border-radius: 16px !important;
+        border-radius: 14px !important;
     }
     .membership-join-btn {
         width: 85% !important;
         max-width: 280px !important;
-        padding: 12px 20px !important;
-        font-size: 1.2rem !important;
+        padding: 10px 20px !important;
+        font-size: 1.1rem !important;
     }
 }
 #pricing::before {

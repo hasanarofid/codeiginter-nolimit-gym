@@ -169,6 +169,12 @@ class Payment extends BaseController
 
     public function confirm()
     {
+        // Hanya Superadmin (SA) yang berhak melakukan approval / konfirmasi pembayaran
+        if (session()->group !== 'SA') {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger" role="alert"><strong>Akses Ditolak:</strong> Hanya Superadmin yang berhak melakukan approval / konfirmasi pembayaran.</div>');
+            return redirect()->back();
+        }
+
         if ($this->request->getPost()) {
             $tgl = $this->request->getVar('payment_date');
             $tgl = empty($tgl) ? date('Y-m-d') : $tgl;

@@ -42,7 +42,7 @@
                     </div>
                     <div>
                         <a href="https://wa.me/6287866860310" target="_blank" class="about-wa-link">
-                            <i class="fa fa-whatsapp"></i> 0818-0249-0343
+                            <i class="fa fa-whatsapp"></i> 0878-6686-0310
                         </a>
                     </div>
 

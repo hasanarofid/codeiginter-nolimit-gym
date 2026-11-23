@@ -79,6 +79,36 @@
                 <li><a href="<?= base_url('/merch') ?>">MERCH</a></li>
             </ul>
         </nav>
+
+        <?php
+        $dbCabang = \Config\Database::connect();
+        $side_cabangs = $dbCabang->table('cabang')->where('deleted_at IS NULL')->get()->getResultArray();
+        ?>
+        <?php if (!empty($side_cabangs)): ?>
+            <div class="drawer-locations mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="text-xs font-weight-bold text-uppercase mb-3" style="color: #ff1414; letter-spacing: 1.5px; font-size: 11px;">
+                    <i class="fa fa-map-marker mr-1"></i> OUR LOCATIONS
+                </div>
+                <div class="drawer-locations-list" style="display: flex; flex-direction: column; gap: 14px;">
+                    <?php foreach ($side_cabangs as $sc): ?>
+                        <div class="drawer-loc-item">
+                            <strong style="color: #ffffff; font-size: 12px; font-weight: 800; display: block; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                                <?= esc($sc['nama']) ?>
+                            </strong>
+                            <p style="color: #888888; font-size: 10px; line-height: 1.4; margin-bottom: 4px;">
+                                <?= esc($sc['alamat']) ?>
+                            </p>
+                            <?php $sc_phone = !empty($sc['hp']) && $sc['hp'] !== '-' ? $sc['hp'] : (!empty($sc['telp']) && $sc['telp'] !== '-' ? $sc['telp'] : '+62 878-6686-0310'); ?>
+                            <?php if ($sc_phone !== '-'): ?>
+                                <a href="tel:<?= esc($sc_phone) ?>" style="color: #ff1414; font-size: 10px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                    <i class="fa fa-phone"></i> <?= esc($sc_phone) ?>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="drawer-bg-image"></div>
 </aside>
@@ -327,9 +357,9 @@ ul#navigation li a i.ti-user {
     position: fixed;
     top: 0;
     left: -100%;
-    width: 55vw;
-    max-width: 280px;
-    min-width: 220px;
+    width: 65vw;
+    max-width: 320px;
+    min-width: 250px;
     height: 100vh;
     background-color: #050505;
     z-index: 100001;
@@ -338,14 +368,15 @@ ul#navigation li a i.ti-user {
     justify-content: space-between;
     transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
-    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .mobile-offcanvas-drawer.active {
     left: 0;
 }
 
 .drawer-content {
-    padding: 90px 25px 30px 30px;
+    padding: 80px 20px 40px 25px;
     position: relative;
     z-index: 2;
 }

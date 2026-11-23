@@ -112,7 +112,7 @@
                                                     <option value="">: Metode Bayar</option>
                                                     <?php
                                                     $oldPayment = old('payment') ?? '';
-                                                    $arr_mtd = ['Cash', 'Qris', 'Bank Transfer'];
+                                                    $arr_mtd = ['Cash', 'Qris BCA', 'Qris BNI', 'Qris BRI', 'Qris Mandiri', 'Bank Transfer'];
                                                     for ($i = 0; $i < count($arr_mtd); $i++):
                                                     ?>
                                                         <option value="<?= $arr_mtd[$i] ?>" <?= $oldPayment == $arr_mtd[$i] ? 'selected' : '' ?>><?= $arr_mtd[$i] ?></option>

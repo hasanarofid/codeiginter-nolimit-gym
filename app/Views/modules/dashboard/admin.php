@@ -216,7 +216,7 @@
                                                             <select name="payment" id="payment" class="form-control" required="required">
                                                                 <option value="">: Metode Bayar</option>
                                                                 <?php
-                                                                $arr_mtd = ['Cash', 'Qris', 'Bank Transfer'];
+                                                                $arr_mtd = ['Cash', 'Qris BCA', 'Qris BNI', 'Qris BRI', 'Qris Mandiri', 'Bank Transfer'];
                                                                 for ($i = 0; $i < count($arr_mtd); $i++):
                                                                 ?>
                                                                     <option value="<?= $arr_mtd[$i] ?>"><?= $arr_mtd[$i] ?></option>

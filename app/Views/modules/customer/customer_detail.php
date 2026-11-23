@@ -148,9 +148,13 @@
                                     </td>
                                     <td>
                                         <?php if ($mbr->payment_date == null) : ?>
-                                            <button type="button" class="btn btn-sm btn-secondary mr-1 mb-1" data-toggle="modal" data-target="#exampleModal<?= $no ?>">
-                                                Pembayaran
-                                            </button>
+                                            <?php if (session()->group === 'SA') : ?>
+                                                <button type="button" class="btn btn-sm btn-secondary mr-1 mb-1" data-toggle="modal" data-target="#exampleModal<?= $no ?>">
+                                                    Pembayaran
+                                                </button>
+                                            <?php else : ?>
+                                                <span class="badge badge-warning">Menunggu Approval Admin</span>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                         <?php if (in_array(session()->group, ['SA', 'AD', 'OP'])): ?>
                                             <button type="button" class="btn btn-sm btn-info mr-1 mb-1" data-toggle="modal" data-target="#modalEditDate<?= $no ?>" title="Edit Tanggal Membership">
@@ -374,7 +378,10 @@
                         <select name="payment" class="form-control" required>
                             <option value="">: Metode Bayar</option>
                             <option value="Cash">Cash</option>
-                            <option value="Qris">Qris</option>
+                            <option value="Qris BCA">Qris BCA</option>
+                            <option value="Qris BNI">Qris BNI</option>
+                            <option value="Qris BRI">Qris BRI</option>
+                            <option value="Qris Mandiri">Qris Mandiri</option>
                             <option value="Bank Transfer">Bank Transfer</option>
                         </select>
                     </div>
