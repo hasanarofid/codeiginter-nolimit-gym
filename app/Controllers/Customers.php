@@ -30,13 +30,97 @@ class Customers extends BaseController
 
         $data = [
             'title' => 'Daftar Customer',
-            'customers' => $this->modelcustomer->getByCabang('%', $status_filter ?: null),
             'status_filter' => $status_filter,
             'permission' => $this->permission,
             'role_array' => $this->role_array
         ];
 
         return view('modules/customer/customer_list', $data);
+    }
+
+    public function fetch()
+    {
+        $draw   = (int) ($this->request->getGet('draw') ?? 1);
+        $start  = (int) ($this->request->getGet('start') ?? 0);
+        $length = (int) ($this->request->getGet('length') ?? 10);
+        $search = trim((string) ($this->request->getGet('search')['value'] ?? ''));
+        $status_filter = trim((string) ($this->request->getGet('membership_status') ?? ''));
+
+        $order = $this->request->getGet('order');
+        $colMap = [
+            0 => 'c.id',
+            1 => 'c.id',
+            2 => 'c.nama',
+            3 => 'mt.max_expired_date',
+            4 => 'c.hp_wa',
+            5 => 'c.email',
+        ];
+        $orderColIdx = isset($order[0]['column']) ? (int) $order[0]['column'] : 1;
+        $orderCol = $colMap[$orderColIdx] ?? 'c.id';
+        $orderDir = $order[0]['dir'] ?? 'ASC';
+
+        $res = $this->modelcustomer->getDatatables('%', $status_filter ?: null, $search, $orderCol, $orderDir, $start, $length);
+
+        $logoUrl = base_url('img/logo.png');
+        $canView   = in_array($this->role_array[1], $this->permission);
+        $canEdit   = in_array($this->role_array[2], $this->permission);
+        $canDelete = in_array($this->role_array[3], $this->permission) || in_array(session()->group, ['SA', 'AD']);
+
+        $data = [];
+        $no = $start + 1;
+        foreach ($res['data'] as $row) {
+            if ($row['membership_status'] === 'aktif') {
+                $statusHtml = '<span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle mr-1"></i>Aktif</span>'
+                    . '<br><small class="text-muted">Exp: ' . date('d/m/Y', strtotime($row['expired_date'])) . '</small>';
+            } elseif ($row['membership_status'] === 'tidak_aktif') {
+                $statusHtml = '<span class="badge badge-danger px-2 py-1"><i class="fas fa-times-circle mr-1"></i>Tidak Aktif</span>';
+                if (!empty($row['expired_date'])) {
+                    $statusHtml .= '<br><small class="text-muted">Exp: ' . date('d/m/Y', strtotime($row['expired_date'])) . '</small>';
+                }
+            } else {
+                $statusHtml = '<span class="badge badge-secondary px-2 py-1">N.A</span>';
+            }
+
+            $fpSrc = (!empty($row['fp_image']) && is_file(FCPATH . 'img/uploads/member/fp/' . $row['fp_image']))
+                ? base_url('img/uploads/member/fp/' . $row['fp_image'])
+                : $logoUrl;
+            $imgHtml = '<img class="img-fluid" src="' . $fpSrc . '" onerror="this.onerror=null;this.src=\'' . $logoUrl . '\';" width="64" loading="lazy" />';
+
+            $aksi = '';
+            if ($canView) {
+                $aksi .= anchor(base_url('customer/detail/' . $row['id']), '<i class="fas fa-eye fa-sw text-white"></i>', ['title' => 'detail', 'class' => 'btn btn-sm btn-info shadow-sm mr-1']);
+            }
+            if ($canEdit) {
+                $aksi .= anchor(base_url('customer/edit/' . $row['id']), '<i class="fas fa-edit fa-sw text-white"></i>', ['title' => 'edit', 'class' => 'btn btn-sm btn-warning shadow-sm mr-1']);
+            }
+            if (!empty($row['idcard_image'])) {
+                $aksi .= anchor(base_url('img/uploads/member/ktp/' . $row['idcard_image']), '<i class="fas fa-id-card fa-sw text-white"></i>', ['title' => 'Download KTP', 'class' => 'btn btn-sm btn-success shadow-sm mr-1', 'download' => 'KTP_' . $row['id']]);
+            }
+            if ($canDelete) {
+                $aksi .= '<form action="' . base_url('customer/delete/' . $row['id']) . '" method="post" class="d-inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus member ' . esc($row['nama'], 'js') . ' (' . esc($row['id'], 'js') . ')?\')">'
+                    . csrf_field()
+                    . '<button type="submit" class="btn btn-sm btn-danger shadow-sm mr-1" title="Hapus Member"><i class="fas fa-trash fa-sw text-white"></i></button>'
+                    . '</form>';
+            }
+
+            $data[] = [
+                $no++,
+                esc($row['id']),
+                esc($row['nama']),
+                $statusHtml,
+                esc($row['hp_wa']),
+                esc($row['email']),
+                $imgHtml,
+                $aksi,
+            ];
+        }
+
+        return $this->response->setJSON([
+            'draw'            => $draw,
+            'recordsTotal'    => $res['recordsTotal'],
+            'recordsFiltered' => $res['recordsFiltered'],
+            'data'            => $data,
+        ]);
     }
 
     public function detail($id = null)

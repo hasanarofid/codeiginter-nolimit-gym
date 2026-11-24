@@ -38,6 +38,7 @@ class Model_customer extends Model
         $builder = $this->db->table($this->table . ' c');
         $builder->select('c.*, mt.max_expired_date');
         $builder->join($subQuery, 'mt.custid = c.id', 'left');
+        $builder->where('c.deleted_at IS NULL');
 
         if ($cabang != '%') {
             $builder->where('c.kdcab', $cabang);
@@ -67,6 +68,76 @@ class Model_customer extends Model
         }
 
         return $results;
+    }
+
+    public function getDatatables($cabang = '%', $membership_status = null, $search = '', $orderCol = 'c.id', $orderDir = 'ASC', $start = 0, $length = 10)
+    {
+        $today = date('Y-m-d');
+        $subQuery = "(SELECT custid, MAX(expired_date) AS max_expired_date FROM membership_trans WHERE status = 1 AND deleted_at IS NULL GROUP BY custid) mt";
+
+        // Total records without filter
+        $totalBuilder = $this->db->table($this->table . ' c');
+        $totalBuilder->where('c.deleted_at IS NULL');
+        if ($cabang != '%') {
+            $totalBuilder->where('c.kdcab', $cabang);
+        }
+        $recordsTotal = $totalBuilder->countAllResults();
+
+        // Filtered query builder
+        $builder = $this->db->table($this->table . ' c');
+        $builder->select('c.id, c.nama, c.hp_wa, c.email, c.fp_image, c.idcard_image, mt.max_expired_date');
+        $builder->join($subQuery, 'mt.custid = c.id', 'left');
+        $builder->where('c.deleted_at IS NULL');
+
+        if ($cabang != '%') {
+            $builder->where('c.kdcab', $cabang);
+        }
+
+        if ($membership_status === 'aktif') {
+            $builder->where('mt.max_expired_date >=', $today);
+        } elseif ($membership_status === 'tidak_aktif') {
+            $builder->where('mt.max_expired_date <', $today);
+        } elseif ($membership_status === 'na') {
+            $builder->where('mt.max_expired_date IS NULL');
+        }
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                ->like('c.id', $search)
+                ->orLike('c.nama', $search)
+                ->orLike('c.hp_wa', $search)
+                ->orLike('c.email', $search)
+                ->groupEnd();
+        }
+
+        $recordsFiltered = $builder->countAllResults(false);
+
+        $allowedCols = ['c.id', 'c.id', 'c.nama', 'mt.max_expired_date', 'c.hp_wa', 'c.email'];
+        $sortCol = in_array($orderCol, $allowedCols, true) ? $orderCol : 'c.id';
+        $sortDir = strtoupper($orderDir) === 'DESC' ? 'DESC' : 'ASC';
+
+        $builder->orderBy($sortCol, $sortDir);
+        if ($length > 0) {
+            $builder->limit($length, $start);
+        }
+
+        $rows = $builder->get()->getResultArray();
+        foreach ($rows as &$row) {
+            $row['expired_date'] = $row['max_expired_date'];
+            if (empty($row['max_expired_date'])) {
+                $row['membership_status'] = 'N.A';
+            } elseif ($row['max_expired_date'] >= $today) {
+                $row['membership_status'] = 'aktif';
+            } else {
+                $row['membership_status'] = 'tidak_aktif';
+            }
+        }
+
+        return [
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $rows,
+        ];
     }
 
     public function get_count($kdcab)

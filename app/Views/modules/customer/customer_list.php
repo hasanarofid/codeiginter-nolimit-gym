@@ -6,7 +6,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <?= (in_array($role_array[0], $permission)) ? anchor(base_url('customer/create'), '<i class="fas fa-plus fa-sm text-white-50"></i> Add New', ['title' => 'data baru', 'class' => "d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-right"]) : '' ?>
-        <a href="<?= base_url('customer/export' . (!empty($status_filter) ? '?membership_status=' . $status_filter : '')) ?>" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm float-right mr-2">
+        <a href="<?= base_url('customer/export' . (!empty($status_filter) ? '?membership_status=' . $status_filter : '')) ?>" id="btnExportCustomer" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm float-right mr-2">
             <i class="fas fa-download fa-sm text-white-50"></i> Export Excel
         </a>
         <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm float-right mr-2" data-toggle="modal" data-target="#modalImport">
@@ -17,7 +17,7 @@
         </a>
     </div>
     <div class="card-body">
-        <form method="get" action="<?= base_url('customer') ?>" class="mb-4">
+        <form method="get" action="<?= base_url('customer') ?>" class="mb-4" id="filterCustomerForm">
             <div class="form-row align-items-center">
                 <div class="col-auto">
                     <label class="sr-only" for="membership_status">Status Membership</label>
@@ -25,7 +25,7 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text"><i class="fas fa-filter mr-1"></i> Status Membership</div>
                         </div>
-                        <select name="membership_status" id="membership_status" class="form-control form-control-sm" onchange="this.form.submit()">
+                        <select name="membership_status" id="membership_status" class="form-control form-control-sm">
                             <option value="">Semua Status</option>
                             <option value="aktif" <?= ($status_filter ?? '') === 'aktif' ? 'selected' : '' ?>>Membership Aktif</option>
                             <option value="tidak_aktif" <?= ($status_filter ?? '') === 'tidak_aktif' ? 'selected' : '' ?>>Tidak Aktif</option>
@@ -33,11 +33,9 @@
                         </select>
                     </div>
                 </div>
-                <?php if (!empty($status_filter)): ?>
-                    <div class="col-auto">
-                        <a href="<?= base_url('customer') ?>" class="btn btn-sm btn-outline-secondary">Reset Filter</a>
-                    </div>
-                <?php endif; ?>
+                <div class="col-auto" id="resetFilterWrap" style="<?= empty($status_filter) ? 'display:none;' : '' ?>">
+                    <button type="button" id="btnResetFilter" class="btn btn-sm btn-outline-secondary">Reset Filter</button>
+                </div>
             </div>
         </form>
         <?php
@@ -48,7 +46,7 @@
         endif;
         ?>
         <div class="table-responsive">
-            <table class="table table-sm table-bordered data-tables">
+            <table class="table table-sm table-bordered" id="customerTable" width="100%">
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -58,56 +56,10 @@
                         <th>No. HP</th>
                         <th>Email</th>
                         <th>Image</th>
-                        <th><i class="fas fa-fw fa-cog"></i></th>
+                        <th width="210px"><i class="fas fa-fw fa-cog"></i></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    $no = 1;
-                    foreach ($customers as $row) :
-                    ?>
-                        <tr>
-                            <td><?= $no ?></td>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['nama'] ?></td>
-                            <td>
-                                <?php if ($row['membership_status'] === 'aktif'): ?>
-                                    <span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle mr-1"></i>Aktif</span>
-                                    <br><small class="text-muted">Exp: <?= date('d/m/Y', strtotime($row['expired_date'])) ?></small>
-                                <?php elseif ($row['membership_status'] === 'tidak_aktif'): ?>
-                                    <span class="badge badge-danger px-2 py-1"><i class="fas fa-times-circle mr-1"></i>Tidak Aktif</span>
-                                    <?php if (!empty($row['expired_date'])): ?>
-                                        <br><small class="text-muted">Exp: <?= date('d/m/Y', strtotime($row['expired_date'])) ?></small>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary px-2 py-1">N.A</span>
-                                <?php endif; ?>
-                            </td>
-                            <td><?= $row['hp_wa'] ?></td>
-                            <td><?= $row['email'] ?></td>
-                            <td><img class="img-fluid" src="/img/uploads/member/fp/<?= $row['fp_image'] ?>" width="64" /></td>
-                            <td width="210px">
-                                <?php
-                                echo (in_array($role_array[1], $permission)) ? anchor(base_url('customer/detail/' . $row['id']), '<i class="fas fa-eye fa-sw text-white"></i>', ['title' => 'detail', 'class' => "btn btn-sm btn-info shadow-sm mr-1"]) : '';
-                                echo (in_array($role_array[2], $permission)) ? anchor(base_url('customer/edit/' . $row['id']), '<i class="fas fa-edit fa-sw text-white"></i>', ['title' => 'edit', 'class' => "btn btn-sm btn-warning shadow-sm mr-1"]) : '';
-                                if (!empty($row['idcard_image'])) {
-                                    echo anchor(base_url('img/uploads/member/ktp/' . $row['idcard_image']), '<i class="fas fa-id-card fa-sw text-white"></i>', ['title' => 'Download KTP', 'class' => "btn btn-sm btn-success shadow-sm mr-1", 'download' => 'KTP_' . $row['id']]);
-                                }
-                                if (in_array($role_array[3], $permission) || in_array(session()->group, ['SA', 'AD'])) {
-                                    echo '<form action="' . base_url('customer/delete/' . $row['id']) . '" method="post" class="d-inline" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus member ' . esc($row['nama']) . ' (' . esc($row['id']) . ')?\')">';
-                                    echo csrf_field();
-                                    echo '<button type="submit" class="btn btn-sm btn-danger shadow-sm mr-1" title="Hapus Member"><i class="fas fa-trash fa-sw text-white"></i></button>';
-                                    echo '</form>';
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    <?php
-                        $no++;
-                    endforeach;
-                    ?>
-
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -142,4 +94,64 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    var table = $('#customerTable').DataTable({
+        processing: true,
+        serverSide: true,
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        order: [[1, 'asc']],
+        ajax: {
+            url: '<?= base_url('customer/fetch') ?>',
+            type: 'GET',
+            data: function(d) {
+                d.membership_status = $('#membership_status').val();
+            }
+        },
+        columnDefs: [
+            { orderable: false, searchable: false, targets: [0, 6, 7] }
+        ],
+        language: {
+            processing: 'Memuat data...',
+            search: 'Cari:',
+            lengthMenu: 'Tampilkan _MENU_ data',
+            info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
+            infoEmpty: 'Menampilkan 0 sampai 0 dari 0 data',
+            infoFiltered: '(disaring dari _MAX_ total data)',
+            emptyTable: 'Data customer tidak ditemukan',
+            zeroRecords: 'Data customer tidak ditemukan',
+            paginate: {
+                first: 'Pertama',
+                last: 'Terakhir',
+                next: 'Selanjutnya',
+                previous: 'Sebelumnya'
+            }
+        }
+    });
+
+    function syncFilterUI() {
+        var val = $('#membership_status').val();
+        var exportUrl = '<?= base_url('customer/export') ?>' + (val ? '?membership_status=' + encodeURIComponent(val) : '');
+        $('#btnExportCustomer').attr('href', exportUrl);
+        if (val) {
+            $('#resetFilterWrap').show();
+        } else {
+            $('#resetFilterWrap').hide();
+        }
+    }
+
+    $('#membership_status').on('change', function() {
+        syncFilterUI();
+        table.ajax.reload();
+    });
+
+    $('#btnResetFilter').on('click', function() {
+        $('#membership_status').val('');
+        syncFilterUI();
+        table.ajax.reload();
+    });
+});
+</script>
 <?= $this->endSection(); ?>

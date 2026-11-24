@@ -343,6 +343,10 @@ class Visitors extends BaseController
                     }
                 }
 
+                $fpUrl = (!empty($member['fp_image']) && is_file(FCPATH . 'img/uploads/member/fp/' . $member['fp_image']))
+                    ? base_url('img/uploads/member/fp/' . $member['fp_image'])
+                    : base_url('img/logo.png');
+
                 return $this->response
                     ->setHeader('X-CSRF-TOKEN', csrf_hash())
                     ->setJSON([
@@ -350,7 +354,7 @@ class Visitors extends BaseController
                         'data' => [
                             'id' => $member['id'],
                             'nama' => $member['nama'],
-                            'fp_image' => base_url('img/uploads/member/fp/' . $member['fp_image']),
+                            'fp_image' => $fpUrl,
                             'expiry_date' => $expiry_text,
                             'is_expired' => $is_expired,
                             'is_cross_branch' => $is_cross_branch,

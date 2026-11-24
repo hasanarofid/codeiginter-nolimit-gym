@@ -55,7 +55,12 @@
                         <?php endif; ?>
                     </div>
                     <div class="position-absolute profile-pic-wrapper">
-                        <img src="/img/uploads/member/fp/<?= $detail['fp_image'] ?>" width="64" class="rounded-circle img-thumbnail" alt="Mads Obel">
+                        <?php
+                        $detailFpSrc = (!empty($detail['fp_image']) && is_file(FCPATH . 'img/uploads/member/fp/' . $detail['fp_image']))
+                            ? base_url('img/uploads/member/fp/' . $detail['fp_image'])
+                            : base_url('img/logo.png');
+                        ?>
+                        <img src="<?= $detailFpSrc ?>" onerror="this.onerror=null;this.src='<?= base_url('img/logo.png') ?>';" width="64" class="rounded-circle img-thumbnail" alt="<?= esc($detail['nama']) ?>">
                     </div>
                 </div>
             </div>

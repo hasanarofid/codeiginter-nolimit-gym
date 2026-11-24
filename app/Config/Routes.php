@@ -76,6 +76,7 @@ $routes->post('/visitors/get-member-data', 'Visitors::getMemberData');
 
 // customer
 $routes->get('/customer', 'Customers::index');
+$routes->get('/customer/fetch', 'Customers::fetch');
 $routes->get('/customer/detail/(:alphanum)', 'Customers::detail/$1');
 $routes->get('/customer/profil', 'Customers::profil');
 $routes->get('/customer/barcode/download/(:alphanum)', 'Customers::download_card/$1');
