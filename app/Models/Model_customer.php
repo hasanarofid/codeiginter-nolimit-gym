@@ -32,8 +32,8 @@ class Model_customer extends Model
     {
         $today = date('Y-m-d');
 
-        // Subquery untuk mendapatkan membership_trans terakhir yang aktif (status=1) dan belum dihapus
-        $subQuery = "(SELECT custid, MAX(expired_date) AS max_expired_date FROM membership_trans WHERE status = 1 AND deleted_at IS NULL GROUP BY custid) mt";
+        // Subquery untuk mendapatkan membership_trans terakhir yang valid (status 1=Active, 2=Expired) dan belum dihapus
+        $subQuery = "(SELECT custid, MAX(expired_date) AS max_expired_date FROM membership_trans WHERE status IN (1, 2) AND deleted_at IS NULL GROUP BY custid) mt";
 
         $builder = $this->db->table($this->table . ' c');
         $builder->select('c.*, mt.max_expired_date');
@@ -73,7 +73,7 @@ class Model_customer extends Model
     public function getDatatables($cabang = '%', $membership_status = null, $search = '', $orderCol = 'c.id', $orderDir = 'ASC', $start = 0, $length = 10)
     {
         $today = date('Y-m-d');
-        $subQuery = "(SELECT custid, MAX(expired_date) AS max_expired_date FROM membership_trans WHERE status = 1 AND deleted_at IS NULL GROUP BY custid) mt";
+        $subQuery = "(SELECT custid, MAX(expired_date) AS max_expired_date FROM membership_trans WHERE status IN (1, 2) AND deleted_at IS NULL GROUP BY custid) mt";
 
         // Total records without filter
         $totalBuilder = $this->db->table($this->table . ' c');

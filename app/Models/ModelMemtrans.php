@@ -70,9 +70,12 @@ class ModelMemtrans extends Model
 
     public function earnings_this_month($cabang)
     {
-        $b = $this->table($this->table);
+        $b = $this->db->table($this->table);
         $b->select('SUM(nominal) as total');
         $b->where('MONTH(payment_date) = MONTH(CURDATE())');
+        $b->where('YEAR(payment_date) = YEAR(CURDATE())');
+        $b->whereIn('status', [1, 2]);
+        $b->where('deleted_at IS NULL');
         if ($cabang != '%') {
             $b->like('id', $cabang, 'after');
         }
@@ -82,9 +85,11 @@ class ModelMemtrans extends Model
 
     public function earnings_this_year($cabang)
     {
-        $b = $this->table($this->table);
+        $b = $this->db->table($this->table);
         $b->select('SUM(nominal) as total');
         $b->where('YEAR(payment_date) = YEAR(CURDATE())');
+        $b->whereIn('status', [1, 2]);
+        $b->where('deleted_at IS NULL');
 
         if ($cabang != '%') {
             $b->like('id', $cabang, 'after');
@@ -95,9 +100,11 @@ class ModelMemtrans extends Model
 
     public function get_daily_earning($cabang)
     {
-        $b = $this->table($this->table);
+        $b = $this->db->table($this->table);
         $b->select('SUM(nominal) as total');
-        $b->where('payment_date = CURDATE()');
+        $b->where('DATE(payment_date) = CURDATE()');
+        $b->whereIn('status', [1, 2]);
+        $b->where('deleted_at IS NULL');
         if ($cabang != '%') {
             $b->like('id', $cabang, 'after');
         }

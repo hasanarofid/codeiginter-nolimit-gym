@@ -342,8 +342,15 @@ class Customers extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         }
 
+        $oldCustomer = $this->modelcustomer->get_customer($id);
+        if (!$oldCustomer) {
+            session()->setFlashdata('pesan', '<div class="alert alert-danger">Data customer tidak ditemukan</div>');
+            return redirect()->to(base_url('customer'));
+        }
+
+        $newKdcab = $this->request->getPost('kdcab');
         $data = [
-            'kdcab' => $this->request->getPost('kdcab'),
+            'kdcab' => $newKdcab,
             'nama' => $this->request->getPost('nama'),
             'noktp' => $this->request->getPost('noktp'),
             'tgl_lhr' => $this->request->getPost('tgl_lhr'),
@@ -356,10 +363,30 @@ class Customers extends BaseController
             $data['password'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
         }
 
-        $update = $this->modelcustomer->update($id, $data);
+        $db = \Config\Database::connect();
+        $db->transStart();
 
-        if ($update) {
-            session()->setFlashdata('pesan', '<div class="alert alert-success">Data customer berhasil diubah</div>');
+        $newId = $id;
+        if ($newKdcab !== $oldCustomer['kdcab']) {
+            $newId = $this->modelcustomer->generateID($newKdcab);
+            $data['id'] = $newId;
+
+            // Sinkronkan ID customer di tabel relasi
+            $db->table('membership_trans')->where('custid', $id)->update(['custid' => $newId]);
+            $db->table('member_visit')->where('idmember', $id)->update(['idmember' => $newId]);
+            if (!empty($oldCustomer['email'])) {
+                $db->table('user')->where('UserID', strtolower($oldCustomer['email']))->update(['kdcab' => $newKdcab]);
+            }
+        }
+
+        $db->table('customers')->where('id', $id)->update($data);
+        $db->transComplete();
+
+        if ($db->transStatus()) {
+            $msg = ($newId !== $id)
+                ? "Data customer berhasil diubah dan dipindahkan ke cabang {$newKdcab} (ID baru: {$newId})"
+                : 'Data customer berhasil diubah';
+            session()->setFlashdata('pesan', '<div class="alert alert-success">' . $msg . '</div>');
             return redirect()->to(base_url('customer'));
         } else {
             session()->setFlashdata('pesan', '<div class="alert alert-danger"><strong>Error : </strong> Gagal mengubah data customer</div>');
